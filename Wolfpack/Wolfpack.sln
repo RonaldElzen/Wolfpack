@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2037
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wolfpack.Web", "Wolfpack.Web\Wolfpack.Web.csproj", "{CC75D06D-5277-4238-AD00-8F1C8AD4F665}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web", "Wolfpack.Web.Tests\Web.csproj", "{FDA8414F-BE21-451D-9A02-9AA92642F249}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{7C2E2C4E-9AE5-448A-BD9C-B3B417B9D5BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wolfpack.BusinessLayer", "Wolfpack.BusinessLayer\Wolfpack.BusinessLayer.csproj", "{FE495A93-3268-4EA8-9EA7-100390EF8D67}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wolfpack.Data", "Wolfpack.Data\Wolfpack.Data.csproj", "{F22ED104-C171-489E-B5B1-6D63D85DC3B5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wolfpack.Data.Models", "Wolfpack.Data.Models\Wolfpack.Data.Models.csproj", "{DFDE6E5C-9BBE-4F7F-A6B1-926581D7CB41}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessLayer", "BusinessLayer\BusinessLayer.csproj", "{2495101A-AF81-4DA5-BDD0-ECA439F1C468}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CC75D06D-5277-4238-AD00-8F1C8AD4F665}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC75D06D-5277-4238-AD00-8F1C8AD4F665}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC75D06D-5277-4238-AD00-8F1C8AD4F665}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC75D06D-5277-4238-AD00-8F1C8AD4F665}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDA8414F-BE21-451D-9A02-9AA92642F249}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDA8414F-BE21-451D-9A02-9AA92642F249}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDA8414F-BE21-451D-9A02-9AA92642F249}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDA8414F-BE21-451D-9A02-9AA92642F249}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE495A93-3268-4EA8-9EA7-100390EF8D67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE495A93-3268-4EA8-9EA7-100390EF8D67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE495A93-3268-4EA8-9EA7-100390EF8D67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE495A93-3268-4EA8-9EA7-100390EF8D67}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F22ED104-C171-489E-B5B1-6D63D85DC3B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F22ED104-C171-489E-B5B1-6D63D85DC3B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F22ED104-C171-489E-B5B1-6D63D85DC3B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F22ED104-C171-489E-B5B1-6D63D85DC3B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DFDE6E5C-9BBE-4F7F-A6B1-926581D7CB41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFDE6E5C-9BBE-4F7F-A6B1-926581D7CB41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFDE6E5C-9BBE-4F7F-A6B1-926581D7CB41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFDE6E5C-9BBE-4F7F-A6B1-926581D7CB41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2495101A-AF81-4DA5-BDD0-ECA439F1C468}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2495101A-AF81-4DA5-BDD0-ECA439F1C468}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2495101A-AF81-4DA5-BDD0-ECA439F1C468}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2495101A-AF81-4DA5-BDD0-ECA439F1C468}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{FDA8414F-BE21-451D-9A02-9AA92642F249} = {7C2E2C4E-9AE5-448A-BD9C-B3B417B9D5BF}
+		{2495101A-AF81-4DA5-BDD0-ECA439F1C468} = {7C2E2C4E-9AE5-448A-BD9C-B3B417B9D5BF}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {ADB4F142-A4F9-4BF3-BA66-B162B22594BD}
+	EndGlobalSection
+EndGlobal
