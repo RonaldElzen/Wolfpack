@@ -13,6 +13,10 @@ namespace Wolfpack.Web.Controllers
             return View();
         }
 
+        /// <summary>
+        /// This is a comment to test whether the wiki auto-updates with it
+        /// </summary>
+        /// <returns></returns>
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
