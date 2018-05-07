@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Wolfpack.Web.Models.Home;
 
 namespace Wolfpack.Web.Controllers
 {
@@ -29,7 +30,15 @@ namespace Wolfpack.Web.Controllers
 
         public ActionResult Test(string name)
         {
-            return View("Index", model: name);
+            var model = new HomeVM { Test = name };
+
+            return View("Index", model);
+        }
+
+        [HttpPost]
+        public ActionResult FormTest(HomeVM vm)
+        {
+            return RedirectToAction("Test", new { name = vm.Test });
         }
     }
 }
