@@ -1,0 +1,205 @@
+﻿body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Open Sans', sans-serif; }
+
+div, ul, li, a {
+  box-sizing: border-box; }
+
+.wrapper {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  overflow-x: hidden; }
+
+.sidebar-wrapper {
+  width: 200px;
+  height: 100%;
+  position: relative;
+  flex: 0 0 200px;
+  transition: all 2s ease; }
+
+.main {
+  flex: 1;
+  padding: 5px; }
+
+.sidebar {
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  width: 200px;
+  height: 100%;
+  background: #455B65;
+  position: fixed;
+  transition: all 2s ease; }
+  .sidebar .logo {
+    padding: 10px;
+    background: #81939D;
+    position: relative;
+    transition: all 2s ease;
+    text-align: center; }
+    .sidebar .logo img {
+      transition: all 2s ease;
+      max-width: 100%;
+      max-height: 130px; }
+  .sidebar .nav {
+    transition: all 2s ease;
+    list-style-type: none;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    margin-top: 20px; }
+    .sidebar .nav li {
+      display: block;
+      transition: all .2s ease; }
+      .sidebar .nav li i, .sidebar .nav li #toggle-collapse > i {
+        line-height: initial;
+        float: right;
+        margin-right: 15px; }
+      .sidebar .nav li:hover {
+        background: #81939D; }
+      .sidebar .nav li a, .sidebar .nav li #toggle-collapse {
+        display: block;
+        text-decoration: none;
+        color: #fff;
+        font-size: 15pt;
+        width: 100%;
+        height: 100%;
+        padding: 10px; }
+  .sidebar .sidebar-bottom {
+    height: 100px;
+    width: 100%;
+    position: absolute;
+    bottom: 10px; }
+    .sidebar .sidebar-bottom .nav-bottom {
+      margin: 0;
+      padding: 5px;
+      list-style-type: none; }
+      .sidebar .sidebar-bottom .nav-bottom li {
+        display: block;
+        margin: 5px;
+        background: #81939D;
+        flex: 1;
+        color: #fff;
+        font-size: 12pt;
+        transition: all .2s ease; }
+        .sidebar .sidebar-bottom .nav-bottom li:hover {
+          transform: scale(1.05); }
+        .sidebar .sidebar-bottom .nav-bottom li i {
+          line-height: initial;
+          float: right;
+          margin-right: 15px; }
+        .sidebar .sidebar-bottom .nav-bottom li a {
+          display: block;
+          width: 100%;
+          height: 100%;
+          text-decoration: none;
+          padding: 10px;
+          color: #fff; }
+
+.sidebar-small {
+  width: 75px;
+  flex: 0 0 75px; }
+
+.collapsed {
+  margin-left: -125px; }
+  .collapsed .sidebar-bottom {
+    display: none; }
+  .collapsed .logo {
+    transition: all 2s ease;
+    margin-left: 125px; }
+  .collapsed .nav li {
+    text-align: center; }
+
+.mobile-nav {
+  width: 100%;
+  position: fixed;
+  height: 70px;
+  top: 0;
+  background: #455A64;
+  display: none;
+  align-items: center;
+  z-index: 2; }
+  .mobile-nav .toggle-menu {
+    color: #fff;
+    margin-left: 25px; }
+
+.form-box {
+  max-width: 500px;
+  padding: 20px;
+  margin: 10px;
+  margin-left: 50px; }
+
+h2 {
+  color: #82949E;
+  font-size: 25pt; }
+
+input[type="text"],
+textarea {
+  width: 100%;
+  border: 0;
+  margin-top: 20px;
+  background: inherit;
+  border-bottom: 1px solid #666666; }
+
+label {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  transition: all .2s ease;
+  color: #666666; }
+
+.submit-button {
+  cursor: pointer;
+  min-width: 100px;
+  border: 0px;
+  background: #455b65;
+  color: #fff;
+  padding: 10px;
+  margin: auto;
+  margin-top: 20px;
+  box-shadow: 0 7px 12px rgba(0, 0, 0, 0.28);
+  transition: all .2s ease; }
+  .submit-button:hover {
+    transform: scale(1.1); }
+
+input:focus ~ label, input:valid ~ label, textarea:focus ~ label, textarea:valid ~ label {
+  top: 0; }
+
+input:focus {
+  border-bottom: 2px solid #455B65;
+  outline: none; }
+
+.form-item {
+  position: relative;
+  min-height: 60px; }
+
+@media only screen and (max-width: 600px) {
+  .mobile-nav {
+    display: flex; }
+  .main {
+    position: absolute;
+    width: 100%;
+    padding: 20px;
+    height: 100%;
+    margin-top: 75px; }
+  .form-box {
+    margin: 0;
+    margin-top: 20px; }
+  .hidden {
+    display: none; }
+  .sidebar {
+    -webkit-transition: all 2s;
+    transition: margin 2s;
+    margin-left: -200px;
+    display: block;
+    z-index: 3; }
+    .sidebar .nav li #toggle-collapse {
+      display: none; }
+  .sidebar-overlay {
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    display: block;
+    position: fixed;
+    background: rgba(0, 0, 0, 0.5); } }
+
