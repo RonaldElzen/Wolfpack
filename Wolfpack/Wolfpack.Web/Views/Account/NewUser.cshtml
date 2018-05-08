@@ -1,0 +1,19 @@
+﻿@model Wolfpack.Web.Models.Account.NewUserVM
+
+@{
+    ViewBag.Title = "NewUser";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Welcome to WolfPack, please fill in your account information</h2>
+
+ using(Html.BeginForm("FormTest", "Home"))
+    {
+<text>
+    @Html.EditorFor(m => m.FirstName)
+
+    <input type="submit" />
+</text>
+    }
+
+<!--<text@Model.FirstName</text>-->
