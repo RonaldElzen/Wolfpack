@@ -6,37 +6,43 @@
     <title>@ViewBag.Title - My ASP.NET Application</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <link href="https://fonts.googleapis.com/css?family=Lato|Montserrat|Open+Sans|Roboto|Source+Sans+Pro" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+    <div class="wrapper">
+        <div class="mobile-nav">
+            <i class="fas fa-bars fa-3x toggle-menu" id="toggle-menu"></i>
+        </div>
+        <div class="sidebar-wrapper">
+            <div class="sidebar" id="sidebar">
+                <div class="logo">
+                    <img src="~/Content/images/logo.png" />
+                    @*@Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })*@
+                </div>
+                <ul class="nav">
+                    <li><div id="toggle-collapse"><span>Close</span><i class="fas fa-bars fa-lg"></i></div></li>
+                    <li><a href="@Url.Action("Index","Home")"><span>Home</span><i class="fas fa-home fa-lg"></i></a></li>
+                    <li><a href="@Url.Action("About","Home")"><span>About</span><i class="fas fa-user fa-lg"></i></i></a></li>
+                    <li><a href="@Url.Action("Contact","Home")"><span>Contact</span><i class="fas fa-phone fa-lg"></i></a></li>
                 </ul>
+
+                <div class="sidebar-bottom">
+                    <ul class="nav-bottom">
+                        <li><a href="@Url.Action("Index","Home")"><span>Log out</span><i class="fas fa-cog fa-lg"></i></a></li>
+                        <li><a href="@Url.Action("Index","Home")"><span>Settings</span><i class="fas fa-sign-out-alt fa-lg"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+            </div>
+            <div class="main">
+                @RenderBody()
             </div>
         </div>
-    </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
-    </div>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+        @Scripts.Render("~/bundles/jquery")
+
+        @RenderSection("scripts", required: false)
+        <script src="@Url.Content("~/Scripts/main.js")"></script>
 </body>
 </html>
