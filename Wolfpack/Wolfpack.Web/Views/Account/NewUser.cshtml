@@ -8,7 +8,7 @@
 <h2>Welcome to WolfPack, please fill in your account information</h2>
 
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("NewUserPost", "NewUser"))
 {
 
     @Html.Label("Username")
@@ -16,15 +16,17 @@
 
     @Html.Label("Firstname")
     @Html.EditorFor(m => m.FirstName)
- 
+
     @Html.Label("Lastname")
     @Html.EditorFor(m => m.LastName)
 
     @Html.Label("Mailadress")
     @Html.EditorFor(m => m.MailAdress)
 
+    @Html.Label("Enter a password")
+    @Html.PasswordFor(m => m.Password)
+    @Html.Label("Confirm your password")
+    @Html.PasswordFor(m => m.PasswordCheck)
 }
+
 <input type="submit" />
-
-
-<!--<text@Model.FirstName</text>-->
