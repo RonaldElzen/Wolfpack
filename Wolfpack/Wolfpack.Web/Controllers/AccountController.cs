@@ -16,8 +16,7 @@ namespace Wolfpack.Web.Controllers
 
         public ActionResult NewUser()
         {
-            ViewBag.Message = "Create a new account.";
-
+           
             return View();
         }
 

@@ -7,13 +7,24 @@
 
 <h2>Welcome to WolfPack, please fill in your account information</h2>
 
- using(Html.BeginForm("FormTest", "Home"))
-    {
-<text>
-    @Html.EditorFor(m => m.FirstName)
 
-    <input type="submit" />
-</text>
-    }
+@using (Html.BeginForm())
+{
+
+    @Html.Label("Username")
+    @Html.EditorFor(m => m.UserName)
+
+    @Html.Label("Firstname")
+    @Html.EditorFor(m => m.FirstName)
+ 
+    @Html.Label("Lastname")
+    @Html.EditorFor(m => m.LastName)
+
+    @Html.Label("Mailadress")
+    @Html.EditorFor(m => m.MailAdress)
+
+}
+<input type="submit" />
+
 
 <!--<text@Model.FirstName</text>-->
