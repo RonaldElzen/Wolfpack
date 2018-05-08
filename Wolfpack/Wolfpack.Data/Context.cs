@@ -13,5 +13,6 @@ namespace Wolfpack.Data
         public Context() : base("WolfPackContext") { }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Recovery> Recoveries { get; set; }
     }
 }

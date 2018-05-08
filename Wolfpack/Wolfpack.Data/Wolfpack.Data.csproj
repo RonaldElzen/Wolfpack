@@ -52,6 +52,10 @@
     <Compile Include="Migrations\201805071351251_Initial.Designer.cs">
       <DependentUpon>201805071351251_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201805081030137_Recovery.cs" />
+    <Compile Include="Migrations\201805081030137_Recovery.Designer.cs">
+      <DependentUpon>201805081030137_Recovery.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -68,6 +72,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201805071351251_Initial.resx">
       <DependentUpon>201805071351251_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805081030137_Recovery.resx">
+      <DependentUpon>201805081030137_Recovery.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,0 +1,24 @@
+﻿@model Wolfpack.Web.Models.Account.RecoveryVM
+
+@{
+    ViewBag.Title = "RecoveryForm";
+}
+
+@if (Model == null || string.IsNullOrWhiteSpace(Model.User))
+{
+
+}
+else
+{
+    using (Html.BeginForm("FormTest", "Home"))
+    {
+        <text>
+            @Html.EditorFor(m => m.User)
+
+            <input type="submit" />
+        </text>
+    }
+
+    <text>@Model.User</text>
+}
+
