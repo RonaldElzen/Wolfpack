@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.Controllers;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -10,7 +11,7 @@ using Wolfpack.Web.Models.Account;
 
 namespace Wolfpack.Web.Controllers
 {
-    public class Account2Controller : Controller
+    public class AccountController : Controller
     {
         // GET: Account2
         public ActionResult Index()
@@ -25,22 +26,36 @@ namespace Wolfpack.Web.Controllers
                 Recovery recovery = context.Recoveries.FirstOrDefault(r => r.Key == key);
                 if (recovery != null)
                 {
-                    User user = context.Users.FirstOrDefault(u => u == recovery.User);
-                    return RedirectToAction("RecoveryForm", new { User = user });
+                    User user = context.Users.FirstOrDefault(u => u.Id == recovery.User.Id);
+                    if(user != null)
+                    {
+                        var model = new RecoveryVM();
+                        return View("Recovery", model);
+                    }
                 }
             }
-
             return View();
         }
 
         [HttpPost]
         public ActionResult RecoveryForm(RecoveryVM vm)
         {
-            using (var context = new Context())
+            if(vm.Password == vm.PasswordDouble)
             {
-                //dostuff
+                using (var context = new Context())
+                {
+                    //int id = getidfromsomewhere?
+                    int id = 2;
+                    User user = context.Users.FirstOrDefault(u => u.Id == id);
+                    if(user != null)
+                    {
+                        user.Password = vm.Password;
+                        context.SaveChanges();
+                    }
+                }
+                return RedirectToAction("Recovery");
             }
-            return View();
+            return RedirectToAction("Recovery");
         }
 
         public void ResetPassword(string email)
@@ -51,14 +66,14 @@ namespace Wolfpack.Web.Controllers
                 if(user != null)
                 {
                     string key = Guid.NewGuid().ToString();
+                    //string link = Url.Action("Recovery", "Account", null);
+                    string link = "http://localhost:56401/Account/Recovery?key=" + key;
                     context.Recoveries.Add(new Recovery
                     {
                         Key = key,
                         User = user
                     });
                     context.SaveChanges();
-
-                    string link = Url.Action("Recovery", "Home", new { Key = key }).ToString();
                     MailService ms = new MailService();
                     ms.SendRecoveryMail(email, link);
                 }

@@ -24,6 +24,9 @@ namespace Wolfpack.Web.Controllers
         {
             ViewBag.Message = "Your application description page.";
 
+            AccountController ac = new AccountController();
+            ac.ResetPassword("daanbroere@hotmail.com");
+
             return View();
         }
 
@@ -48,10 +51,10 @@ namespace Wolfpack.Web.Controllers
             {
                 context.Users.Add(new User
                 {
-                    Mail = $"{vm.Test}@gmail.com",
-                    Password = "NiceAndSafePassword",
+                    Mail = $"daanbroere@hotmail.com",
+                    Password = "testpass",
                     RegisterDate = DateTime.Now,
-                    UserName = "SomeUser"
+                    UserName = "Daan"
                 });
 
                 context.SaveChanges();
