@@ -16,17 +16,20 @@ document.querySelector(".toggle-menu").addEventListener('click', function () {
 
 if (window.innerWidth <= 1024 && window.innerWidth >= 600) {
     document.querySelector(".sidebar").classList.add("collapsed");
+    document.querySelector(".sidebar-wrapper").classList.add("sidebar-small");
     isCollapsed = true;
 }
 
 document.querySelector("#toggle-collapse").addEventListener('click', function () {
     if (isCollapsed) {
         document.querySelector(".sidebar").classList.remove("collapsed");
+        document.querySelector(".sidebar-wrapper").classList.remove("sidebar-small");
         isCollapsed = false;
 
     }
     else {
         document.querySelector(".sidebar").classList.add("collapsed");
+        document.querySelector(".sidebar-wrapper").classList.add("sidebar-small");
         isCollapsed = true;
     }
 });

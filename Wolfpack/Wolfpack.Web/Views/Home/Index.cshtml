@@ -7,6 +7,26 @@
 @if (string.IsNullOrWhiteSpace(Model))
 {
 
+<div class="form-box">
+    <h2> Form demo</h2>
+    <form action="" method="post">
+        <div class="form-item">
+
+            <input type="text" id="name" name="user_name" required>
+            <label for="name">Name:</label>
+        </div>
+        <div class="form-item">
+
+            <input type="text" id="mail" name="user_mail" required>
+            <label for="mail">E-mail:</label>
+        </div>
+        <div class="form-item">
+
+            <textarea id="msg" name="user_message" required></textarea>
+            <label for="msg">Message:</label>
+        </div>
+    </form>
+</div>
 }
 else
 {
