@@ -1,0 +1,28 @@
+﻿@model Wolfpack.Web.Models.Account.LoginVM
+
+@{
+    ViewBag.Title = "Login";
+}
+
+<h2>Login</h2>
+
+@Html.ValidationSummary()
+
+@using (Html.BeginForm("Login"))
+{
+    <div>
+        @Html.LabelFor(m => m.LoginName)
+    </div>
+    <div>
+        @Html.EditorFor(m => m.LoginName)
+    </div>
+    <div>
+        @Html.LabelFor(m => m.Password)
+    </div>
+    <div>
+        @Html.PasswordFor(m => m.Password)
+    </div>
+    <div>
+        <input type="submit" />
+    </div>
+}

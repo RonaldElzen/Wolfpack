@@ -153,6 +153,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\UserHelper.cs" />
+    <Compile Include="Models\Account\LoginVM.cs" />
     <Compile Include="Models\Account\NewUserVM.cs" />
     <Compile Include="Models\Home\HomeVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -204,6 +206,7 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\NewUser.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -222,6 +225,10 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Wolfpack.BusinessLayer\Wolfpack.BusinessLayer.csproj">
+      <Project>{FE495A93-3268-4EA8-9EA7-100390EF8D67}</Project>
+      <Name>Wolfpack.BusinessLayer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Wolfpack.Data.Models\Wolfpack.Data.Models.csproj">
       <Project>{DFDE6E5C-9BBE-4F7F-A6B1-926581D7CB41}</Project>
       <Name>Wolfpack.Data.Models</Name>

@@ -5,7 +5,7 @@ using Wolfpack.BusinessLayer;
 namespace BusinessLayer
 {
     [TestClass]
-    public class HashingTests
+    public class HashingTest
     {
         [TestMethod]
         public void Hash_HashedPassword_HasLengthHigherThanTen()
