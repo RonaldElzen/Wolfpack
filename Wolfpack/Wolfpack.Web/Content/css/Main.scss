@@ -103,6 +103,11 @@ div, ul, li, a {
                 flex: 1;
                 color: #fff;
                 font-size: 12pt;
+                transition: all .2s ease;
+
+                &:hover {
+                    transform: scale(1.05);
+                }
 
                 i {
                     line-height: initial;
@@ -181,7 +186,7 @@ h2 {
     font-size: 25pt;
 }
 
-input,
+input[type="text"],
 textarea {
     width: 100%;
     border: 0;
@@ -197,6 +202,23 @@ label {
     left: 0;
     transition: all .2s ease;
     color: #666666;
+}
+
+.submit-button {
+    cursor: pointer;
+    min-width: 100px;
+    border: 0px;
+    background: #455b65;
+    color: #fff;
+    padding: 10px;
+    margin: auto;
+    margin-top: 20px;
+    box-shadow: 0 7px 12px rgba(0,0,0,0.28);
+    transition: all .2s ease;
+
+    &:hover {
+        transform: scale(1.1);
+    }
 }
 
 input:focus ~ label, input:valid ~ label, textarea:focus ~ label, textarea:valid ~ label {
