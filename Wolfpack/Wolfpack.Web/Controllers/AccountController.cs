@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Net.Mail;
 using Wolfpack.BusinessLayer;
 using Wolfpack.Data;
 using Wolfpack.Data.Models;
 using Wolfpack.Web.Helpers;
 using Wolfpack.Web.Models.Account;
+
 
 namespace Wolfpack.Web.Controllers
 {
@@ -84,46 +86,83 @@ namespace Wolfpack.Web.Controllers
             return RedirectToAction("Login");
         }
 
+
+        /// <summary>
+        /// Creates a new useraccount based on the form Account/NewUser
+        /// </summary>
+        /// <param name="vm"></param>
+        /// <returns></returns>
+
         [HttpPost]
         public ActionResult NewUserPost(NewUserVM vm)
         {
 
-            if (!string.Equals(vm.Password, vm.PasswordCheck)) {
+            if (!string.Equals(vm.Password, vm.PasswordCheck))
+            {
                 ModelState.AddModelError("Password", "Passwords do not match ");
             }
 
-            using (var context = new Context())
+            if (IsEmailValid(vm.MailAdress))
             {
-                context.Users.Add(new User
+
+                using (var context = new Context())
                 {
-                    
-                    UserName = vm.UserName,
-                    Mail = vm.MailAdress,
-                    Password = vm.Password,
-                    RegisterDate = DateTime.Now,
-                    FirstName = vm.FirstName,
-                    LastName = vm.LastName
-                   
-                });
-                if ( ModelState.IsValid && (vm.Password == vm.PasswordCheck))
-                {
-                    context.SaveChanges();
+                    context.Users.Add(new User
+                    {
+
+                        UserName = vm.UserName,
+                        Mail = vm.MailAdress,
+                        Password = vm.Password,
+                        RegisterDate = DateTime.Now,
+                        FirstName = vm.FirstName,
+                        LastName = vm.LastName
+
+                    });
+                    if (ModelState.IsValid && (vm.Password == vm.PasswordCheck))
+                    {
+                        context.SaveChanges();
+                    }
+                    else
+                    {
+
+
+                        return View("NewUser");
+                    }
+
+                    return RedirectToAction("NewUserCreated");
+
                 }
-                else{
-
-
-                    return View("NewUser");
-                }
-
-                return RedirectToAction("NewUserCreated");
-
             }
-            // return RedirectToAction("Test", new { name = vm.Test });
+            else {
+                ModelState.AddModelError("MailAdress", "This email is not valid please try again.");
+                return View("NewUser");
+            }
         }
+
+        /// <summary>
+        /// Validate check for Emailadress
+        /// </summary>
+        /// <param name="emailAddress"></param>
+        /// <returns></returns>
+
+        public bool IsEmailValid(string emailAddress)
+        {
+            try
+            {
+                MailAddress mailAddress = new MailAddress(emailAddress);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         public ActionResult NewUserCreated()
         {
-
-            return Redirect("/");
+            
+            return Redirect("Profile/UserProfile");
         }
 
     }
