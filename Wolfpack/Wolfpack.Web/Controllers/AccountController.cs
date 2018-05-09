@@ -18,6 +18,11 @@ namespace Wolfpack.Web.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Check for a key in the params. If it exists in the database redirect to the reset password form.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public ActionResult Recovery(string key)
         {
             using (var context = new Context())
@@ -37,6 +42,12 @@ namespace Wolfpack.Web.Controllers
             return View();
         }
 
+        /// <summary>
+        /// New password form. Once posted and passwords are the same + the key is still correct.
+        /// The password will be changed and the current recovery code removed
+        /// </summary>
+        /// <param name="vm"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult RecoveryForm(RecoveryVM vm)
         {
@@ -62,6 +73,11 @@ namespace Wolfpack.Web.Controllers
             return RedirectToAction("Recovery", new { Status = "failed" });
         }
 
+        /// <summary>
+        /// Send email for recovery if form on /Account/Recovery is posted
+        /// </summary>
+        /// <param name="vm"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult RecoveryNew(RecoveryVM vm)
         {
@@ -79,6 +95,10 @@ namespace Wolfpack.Web.Controllers
             return RedirectToAction("Recovery", new { Status = "sent" });
         }
 
+        /// <summary>
+        /// Send email to the email provided with a link for the user to reset his/her password
+        /// </summary>
+        /// <param name="email"></param>
         public void ResetPassword(string email)
         {
             using (var context = new Context())
