@@ -9,6 +9,8 @@ using Wolfpack.Data;
 using Wolfpack.Data.Models;
 using Wolfpack.Web.Helpers;
 using Wolfpack.Web.Models.Account;
+using Recaptcha.Web;
+using Recaptcha.Web.Mvc;
 
 
 namespace Wolfpack.Web.Controllers
@@ -51,6 +53,7 @@ namespace Wolfpack.Web.Controllers
         [HttpPost]
         public ActionResult Login(LoginVM vm)
         {
+
             using(var context = new Context())
             {
                 var user = context.Users
@@ -99,6 +102,19 @@ namespace Wolfpack.Web.Controllers
         [HttpPost]
         public ActionResult NewUserPost(NewUserVM vm)
         {
+            var recaptchaHelper = this.GetRecaptchaVerificationHelper();
+            if (string.IsNullOrEmpty(recaptchaHelper.Response))
+            {
+                //This means the captcha had a empty response.
+                ModelState.AddModelError("CaptchaResponse", "Please complete the captcha.");
+            }
+
+            var recaptchaResult = recaptchaHelper.VerifyRecaptchaResponse();
+            if (recaptchaResult != RecaptchaVerificationResult.Success)
+            {
+                ModelState.AddModelError("CaptchaResponse", "Invalid captcha response.");
+            }
+
             if (!string.Equals(vm.Password, vm.PasswordCheck))
             {
                 ModelState.AddModelError("Password", "Passwords do not match ");

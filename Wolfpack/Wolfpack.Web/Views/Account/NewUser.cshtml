@@ -1,4 +1,5 @@
 ﻿@model Wolfpack.Web.Models.Account.NewUserVM
+@using Recaptcha.Web.Mvc;
 
 @{
     ViewBag.Title = "NewUser";
@@ -63,6 +64,11 @@
     <div>
         @Html.PasswordFor(m => m.PasswordCheck)
     </div>
+
+    <br />
+
+    @Html.Recaptcha();
+    @Html.ValidationMessageFor(m => m.CaptchaResponse);
 
     <br />
     <br />

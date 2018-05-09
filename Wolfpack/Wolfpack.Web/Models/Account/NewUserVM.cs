@@ -27,5 +27,7 @@ namespace Wolfpack.Web.Models.Account
         public string LastName { get; set; }
 
         public string Message { get; set; }
+
+        public string CaptchaResponse { get; set; }
     }
 }
