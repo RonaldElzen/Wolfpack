@@ -21,6 +21,10 @@ namespace Wolfpack.Web.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Standard View
+        /// </summary>
+        /// <returns></returns>
         public ActionResult NewUser()
         {
            
@@ -89,6 +93,7 @@ namespace Wolfpack.Web.Controllers
 
         /// <summary>
         /// Creates a new useraccount based on the form Account/NewUser
+        /// Checks for correct password format and valid data for email
         /// </summary>
         /// <param name="vm"></param>
         /// <returns></returns>
@@ -102,7 +107,7 @@ namespace Wolfpack.Web.Controllers
                 ModelState.AddModelError("Password", "Passwords do not match ");
             }
 
-            if (IsEmailValid(vm.MailAdress))
+            if (_isEmailValid(vm.MailAdress))
             {
 
                 using (var context = new Context())
@@ -140,18 +145,18 @@ namespace Wolfpack.Web.Controllers
         }
 
         /// <summary>
-        /// Validate check for Emailadress
+        /// Validation check for emailadress
         /// </summary>
         /// <param name="emailAddress"></param>
         /// <returns></returns>
 
-        public bool IsEmailValid(string emailAddress)
+        private bool _isEmailValid(string emailAddress)
         {
             try
             {
                 MailAddress mailAddress = new MailAddress(emailAddress);
             }
-            catch (Exception ex)
+            catch (FormatException ex)
             {
                 return false;
             }
@@ -159,10 +164,14 @@ namespace Wolfpack.Web.Controllers
             return true;
         }
 
+        /// <summary>
+        /// Redirection from creation to profile creation
+        /// </summary>
+        /// <returns></returns>
         public ActionResult NewUserCreated()
         {
             
-            return Redirect("Profile/UserProfile");
+          return Redirect("/");
         }
 
     }
