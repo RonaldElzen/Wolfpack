@@ -31,7 +31,7 @@ namespace Wolfpack.Web.Helpers
         /// <summary>
         /// Gets the current logged in user
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The current logged in user</returns>
         public static UserHelper GetCurrentUser()
         {
             return (UserHelper)HttpContext.Current.Session[CURRENTUSER];

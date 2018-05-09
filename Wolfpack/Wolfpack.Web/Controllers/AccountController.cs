@@ -31,6 +31,9 @@ namespace Wolfpack.Web.Controllers
         /// <returns>Login page</returns>
         public ActionResult Login()
         {
+            if (UserHelper.GetCurrentUser() != null)
+                return RedirectToAction("Index", "Home");
+
             return View(new LoginVM());
         }
 
@@ -69,8 +72,17 @@ namespace Wolfpack.Web.Controllers
                 }
             }
         }
-    }
-}
+
+        /// <summary>
+        /// Logs out the current user
+        /// </summary>
+        /// <returns>The login view</returns>
+        public ActionResult Logout()
+        {
+            UserHelper.ClearCurrentUser();
+
+            return RedirectToAction("Login");
+        }
 
         [HttpPost]
         public ActionResult NewUserPost(NewUserVM vm)
