@@ -8,7 +8,8 @@ namespace Wolfpack.Web.Models.Account
 {
     public class RecoveryVM
     {
+        public string Email { get; set; }
         public string Password { get; set; }
-        public string PasswordDouble { get; set; }
+        public string PasswordSame { get; set; }
     }
 }

@@ -13,7 +13,6 @@ namespace Wolfpack.Web.Controllers
 {
     public class AccountController : Controller
     {
-        // GET: Account2
         public ActionResult Index()
         {
             return View();
@@ -27,8 +26,9 @@ namespace Wolfpack.Web.Controllers
                 if (recovery != null)
                 {
                     User user = context.Users.FirstOrDefault(u => u.Id == recovery.User.Id);
-                    if(user != null)
+                    if (user != null)
                     {
+                        Session["recoveryKey"] = key;
                         var model = new RecoveryVM();
                         return View("Recovery", model);
                     }
@@ -40,22 +40,43 @@ namespace Wolfpack.Web.Controllers
         [HttpPost]
         public ActionResult RecoveryForm(RecoveryVM vm)
         {
-            if(vm.Password == vm.PasswordDouble)
+            string key = (string) Session["recoveryKey"];
+            if (vm.Password == vm.PasswordSame && key != null)
             {
                 using (var context = new Context())
                 {
-                    //int id = getidfromsomewhere?
-                    int id = 2;
-                    User user = context.Users.FirstOrDefault(u => u.Id == id);
-                    if(user != null)
+                    Recovery recovery = context.Recoveries.FirstOrDefault(r => r.Key == key);
+                    if (recovery != null)
                     {
-                        user.Password = vm.Password;
-                        context.SaveChanges();
+                        User user = context.Users.FirstOrDefault(u => u.Id == recovery.User.Id);
+                        if (user != null)
+                        {
+                            user.Password = vm.Password;
+                            context.Recoveries.Remove(recovery);
+                            context.SaveChanges();
+                            return RedirectToAction("Recovery", new { Status = "changed" });
+                        }
                     }
                 }
-                return RedirectToAction("Recovery");
             }
-            return RedirectToAction("Recovery");
+            return RedirectToAction("Recovery", new { Status = "failed" });
+        }
+
+        [HttpPost]
+        public ActionResult RecoveryNew(RecoveryVM vm)
+        {
+            if (vm.Email != null)
+            {
+                using (var context = new Context())
+                {
+                    User user = context.Users.FirstOrDefault(u => u.Mail == vm.Email);
+                    if (user != null)
+                    {
+                        ResetPassword(vm.Email);
+                    }
+                }
+            }
+            return RedirectToAction("Recovery", new { Status = "sent" });
         }
 
         public void ResetPassword(string email)

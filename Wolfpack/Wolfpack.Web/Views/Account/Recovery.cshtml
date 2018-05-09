@@ -2,19 +2,51 @@
 
 @{
     ViewBag.Title = "Recovery";
+    ViewBag.Status = Request["Status"];
 }
 
 @if (Model == null)
 {
-    <h2>Recovery 1</h2>
+    switch (ViewBag.Status)
+    {
+        case "sent":
+            <h3>If your email is linked to an account on our services, an email will be sent.</h3>
+            break;
+        case "changed":
+            <h3>Your password has been changed.</h3>
+            <p><a href="@Url.Action("Login", "Account")">Click here to go to the login page</a></p>
+            break;
+        case "failed":
+            <h3>Something went wrong.</h3>
+            break;
+        default:
+            <h2>Recovery</h2>
+            <h3>Invalid key:</h3>
+
+            <p>The key is either invalid or has expired.</p>
+            <p>You can try again by entering you email below.</p>
+
+            using (Html.BeginForm("RecoveryNew", "Account", FormMethod.Post))
+            {
+                <text>
+                @Html.Label("Email")
+                @Html.EditorFor(m => m.Email)
+
+                <input type = "submit" />
+                </text>
+            }
+            break;
+    }
 }
 else
 {
-    using (Html.BeginForm("RecoveryForm", "Account"))
+    using (Html.BeginForm("RecoveryForm", "Account", FormMethod.Post))
     {
         <text>
-            @Html.EditorFor(m => m.Password)
-            @Html.EditorFor(m => m.PasswordDouble)
+            @Html.Label("Password")
+            @Html.EditorFor(m => m.Password)<br />
+            @Html.Label("Confirm password")
+            @Html.EditorFor(m => m.PasswordSame)
 
             <input type="submit" />
         </text>

@@ -24,9 +24,6 @@ namespace Wolfpack.Web.Controllers
         {
             ViewBag.Message = "Your application description page.";
 
-            AccountController ac = new AccountController();
-            ac.ResetPassword("daanbroere@hotmail.com");
-
             return View();
         }
 

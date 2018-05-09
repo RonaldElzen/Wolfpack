@@ -103,7 +103,6 @@ namespace BusinessLayer.Controllers
                         {
                             Debug.WriteLine("Error {0}", e.StatusCode);
                         }
-
                     }
                 }
             }
