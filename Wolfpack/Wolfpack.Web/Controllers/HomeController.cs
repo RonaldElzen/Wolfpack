@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Wolfpack.BusinessLayer;
 using Wolfpack.Data;
 using Wolfpack.Data.Models;
 using Wolfpack.Web.Models.Home;
@@ -49,9 +50,9 @@ namespace Wolfpack.Web.Controllers
                 context.Users.Add(new User
                 {
                     Mail = $"{vm.Test}@gmail.com",
-                    Password = "NiceAndSafePassword",
+                    Password = Hashing.Hash("test"),
                     RegisterDate = DateTime.Now,
-                    UserName = "SomeUser"
+                    UserName = "Test"
                 });
 
                 context.SaveChanges();

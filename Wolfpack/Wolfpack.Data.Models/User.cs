@@ -17,5 +17,9 @@ namespace Wolfpack.Data.Models
         public string Password { get; set; }
 
         public DateTime RegisterDate { get; set; }
+
+        public string FirstName { get; set; }
+
+        public string LastName { get; set; }
     }
 }
