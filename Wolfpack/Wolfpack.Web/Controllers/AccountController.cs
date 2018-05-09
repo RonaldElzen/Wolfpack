@@ -25,17 +25,23 @@ namespace Wolfpack.Web.Controllers
         /// <returns></returns>
         public ActionResult Recovery(string key)
         {
-            using (var context = new Context())
+            if(key != null)
             {
-                Recovery recovery = context.Recoveries.FirstOrDefault(r => r.Key == key);
-                if (recovery != null)
+                using (var context = new Context())
                 {
-                    User user = context.Users.FirstOrDefault(u => u.Id == recovery.User.Id);
-                    if (user != null)
+                    Recovery recovery = context.Recoveries.FirstOrDefault(r => r.Key == key);
+                    if (recovery != null)
                     {
-                        Session["recoveryKey"] = key;
-                        var model = new RecoveryVM();
-                        return View("Recovery", model);
+                        User user = context.Users.FirstOrDefault(u => u.Id == recovery.User.Id);
+                        if (user != null)
+                        {
+                            Session["recoveryKey"] = key;
+                            return View("Recovery", new RecoveryVM());
+                        }
+                    }
+                    else
+                    {
+                        return RedirectToAction("Recovery", new { Status = "invalid" });
                     }
                 }
             }
@@ -52,7 +58,7 @@ namespace Wolfpack.Web.Controllers
         public ActionResult RecoveryForm(RecoveryVM vm)
         {
             string key = (string) Session["recoveryKey"];
-            if (vm.Password == vm.PasswordSame && key != null)
+            if (vm.Password == vm.ConfirmPassword && key != null)
             {
                 using (var context = new Context())
                 {
@@ -86,10 +92,7 @@ namespace Wolfpack.Web.Controllers
                 using (var context = new Context())
                 {
                     User user = context.Users.FirstOrDefault(u => u.Mail == vm.Email);
-                    if (user != null)
-                    {
-                        ResetPassword(vm.Email);
-                    }
+                    if (user != null) ResetPassword(vm.Email);
                 }
             }
             return RedirectToAction("Recovery", new { Status = "sent" });
