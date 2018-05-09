@@ -26,8 +26,7 @@ namespace Wolfpack.Web.Controllers
         /// </summary>
         /// <returns></returns>
         public ActionResult NewUser()
-        {
-           
+        {           
             return View();
         }
 
@@ -96,12 +95,10 @@ namespace Wolfpack.Web.Controllers
         /// Checks for correct password format and valid data for email
         /// </summary>
         /// <param name="vm"></param>
-        /// <returns></returns>
-
+        /// /// <returns></returns>
         [HttpPost]
         public ActionResult NewUserPost(NewUserVM vm)
         {
-
             if (!string.Equals(vm.Password, vm.PasswordCheck))
             {
                 ModelState.AddModelError("Password", "Passwords do not match ");
@@ -109,36 +106,31 @@ namespace Wolfpack.Web.Controllers
 
             if (_isEmailValid(vm.MailAdress))
             {
-
                 using (var context = new Context())
                 {
                     context.Users.Add(new User
                     {
-
                         UserName = vm.UserName,
                         Mail = vm.MailAdress,
-                        Password = vm.Password,
+                        Password = Hashing.Hash(vm.Password),
                         RegisterDate = DateTime.Now,
                         FirstName = vm.FirstName,
                         LastName = vm.LastName
-
                     });
+
                     if (ModelState.IsValid && (vm.Password == vm.PasswordCheck))
                     {
                         context.SaveChanges();
                     }
                     else
                     {
-
-
                         return View("NewUser");
                     }
-
                     return RedirectToAction("NewUserCreated");
-
                 }
             }
-            else {
+            else
+            {
                 ModelState.AddModelError("MailAdress", "This email is not valid please try again.");
                 return View("NewUser");
             }
@@ -149,7 +141,6 @@ namespace Wolfpack.Web.Controllers
         /// </summary>
         /// <param name="emailAddress"></param>
         /// <returns></returns>
-
         private bool _isEmailValid(string emailAddress)
         {
             try
@@ -160,7 +151,6 @@ namespace Wolfpack.Web.Controllers
             {
                 return false;
             }
-
             return true;
         }
 
@@ -169,8 +159,7 @@ namespace Wolfpack.Web.Controllers
         /// </summary>
         /// <returns></returns>
         public ActionResult NewUserCreated()
-        {
-            
+        {            
           return Redirect("/");
         }
 
