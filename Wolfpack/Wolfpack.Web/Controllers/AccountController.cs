@@ -87,8 +87,8 @@ namespace Wolfpack.Web.Controllers
                 if(user != null)
                 {
                     string key = Guid.NewGuid().ToString();
-                    //string link = Url.Action("Recovery", "Account", null);
-                    string link = "http://localhost:56401/Account/Recovery?key=" + key;
+                    string baseUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath.TrimEnd('/') + "/";
+                    string link = baseUrl + "Account/Recovery?key=" + key;
                     context.Recoveries.Add(new Recovery
                     {
                         Key = key,
