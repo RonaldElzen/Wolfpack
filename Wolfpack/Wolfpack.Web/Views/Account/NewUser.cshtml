@@ -3,17 +3,69 @@
 @{
     ViewBag.Title = "NewUser";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
 }
 
+<br />
 <h2>Welcome to WolfPack, please fill in your account information</h2>
+<br />
 
- using(Html.BeginForm("FormTest", "Home"))
-    {
-<text>
-    @Html.EditorFor(m => m.FirstName)
 
-    <input type="submit" />
-</text>
-    }
+@using (Html.BeginForm("NewUserPost", "Account"))
+{
+    <!-- UserName -->
+    <div>
+        @Html.Label("Username")
+    </div>
+    <div>
+        @Html.EditorFor(m => m.UserName)
+        @Html.ValidationMessageFor(m => m.UserName)
+    </div>
 
-<!--<text@Model.FirstName</text>-->
+    <!-- FirstName -->
+    <div>
+        @Html.Label("Firstname")
+    </div>
+    <div>
+        @Html.EditorFor(m => m.FirstName)
+        @Html.ValidationMessageFor(m => m.FirstName)
+    </div>
+
+    <!-- LastName -->
+    <div>
+        @Html.Label("Lastname")
+    </div>
+    <div>
+        @Html.EditorFor(m => m.LastName)
+        @Html.ValidationMessageFor(m => m.LastName)
+    </div>
+
+    <!-- Mailadress -->
+    <div>
+        @Html.Label("Mailadress")
+    </div>
+    <div>
+        @Html.EditorFor(m => m.MailAdress)
+        @Html.ValidationMessageFor(m => m.MailAdress)
+    </div>
+
+    <!-- Password -->
+    <div>
+        @Html.Label("Enter a password")
+    </div>
+    <div>
+        @Html.PasswordFor(m => m.Password)
+        @Html.ValidationMessageFor(m => m.Password)
+    </div>
+    <div>
+        @Html.Label("Confirm your password")
+    </div>
+    <div>
+        @Html.PasswordFor(m => m.PasswordCheck)
+    </div>
+
+    <br />
+    <br />
+
+    <input type="submit" value="Subscribe" />
+}

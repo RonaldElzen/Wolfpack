@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Wolfpack.BusinessLayer;
 using Wolfpack.Data;
+using Wolfpack.Data.Models;
 using Wolfpack.Web.Helpers;
 using Wolfpack.Web.Models.Account;
 
@@ -20,8 +21,7 @@ namespace Wolfpack.Web.Controllers
 
         public ActionResult NewUser()
         {
-            ViewBag.Message = "Create a new account.";
-
+           
             return View();
         }
 
@@ -70,4 +70,50 @@ namespace Wolfpack.Web.Controllers
             }
         }
     }
+}
+
+        [HttpPost]
+        public ActionResult NewUserPost(NewUserVM vm)
+        {
+
+            if (!string.Equals(vm.Password, vm.PasswordCheck)) {
+                ModelState.AddModelError("Password", "Passwords do not match ");
+            }
+
+            using (var context = new Context())
+            {
+                context.Users.Add(new User
+                {
+                    
+                    UserName = vm.UserName,
+                    Mail = vm.MailAdress,
+                    Password = vm.Password,
+                    RegisterDate = DateTime.Now,
+                    FirstName = vm.FirstName,
+                    LastName = vm.LastName
+                   
+                });
+                if ( ModelState.IsValid && (vm.Password == vm.PasswordCheck))
+                {
+                    context.SaveChanges();
+                }
+                else{
+
+
+                    return View("NewUser");
+                }
+
+                return RedirectToAction("NewUserCreated");
+
+            }
+            // return RedirectToAction("Test", new { name = vm.Test });
+        }
+        public ActionResult NewUserCreated()
+        {
+
+            return Redirect("/");
+        }
+
+    }
+
 }
