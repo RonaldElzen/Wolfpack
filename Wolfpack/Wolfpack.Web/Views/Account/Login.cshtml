@@ -1,28 +1,27 @@
 ﻿@model Wolfpack.Web.Models.Account.LoginVM
 
 @{
+    Layout = "~/Views/Shared/_NoSidebarLayout.cshtml";
     ViewBag.Title = "Login";
 }
 
-<h2>Login</h2>
+    <h2>Welcome back to WolfPack!</h2>
+<div class="form-box pre-form">
+    @using (Html.BeginForm("Login"))
+    {
+        @Html.ValidationSummary()
+        <div class="input-box">
+            <div class="form-item">
+                @Html.EditorFor(m => m.LoginName, new { htmlAttributes = new { required = "required" } })
+                @Html.LabelFor(m => m.LoginName)
+            </div>
 
-@Html.ValidationSummary()
+            <div class="form-item">
+                @Html.PasswordFor(m => m.Password, new { required = "required" })
+                @Html.LabelFor(m => m.Password)
+            </div>
+        </div>
+        <input type="submit" class="submit-button" />
+    }
+</div>
 
-@using (Html.BeginForm("Login"))
-{
-    <div>
-        @Html.LabelFor(m => m.LoginName)
-    </div>
-    <div>
-        @Html.EditorFor(m => m.LoginName)
-    </div>
-    <div>
-        @Html.LabelFor(m => m.Password)
-    </div>
-    <div>
-        @Html.PasswordFor(m => m.Password)
-    </div>
-    <div>
-        <input type="submit" />
-    </div>
-}
