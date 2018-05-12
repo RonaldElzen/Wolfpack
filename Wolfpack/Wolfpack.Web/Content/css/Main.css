@@ -3,6 +3,36 @@
   padding: 0;
   font-family: 'Open Sans', sans-serif; }
 
+.login-body {
+  background: #455B65;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  position: absolute; }
+
+.login-wrapper {
+  max-width: 650px;
+  text-align: center; }
+
+.login-logo {
+  max-width: 200px;
+  min-height: 200px;
+  text-align: center;
+  margin: auto; }
+  .login-logo img {
+    max-width: 100%;
+    margin: auto;
+    animation-name: loginLogo;
+    animation-duration: 2s; }
+
+@keyframes loginLogo {
+  from {
+    margin-top: -50px; }
+  to {
+    margin-top: 0; } }
+
 div, ul, li, a {
   box-sizing: border-box; }
 
@@ -129,11 +159,8 @@ div, ul, li, a {
   margin: 10px;
   margin-left: 50px; }
 
-h2 {
-  color: #82949E;
-  font-size: 25pt; }
-
 input[type="text"],
+input[type="password"],
 textarea {
   width: 100%;
   border: 0;
@@ -141,12 +168,57 @@ textarea {
   background: inherit;
   border-bottom: 1px solid #666666; }
 
+input:focus ~ label, input:valid ~ label, textarea:focus ~ label, textarea:valid ~ label {
+  top: 0; }
+
+input:focus {
+  border-bottom: 2px solid #455B65;
+  outline: none; }
+
 label {
   position: absolute;
   top: 10px;
   left: 0;
   transition: all .2s ease;
   color: #666666; }
+
+.login-form {
+  width: 350px;
+  min-width: 300px;
+  padding: 20px;
+  text-align: left;
+  margin-left: 0; }
+  .login-form input[type="text"],
+  .login-form input[type="password"] {
+    border-color: #fff;
+    transition: all .2s ease;
+    border-width: 2px;
+    color: #fff;
+    width: 100%; }
+  .login-form input[type="submit"] {
+    margin: auto;
+    background: #81939d;
+    display: block;
+    margin-top: 20px; }
+  .login-form label {
+    color: #fff; }
+
+.input-box {
+  background: #49606b;
+  padding: 20px; }
+
+.register-form {
+  width: 750px;
+  margin: auto;
+  text-align: center; }
+  .register-form img {
+    max-width: 200px;
+    display: block;
+    margin: auto; }
+
+h2 {
+  color: #82949E;
+  font-size: 25pt; }
 
 .submit-button {
   cursor: pointer;
@@ -161,13 +233,6 @@ label {
   transition: all .2s ease; }
   .submit-button:hover {
     transform: scale(1.1); }
-
-input:focus ~ label, input:valid ~ label, textarea:focus ~ label, textarea:valid ~ label {
-  top: 0; }
-
-input:focus {
-  border-bottom: 2px solid #455B65;
-  outline: none; }
 
 .form-item {
   position: relative;

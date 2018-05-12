@@ -1,28 +1,44 @@
 ﻿@model Wolfpack.Web.Models.Account.LoginVM
 
 @{
+    Layout = null;
     ViewBag.Title = "Login";
 }
 
-<h2>Login</h2>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/Content/css")
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
+</head>
 
-@Html.ValidationSummary()
+<body class="login-body">
+<div class="login-wrapper">
+<div class="login-logo">
+    <img src="~/Content/images/logo.png" />
+</div>
+<div class="form-box login-form">
+    @using (Html.BeginForm("Login"))
+    {
+        @Html.ValidationSummary()
+        <div class="input-box">
+            <div class="form-item">
+                @Html.EditorFor(m => m.LoginName, new { htmlAttributes = new { required = "required" } })
+                @Html.LabelFor(m => m.LoginName)
+            </div>
 
-@using (Html.BeginForm("Login"))
-{
-    <div>
-        @Html.LabelFor(m => m.LoginName)
-    </div>
-    <div>
-        @Html.EditorFor(m => m.LoginName)
-    </div>
-    <div>
-        @Html.LabelFor(m => m.Password)
-    </div>
-    <div>
-        @Html.PasswordFor(m => m.Password)
-    </div>
-    <div>
-        <input type="submit" />
-    </div>
-}
+            <div class="form-item">
+                @Html.PasswordFor(m => m.Password, new { required = "required" })
+                @Html.LabelFor(m => m.Password)
+            </div>
+        </div>
+        <input type="submit" class="submit-button" />
+    }
+</div>
+</div>
+</body>
+</html>
