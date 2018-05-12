@@ -227,6 +227,7 @@
     <Content Include="Views\Account\NewUser.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Profile\UserProfile.cshtml" />
+    <Content Include="Views\Shared\_NoSidebarLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

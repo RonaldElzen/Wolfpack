@@ -3,29 +3,26 @@
   padding: 0;
   font-family: 'Open Sans', sans-serif; }
 
-.login-body {
+.body-form {
   background: #455B65;
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100%;
   width: 100%;
-  position: absolute; }
+  position: absolute;
+  overflow-x: hidden; }
 
-.login-wrapper {
-  max-width: 650px;
-  text-align: center; }
-
-.login-logo {
+.form-logo {
   max-width: 200px;
   min-height: 200px;
   text-align: center;
   margin: auto; }
-  .login-logo img {
+  .form-logo img {
     max-width: 100%;
     margin: auto;
     animation-name: loginLogo;
-    animation-duration: 2s; }
+    animation-duration: 1s; }
 
 @keyframes loginLogo {
   from {
@@ -42,6 +39,9 @@ div, ul, li, a {
   height: 100%;
   position: absolute;
   overflow-x: hidden; }
+
+.no-sidebar {
+  display: block; }
 
 .sidebar-wrapper {
   width: 200px;
@@ -182,25 +182,24 @@ label {
   transition: all .2s ease;
   color: #666666; }
 
-.login-form {
-  width: 350px;
+.pre-form {
   min-width: 300px;
   padding: 20px;
   text-align: left;
-  margin-left: 0; }
-  .login-form input[type="text"],
-  .login-form input[type="password"] {
+  margin: auto; }
+  .pre-form input[type="text"],
+  .pre-form input[type="password"] {
     border-color: #fff;
     transition: all .2s ease;
     border-width: 2px;
     color: #fff;
     width: 100%; }
-  .login-form input[type="submit"] {
+  .pre-form input[type="submit"] {
     margin: auto;
     background: #81939d;
     display: block;
     margin-top: 20px; }
-  .login-form label {
+  .pre-form label {
     color: #fff; }
 
 .input-box {
@@ -220,6 +219,9 @@ h2 {
   color: #82949E;
   font-size: 25pt; }
 
+.registration-box {
+  margin: auto; }
+
 .submit-button {
   cursor: pointer;
   min-width: 100px;
@@ -234,13 +236,44 @@ h2 {
   .submit-button:hover {
     transform: scale(1.1); }
 
+.form-wrapper {
+  max-width: 650px;
+  text-align: center;
+  height: 100%;
+  margin-top: 50px; }
+  .form-wrapper h2 {
+    color: #fff; }
+
 .form-item {
   position: relative;
   min-height: 60px; }
 
+.validation-summary-errors ul li {
+  list-style-type: none;
+  margin-bottom: 10px;
+  color: #fff; }
+
+.field-validation-error {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  color: #ef5350; }
+
+.g-recaptcha div {
+  margin: auto; }
+
 @media only screen and (max-width: 600px) {
   .mobile-nav {
     display: flex; }
+  .form-wrapper {
+    width: 100%;
+    margin-left: 20px;
+    margin-right: 20px; }
+    .form-wrapper h2 {
+      font-size: 20pt;
+      max-width: 100%;
+      padding: 20px;
+      margin: 10px;
+      box-sizing: border-box; }
   .main {
     position: absolute;
     width: 100%;
@@ -260,6 +293,14 @@ h2 {
     z-index: 3; }
     .sidebar .nav li #toggle-collapse {
       display: none; }
+  .g-recaptcha {
+    transform: scale(0.8);
+    -webkit-transform: scale(0.8);
+    transform-origin: 0 0;
+    -webkit-transform-origin: 0 0;
+    margin: auto; }
+  .input-box {
+    margin: 20px; }
   .sidebar-overlay {
     width: 100%;
     height: 100%;
