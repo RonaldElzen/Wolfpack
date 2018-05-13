@@ -13,12 +13,9 @@ namespace Wolfpack.Web.Controllers
     {
         protected Context Context { get; set; }
 
-        protected UserHelper CurrentUser { get; set; }
-
         public BaseController(Context context)
         {
             Context = context;
-            CurrentUser = UserHelper.GetCurrentUser();
         }
 
         protected override void Dispose(bool disposing)

@@ -38,7 +38,7 @@ namespace Wolfpack.Web.Controllers
         /// <returns>Login page</returns>
         public ActionResult Login()
         {
-            if (CurrentUser != null)
+            if (UserHelper.GetCurrentUser() != null)
                 return RedirectToAction("Index", "Home");
 
             return View(new LoginVM());
