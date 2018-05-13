@@ -17,5 +17,6 @@ namespace Wolfpack.Data
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Recovery> Recoveries { get; set; }
     }
 }

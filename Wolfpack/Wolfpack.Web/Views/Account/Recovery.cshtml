@@ -1,0 +1,87 @@
+﻿@model Wolfpack.Web.Models.Account.RecoveryVM
+
+@{
+    ViewBag.Title = "Recovery";
+    ViewBag.Status = Request["Status"];
+}
+
+@if (Model == null)
+{
+    switch (ViewBag.Status)
+    {
+        case "sent":
+            <text>
+                <h3>If your email is linked to an account on our services, an email will be sent.</h3>
+            </text>
+            break;
+        case "changed":
+            <text>
+                <h3>Your password has been changed.</h3>
+                <p><a href="@Url.Action("Login", "Account")">Click here to go to the login page</a></p>
+            </text>
+            break;
+        case "failed":
+            <text>
+                <h3>Something went wrong.</h3>
+            </text>
+            break;
+        case "invalid":
+            <text>
+                <h3>Invalid key</h3>
+                <p>The key is either invalid or has expired.</p>
+                <p>You can try again by going to this link: <p><a href="@Url.Action("Recovery", "Account")">Reset password</a></p></p>
+            </text>
+            break;
+        default:
+            <text>
+                <h2>Recovery</h2>
+                <p>Please fill in an email below to recover your password.</p>
+            </text>
+
+            using (Html.BeginForm("RecoveryNew", "Account", FormMethod.Post))
+            {
+                <text>
+                    <table>
+                        <tr>
+                            <td>@Html.Label("Email")</td>
+                            <td>@Html.EditorFor(m => m.Email)</td>
+                            <td>@Html.ValidationMessageFor(m => m.Email, "", new { @class = "error" })</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><input type="submit" /></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </text>
+            }
+            break;
+    }
+}
+else
+{
+    using (Html.BeginForm("RecoveryForm", "Account", FormMethod.Post))
+    {
+        <text>
+            <table>
+                <tr>
+                    <td>@Html.Label("Password")</td>
+                    <td>@Html.EditorFor(m => m.Password)</td>
+                    <td>@Html.ValidationMessageFor(m => m.Password, "", new { @class = "error" })</td>
+                </tr>
+                <tr>
+                    <td>@Html.Label("Confirm password")</td>
+                    <td>@Html.EditorFor(m => m.ConfirmPassword)</td>
+                    <td>@Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "error" })</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="submit" /></td>
+                    <td></td>
+                </tr>
+            </table>
+        </text>
+    }
+}
+
+
