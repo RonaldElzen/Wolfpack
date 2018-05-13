@@ -8,7 +8,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Diagnostics;
 
-namespace BusinessLayer.Controllers
+namespace BusinessLayer.Services
 {
     public class MailService
     {

@@ -10,8 +10,10 @@ using Wolfpack.Web.Models.Home;
 
 namespace Wolfpack.Web.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
+        public HomeController(Context context) : base(context) { }
+
         public ActionResult Index()
         {
             return View();
@@ -45,18 +47,15 @@ namespace Wolfpack.Web.Controllers
         [HttpPost]
         public ActionResult FormTest(HomeVM vm)
         {
-            using(var context = new Context())
+            Context.Users.Add(new User
             {
-                context.Users.Add(new User
-                {
-                    Mail = $"{vm.Test}@gmail.com",
-                    Password = Hashing.Hash("test"),
-                    RegisterDate = DateTime.Now,
-                    UserName = "Test"
-                });
+                Mail = $"{vm.Test}@gmail.com",
+                Password = Hashing.Hash("test"),
+                RegisterDate = DateTime.Now,
+                UserName = "Test"
+            });
 
-                context.SaveChanges();
-            }
+            Context.SaveChanges();
 
             return RedirectToAction("Test", new { name = vm.Test });
         }

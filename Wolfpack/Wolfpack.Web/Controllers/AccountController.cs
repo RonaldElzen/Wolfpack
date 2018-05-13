@@ -1,23 +1,22 @@
-﻿using BusinessLayer.Controllers;
+﻿using BusinessLayer.Services;
+using Recaptcha.Web;
+using Recaptcha.Web.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
 using System.Net.Mail;
+using System.Web.Mvc;
 using Wolfpack.BusinessLayer;
 using Wolfpack.Data;
 using Wolfpack.Data.Models;
 using Wolfpack.Web.Helpers;
 using Wolfpack.Web.Models.Account;
-using Recaptcha.Web;
-using Recaptcha.Web.Mvc;
 
 namespace Wolfpack.Web.Controllers
 {
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
+        public AccountController(Context context) : base(context) { }
+
         // GET: Account
         public ActionResult Index()
         {
@@ -39,7 +38,7 @@ namespace Wolfpack.Web.Controllers
         /// <returns>Login page</returns>
         public ActionResult Login()
         {
-            if (UserHelper.GetCurrentUser() != null)
+            if (CurrentUser != null)
                 return RedirectToAction("Index", "Home");
 
             return View(new LoginVM());
@@ -54,31 +53,27 @@ namespace Wolfpack.Web.Controllers
         [HttpPost]
         public ActionResult Login(LoginVM vm)
         {
+            var user = Context.Users
+                .SingleOrDefault(x => x.UserName == vm.LoginName || x.Mail == vm.LoginName);
 
-            using(var context = new Context())
+            if(user == null)
             {
-                var user = context.Users
-                    .SingleOrDefault(x => x.UserName == vm.LoginName || x.Mail == vm.LoginName);
+                ModelState.AddModelError("LoginName", "Invalid combination of username and password");
 
-                if(user == null)
-                {
-                    ModelState.AddModelError("LoginName", "Invalid combination of username and password");
+                return View("Login", vm);
+            }
 
-                    return View("Login", vm);
-                }
+            if(Hashing.Verify(vm.Password, user.Password))
+            {
+                UserHelper.SetCurrentUser(user);
 
-                if(Hashing.Verify(vm.Password, user.Password))
-                {
-                    UserHelper.SetCurrentUser(user);
-
-                    return RedirectToAction("Index", "Home");
-                }
-                else
-                {
-                    ModelState.AddModelError("LoginName", "Invalid combination of username and password");
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                ModelState.AddModelError("LoginName", "Invalid combination of username and password");
                     
-                    return View("Login", vm);
-                }
+                return View("Login", vm);
             }
         }
 
@@ -122,28 +117,25 @@ namespace Wolfpack.Web.Controllers
 
             if (_isEmailValid(vm.MailAdress))
             {
-                using (var context = new Context())
+                Context.Users.Add(new User
                 {
-                    context.Users.Add(new User
-                    {
-                        UserName = vm.UserName,
-                        Mail = vm.MailAdress,
-                        Password = Hashing.Hash(vm.Password),
-                        RegisterDate = DateTime.Now,
-                        FirstName = vm.FirstName,
-                        LastName = vm.LastName
-                    });
+                    UserName = vm.UserName,
+                    Mail = vm.MailAdress,
+                    Password = Hashing.Hash(vm.Password),
+                    RegisterDate = DateTime.Now,
+                    FirstName = vm.FirstName,
+                    LastName = vm.LastName
+                });
 
-                    if (ModelState.IsValid && (vm.Password == vm.PasswordCheck))
-                    {
-                        context.SaveChanges();
-                    }
-                    else
-                    {
-                        return View("NewUser");
-                    }
-                    return RedirectToAction("NewUserCreated");
+                if (ModelState.IsValid && (vm.Password == vm.PasswordCheck))
+                {
+                    Context.SaveChanges();
                 }
+                else
+                {
+                    return View("NewUser");
+                }
+                return RedirectToAction("NewUserCreated");
             }
             else
             {
@@ -176,7 +168,7 @@ namespace Wolfpack.Web.Controllers
         /// <returns></returns>
         public ActionResult NewUserCreated()
         {            
-          return Redirect("/");
+            return Redirect("/");
         }
 
         /// <summary>
@@ -188,22 +180,19 @@ namespace Wolfpack.Web.Controllers
         {
             if(key != null)
             {
-                using (var context = new Context())
+                Recovery recovery = Context.Recoveries.FirstOrDefault(r => r.Key == key);
+                if (recovery != null)
                 {
-                    Recovery recovery = context.Recoveries.FirstOrDefault(r => r.Key == key);
-                    if (recovery != null)
+                    User user = recovery.User;
+                    if (user != null)
                     {
-                        User user = context.Users.FirstOrDefault(u => u.Id == recovery.User.Id);
-                        if (user != null)
-                        {
-                            Session["recoveryKey"] = key;
-                            return View("Recovery", new RecoveryVM());
-                        }
+                        Session["recoveryKey"] = key;
+                        return View("Recovery", new RecoveryVM());
                     }
-                    else
-                    {
-                        return RedirectToAction("Recovery", new { Status = "invalid" });
-                    }
+                }
+                else
+                {
+                    return RedirectToAction("Recovery", new { Status = "invalid" });
                 }
             }
             return View();
@@ -221,19 +210,16 @@ namespace Wolfpack.Web.Controllers
             string key = (string) Session["recoveryKey"];
             if (vm.Password == vm.ConfirmPassword && key != null)
             {
-                using (var context = new Context())
+                Recovery recovery = Context.Recoveries.FirstOrDefault(r => r.Key == key);
+                if (recovery != null)
                 {
-                    Recovery recovery = context.Recoveries.FirstOrDefault(r => r.Key == key);
-                    if (recovery != null)
+                    User user = recovery.User;
+                    if (user != null)
                     {
-                        User user = context.Users.FirstOrDefault(u => u.Id == recovery.User.Id);
-                        if (user != null)
-                        {
-                            user.Password = vm.Password;
-                            context.Recoveries.Remove(recovery);
-                            context.SaveChanges();
-                            return RedirectToAction("Recovery", new { Status = "changed" });
-                        }
+                        user.Password = vm.Password;
+                        Context.Recoveries.Remove(recovery);
+                        Context.SaveChanges();
+                        return RedirectToAction("Recovery", new { Status = "changed" });
                     }
                 }
             }
@@ -250,11 +236,8 @@ namespace Wolfpack.Web.Controllers
         {
             if (vm.Email != null)
             {
-                using (var context = new Context())
-                {
-                    User user = context.Users.FirstOrDefault(u => u.Mail == vm.Email);
-                    if (user != null) ResetPassword(vm.Email);
-                }
+                User user = Context.Users.FirstOrDefault(u => u.Mail == vm.Email);
+                if (user != null) _resetPassword(vm.Email);
             }
             return RedirectToAction("Recovery", new { Status = "sent" });
         }
@@ -263,25 +246,22 @@ namespace Wolfpack.Web.Controllers
         /// Send email to the email provided with a link for the user to reset his/her password
         /// </summary>
         /// <param name="email"></param>
-        public void ResetPassword(string email)
+        private void _resetPassword(string email)
         {
-            using (var context = new Context())
+            User user = Context.Users.SingleOrDefault(u => u.Mail == email);
+            if(user != null)
             {
-                User user = context.Users.SingleOrDefault(u => u.Mail == email);
-                if(user != null)
+                string key = Guid.NewGuid().ToString();
+                string baseUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath.TrimEnd('/') + "/";
+                string link = baseUrl + "Account/Recovery?key=" + key;
+                Context.Recoveries.Add(new Recovery
                 {
-                    string key = Guid.NewGuid().ToString();
-                    string baseUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath.TrimEnd('/') + "/";
-                    string link = baseUrl + "Account/Recovery?key=" + key;
-                    context.Recoveries.Add(new Recovery
-                    {
-                        Key = key,
-                        User = user
-                    });
-                    context.SaveChanges();
-                    MailService ms = new MailService();
-                    ms.SendRecoveryMail(email, link);
-                }
+                    Key = key,
+                    User = user
+                });
+                Context.SaveChanges();
+                MailService ms = new MailService();
+                ms.SendRecoveryMail(email, link);
             }
         }
     }
