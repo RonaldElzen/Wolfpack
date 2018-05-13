@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Web.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Wolfpack.Data;
 using Wolfpack.Web;
 using Wolfpack.Web.Controllers;
 
@@ -16,7 +17,7 @@ namespace Wolfpack.Tests.Web.Controllers
         public void Index()
         {
             // Arrange
-            HomeController controller = new HomeController();
+            HomeController controller = new HomeController(new Context());
 
             // Act
             ViewResult result = controller.Index() as ViewResult;
@@ -29,7 +30,7 @@ namespace Wolfpack.Tests.Web.Controllers
         public void About()
         {
             // Arrange
-            HomeController controller = new HomeController();
+            HomeController controller = new HomeController(new Context());
 
             // Act
             ViewResult result = controller.About() as ViewResult;
@@ -42,7 +43,7 @@ namespace Wolfpack.Tests.Web.Controllers
         public void Contact()
         {
             // Arrange
-            HomeController controller = new HomeController();
+            HomeController controller = new HomeController(new Context());
 
             // Act
             ViewResult result = controller.Contact() as ViewResult;
