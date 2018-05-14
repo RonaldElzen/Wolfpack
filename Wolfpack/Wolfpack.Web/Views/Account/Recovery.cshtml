@@ -7,7 +7,32 @@
 
 @if (Model == null)
 {
-    switch (ViewBag.Status)
+    <text>
+        <h2>Recovery</h2>
+        <p>Please fill in an email below to recover your password.</p>
+    </text>
+
+    using (Html.BeginForm("RecoveryNew", "Account", FormMethod.Post))
+    {
+        <text>
+            <table>
+                <tr>
+                    <td>@Html.Label("Email")</td>
+                    <td>@Html.EditorFor(m => m.Email)</td>
+                    <td>@Html.ValidationMessageFor(m => m.Email, "", new { @class = "error" })</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="submit" /></td>
+                    <td></td>
+                </tr>
+            </table>
+        </text>
+    }
+}
+else if (Model.Status != null)
+{
+    switch (Model.Status)
     {
         case "sent":
             <text>
@@ -33,28 +58,7 @@
             </text>
             break;
         default:
-            <text>
-                <h2>Recovery</h2>
-                <p>Please fill in an email below to recover your password.</p>
-            </text>
 
-            using (Html.BeginForm("RecoveryNew", "Account", FormMethod.Post))
-            {
-                <text>
-                    <table>
-                        <tr>
-                            <td>@Html.Label("Email")</td>
-                            <td>@Html.EditorFor(m => m.Email)</td>
-                            <td>@Html.ValidationMessageFor(m => m.Email, "", new { @class = "error" })</td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td><input type="submit" /></td>
-                            <td></td>
-                        </tr>
-                    </table>
-                </text>
-            }
             break;
     }
 }

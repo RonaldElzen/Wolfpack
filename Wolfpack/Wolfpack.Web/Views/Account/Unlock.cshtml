@@ -1,0 +1,22 @@
+﻿@model Wolfpack.Web.Models.Account.UnlockVM
+
+@{
+    ViewBag.Title = "Unlock";
+}
+
+<h2>Unlock</h2>
+
+@if (Model != null && Model.Status == "succes")
+{
+    <text>
+        <p>Your account has been unlocked. You click on the link to go to the login page. <a href="@Url.Action("Login", "Account")">Login</a></p>
+    </text>
+}
+else
+{
+    <text>
+        <p>Invalid key: The key has either been used already or is invalid. Please try to login again. <a href="@Url.Action("Login", "Account")">Login</a></p>
+    </text>
+}
+
+
