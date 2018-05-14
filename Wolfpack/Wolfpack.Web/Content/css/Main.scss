@@ -255,7 +255,16 @@ label {
     min-width: 300px;
     padding: 20px;
     text-align: left;
-    margin:auto;
+    margin: auto;
+
+
+    a {
+        text-align: center;
+        margin: auto;
+        display: block;
+        margin-top: 10px;
+        color:#fff;
+    }
 
     input[type="text"],
     input[type="password"] {
@@ -281,6 +290,7 @@ label {
 .input-box {
     background: lighten(#455b65,2%);
     padding: 20px;
+
 }
 
 .register-form {
