@@ -18,6 +18,14 @@ namespace Wolfpack.Web.Controllers
             Context = context;
         }
 
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            if(UserHelper.GetCurrentUser() == null && filterContext.Controller as AccountController == null)
+            {
+                filterContext.Result = new RedirectResult(Url.Action("Login", "Account"));
+            }
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && Context != null)
