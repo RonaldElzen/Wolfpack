@@ -36,12 +36,12 @@ namespace Wolfpack.Web.Controllers
         /// Login action method
         /// </summary>
         /// <returns>Login page</returns>
-        public ActionResult Login()
-        {
+        public ActionResult Login(string message = "")
+        {           
             if (UserHelper.GetCurrentUser() != null)
                 return RedirectToAction("Index", "Home");
-
-            return View(new LoginVM());
+           
+            return View(new LoginVM() { Message = message });
         }
 
         /// <summary>
@@ -117,8 +117,9 @@ namespace Wolfpack.Web.Controllers
 
             if (_isEmailValid(vm.MailAdress))
             {
-             var mailexists = Context.Users.Any(x => x.Mail == vm.MailAdress);
-                if (!mailexists)
+                var userExists = Context.Users.Any(x => x.UserName == vm.UserName);
+                var mailExists = Context.Users.Any(x => x.Mail == vm.MailAdress);              
+                if (!userExists && !mailExists)
                 {
                     Context.Users.Add(new User
                     {
@@ -132,7 +133,11 @@ namespace Wolfpack.Web.Controllers
                 }
                 else
                 {
+                    if (userExists)
                     ModelState.AddModelError("MailAdress", "Email already in use.");
+
+                    if (mailExists)
+                        ModelState.AddModelError("UserName", "Username already in use.");
                 }
 
                 if (ModelState.IsValid && (vm.Password == vm.PasswordCheck))
@@ -141,9 +146,10 @@ namespace Wolfpack.Web.Controllers
                 }
                 else
                 {
-                    return View("Register");
+                    return View("Register", vm);
                 }
-                return RedirectToAction("RegisterCreated");
+
+                return RedirectToAction("Login", "Account", new { message = "Your account has been successfully created!" });
             }
             else
             {
@@ -170,14 +176,6 @@ namespace Wolfpack.Web.Controllers
             return true;
         }
 
-        /// <summary>
-        /// Redirection from creation to profile creation
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult RegisterCreated()
-        {            
-            return Redirect("/");
-        }
 
         /// <summary>
         /// Check for a key in the params. If it exists in the database redirect to the reset password form.
