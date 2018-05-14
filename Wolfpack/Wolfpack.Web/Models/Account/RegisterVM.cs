@@ -5,7 +5,7 @@ using System.Linq;
 using System.Web;
 namespace Wolfpack.Web.Models.Account
 {
-    public class NewUserVM
+    public class RegisterVM
     {
         [Required(ErrorMessage = "Please fill in a username.")]
         public string UserName { get; set; }

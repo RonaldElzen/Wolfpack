@@ -5,7 +5,7 @@
     ViewBag.Title = "Login";
 }
 
-    <h2>Welcome back to WolfPack!</h2>
+<h2>Welcome back to WolfPack!</h2>
 <div class="form-box pre-form">
     @using (Html.BeginForm("Login"))
     {
@@ -19,8 +19,14 @@
             <div class="form-item">
                 @Html.PasswordFor(m => m.Password, new { required = "required" })
                 @Html.LabelFor(m => m.Password)
-            </div>
+            </div>            
         </div>
+        if (!string.IsNullOrWhiteSpace(Model.Message))
+        {
+            <div class="form-item">
+                @Model.Message
+            </div>
+        }
         <input type="submit" class="submit-button" />
     }
 </div>

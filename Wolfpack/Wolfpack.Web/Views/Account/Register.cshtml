@@ -1,15 +1,15 @@
-﻿@model Wolfpack.Web.Models.Account.NewUserVM
+﻿@model Wolfpack.Web.Models.Account.RegisterVM
 @using Recaptcha.Web.Mvc;
 
 @{
-    ViewBag.Title = "NewUser";
+    ViewBag.Title = "Register";
     Layout = "~/Views/Shared/_NoSidebarLayout.cshtml";
 
 }
 
         <h2>Welcome to WolfPack, please fill in your account information</h2>
         <div class="form-box pre-form">
-            @using (Html.BeginForm("NewUserPost", "Account"))
+            @using (Html.BeginForm("RegisterPost", "Account"))
     {
         <div class="input-box">
             <!-- UserName -->

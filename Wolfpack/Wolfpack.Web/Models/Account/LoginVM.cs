@@ -13,5 +13,7 @@ namespace Wolfpack.Web.Models.Account
 
         [Required]
         public string Password { get; set; }
+
+        public string Message { get; set; }
     }
 }

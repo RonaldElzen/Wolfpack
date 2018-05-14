@@ -27,7 +27,7 @@ namespace Wolfpack.Web.Controllers
         /// Standard View
         /// </summary>
         /// <returns></returns>
-        public ActionResult NewUser()
+        public ActionResult Register()
         {           
             return View();
         }
@@ -36,12 +36,12 @@ namespace Wolfpack.Web.Controllers
         /// Login action method
         /// </summary>
         /// <returns>Login page</returns>
-        public ActionResult Login()
-        {
+        public ActionResult Login(string message = "")
+        {           
             if (UserHelper.GetCurrentUser() != null)
                 return RedirectToAction("Index", "Home");
-
-            return View(new LoginVM());
+           
+            return View(new LoginVM() { Message = message });
         }
 
         /// <summary>
@@ -89,13 +89,13 @@ namespace Wolfpack.Web.Controllers
         }
 
         /// <summary>
-        /// Creates a new useraccount based on the form Account/NewUser
+        /// Creates a new useraccount based on the form Account/Register
         /// Checks for correct password format and valid data for email
         /// </summary>
         /// <param name="vm"></param>
         /// /// <returns></returns>
         [HttpPost]
-        public ActionResult NewUserPost(NewUserVM vm)
+        public ActionResult RegisterPost(RegisterVM vm)
         {
             var recaptchaHelper = this.GetRecaptchaVerificationHelper();
             if (string.IsNullOrEmpty(recaptchaHelper.Response))
@@ -117,15 +117,28 @@ namespace Wolfpack.Web.Controllers
 
             if (_isEmailValid(vm.MailAdress))
             {
-                Context.Users.Add(new User
+                var userExists = Context.Users.Any(x => x.UserName == vm.UserName);
+                var mailExists = Context.Users.Any(x => x.Mail == vm.MailAdress);              
+                if (!userExists && !mailExists)
                 {
-                    UserName = vm.UserName,
-                    Mail = vm.MailAdress,
-                    Password = Hashing.Hash(vm.Password),
-                    RegisterDate = DateTime.Now,
-                    FirstName = vm.FirstName,
-                    LastName = vm.LastName
-                });
+                    Context.Users.Add(new User
+                    {
+                        UserName = vm.UserName,
+                        Mail = vm.MailAdress,
+                        Password = Hashing.Hash(vm.Password),
+                        RegisterDate = DateTime.Now,
+                        FirstName = vm.FirstName,
+                        LastName = vm.LastName
+                    });
+                }
+                else
+                {
+                    if (userExists)
+                    ModelState.AddModelError("MailAdress", "Email already in use.");
+
+                    if (mailExists)
+                        ModelState.AddModelError("UserName", "Username already in use.");
+                }
 
                 if (ModelState.IsValid && (vm.Password == vm.PasswordCheck))
                 {
@@ -133,14 +146,15 @@ namespace Wolfpack.Web.Controllers
                 }
                 else
                 {
-                    return View("NewUser");
+                    return View("Register", vm);
                 }
-                return RedirectToAction("NewUserCreated");
+
+                return RedirectToAction("Login", "Account", new { message = "Your account has been successfully created!" });
             }
             else
             {
                 ModelState.AddModelError("MailAdress", "This email is not valid please try again.");
-                return View("NewUser");
+                return View("Register");
             }
         }
 
@@ -162,14 +176,6 @@ namespace Wolfpack.Web.Controllers
             return true;
         }
 
-        /// <summary>
-        /// Redirection from creation to profile creation
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult NewUserCreated()
-        {            
-            return Redirect("/");
-        }
 
         /// <summary>
         /// Check for a key in the params. If it exists in the database redirect to the reset password form.

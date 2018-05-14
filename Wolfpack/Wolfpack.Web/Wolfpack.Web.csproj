@@ -161,8 +161,8 @@
     <Compile Include="Helpers\CustomControllerFactory.cs" />
     <Compile Include="Helpers\UserHelper.cs" />
     <Compile Include="Models\Account\LoginVM.cs" />
-    <Compile Include="Models\Account\NewUserVM.cs" />
     <Compile Include="Models\Account\RecoveryVM.cs" />
+    <Compile Include="Models\Account\RegisterVM.cs" />
     <Compile Include="Models\Home\HomeVM.cs" />
     <Compile Include="Models\Profile\ProfileVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -229,12 +229,12 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Account\NewUser.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\Index.cshtml" />
     <Content Include="Views\Account\Recovery.cshtml" />
     <Content Include="Views\Profile\UserProfile.cshtml" />
     <Content Include="Views\Shared\_NoSidebarLayout.cshtml" />
+    <Content Include="Views\Account\Register.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
