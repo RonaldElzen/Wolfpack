@@ -155,7 +155,7 @@ namespace Wolfpack.Web.Controllers
             {
                 MailAddress mailAddress = new MailAddress(emailAddress);
             }
-            catch (FormatException ex)
+            catch (FormatException)
             {
                 return false;
             }
