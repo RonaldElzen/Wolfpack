@@ -60,9 +60,9 @@
     <Compile Include="Migrations\201805131205212_Recovery.Designer.cs">
       <DependentUpon>201805131205212_Recovery.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201805141235076_LockedAccounts.cs" />
-    <Compile Include="Migrations\201805141235076_LockedAccounts.Designer.cs">
-      <DependentUpon>201805141235076_LockedAccounts.cs</DependentUpon>
+    <Compile Include="Migrations\201805141430084_LockedAccounts.cs" />
+    <Compile Include="Migrations\201805141430084_LockedAccounts.Designer.cs">
+      <DependentUpon>201805141430084_LockedAccounts.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -87,8 +87,8 @@
     <EmbeddedResource Include="Migrations\201805131205212_Recovery.resx">
       <DependentUpon>201805131205212_Recovery.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201805141235076_LockedAccounts.resx">
-      <DependentUpon>201805141235076_LockedAccounts.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201805141430084_LockedAccounts.resx">
+      <DependentUpon>201805141430084_LockedAccounts.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

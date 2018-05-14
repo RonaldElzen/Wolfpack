@@ -63,7 +63,12 @@ namespace Wolfpack.Web.Controllers
                 return View("Login", vm);
             }
 
-            if(user.LoginAttempts > 3)
+            if(user.LastLoginAttempt != null && user.LoginAttempts > 0 && user.LoginAttempts < 4)
+            {
+                TimeSpan diff = DateTime.Now - user.LastLoginAttempt;
+                if (diff.TotalMinutes > 30) user.LoginAttempts = 0;
+            }
+            else if (user.LoginAttempts > 3)
             {
                 ModelState.AddModelError("Locked", "This account is currently locked. To unlock your account, please check your email");
 
@@ -83,7 +88,9 @@ namespace Wolfpack.Web.Controllers
                 return View("Login", vm);
             }
 
-            if(Hashing.Verify(vm.Password, user.Password))
+            user.LastLoginAttempt = DateTime.Now;
+
+            if (Hashing.Verify(vm.Password, user.Password))
             {
                 user.LoginAttempts = 0;
                 Context.SaveChanges();
