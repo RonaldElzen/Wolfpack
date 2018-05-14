@@ -19,7 +19,7 @@
                 <tr>
                     <td>@Html.Label("Email")</td>
                     <td>@Html.EditorFor(m => m.Email)</td>
-                    <td>@Html.ValidationMessageFor(m => m.Email, "", new { @class = "error" })</td>
+                    <td>@Html.ValidationMessageFor(m => m.Email)</td>
                 </tr>
                 <tr>
                     <td></td>
@@ -71,12 +71,12 @@ else
                 <tr>
                     <td>@Html.Label("Password")</td>
                     <td>@Html.EditorFor(m => m.Password)</td>
-                    <td>@Html.ValidationMessageFor(m => m.Password, "", new { @class = "error" })</td>
+                    <td>@Html.ValidationMessageFor(m => m.Password)</td>
                 </tr>
                 <tr>
                     <td>@Html.Label("Confirm password")</td>
                     <td>@Html.EditorFor(m => m.PasswordCheck)</td>
-                    <td>@Html.ValidationMessageFor(m => m.PasswordCheck, "", new { @class = "error" })</td>
+                    <td>@Html.ValidationMessageFor(m => m.PasswordCheck)</td>
                 </tr>
                 <tr>
                     <td></td>
