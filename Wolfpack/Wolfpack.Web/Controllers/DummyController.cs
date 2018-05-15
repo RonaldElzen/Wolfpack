@@ -38,6 +38,10 @@ namespace Wolfpack.Web.Controllers
             //create users
             foreach (string name in names)
             {
+                if (Context.Users.Any(x => x.FirstName == name))
+                {
+                    return View("Dummy", new DummyVM { Message = "Dummy's have already been created" });
+                }
                 string username = Guid.NewGuid().ToString();
                 User u = new User
                 {
