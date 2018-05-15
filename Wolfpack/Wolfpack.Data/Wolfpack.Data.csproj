@@ -64,6 +64,10 @@
     <Compile Include="Migrations\201805141430084_LockedAccounts.Designer.cs">
       <DependentUpon>201805141430084_LockedAccounts.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201805151209036_SkillRating.cs" />
+    <Compile Include="Migrations\201805151209036_SkillRating.Designer.cs">
+      <DependentUpon>201805151209036_SkillRating.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -89,6 +93,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201805141430084_LockedAccounts.resx">
       <DependentUpon>201805141430084_LockedAccounts.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805151209036_SkillRating.resx">
+      <DependentUpon>201805151209036_SkillRating.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

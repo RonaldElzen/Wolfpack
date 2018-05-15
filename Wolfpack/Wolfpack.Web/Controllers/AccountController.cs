@@ -159,7 +159,8 @@ namespace Wolfpack.Web.Controllers
                         Password = Hashing.Hash(vm.Password),
                         RegisterDate = DateTime.Now,
                         FirstName = vm.FirstName,
-                        LastName = vm.LastName
+                        LastName = vm.LastName,
+                        LastLoginAttempt = DateTime.Now
                     });
                 }
                 else

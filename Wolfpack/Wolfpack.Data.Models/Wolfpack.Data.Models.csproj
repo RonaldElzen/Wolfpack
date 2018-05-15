@@ -49,6 +49,8 @@
   <ItemGroup>
     <Compile Include="LockedAccount.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Skill.cs" />
+    <Compile Include="UserRating.cs" />
     <Compile Include="Recovery.cs" />
     <Compile Include="User.cs" />
   </ItemGroup>
