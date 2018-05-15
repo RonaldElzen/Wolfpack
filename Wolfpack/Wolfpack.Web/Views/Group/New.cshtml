@@ -14,18 +14,17 @@
             @Html.LabelFor(m => m.GroupName)
             @Html.EditorFor(m => m.GroupName, new { htmlAttributes = new { required = "required" } })
         </div>
-
         <div class="form-item">
             @Html.LabelFor(m => m.Category)
             @Html.EditorFor(m => m.Category, new { required = "required" })
         </div>
-
     </div>
+
         if (!string.IsNullOrEmpty(Model.Message))
         {
-    <div class="form-item">
-        @Model.Message
-    </div>
+            <div class="form-item">
+            @Model.Message
+            </div>
         }
     <input type="submit" class="submit-button" />
     }

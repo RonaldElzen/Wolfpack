@@ -20,8 +20,7 @@ namespace Wolfpack.Web.Controllers
         {
             return View(new GroupVM() { Message = message });
         }
-
-
+        
         [HttpPost]
         public ActionResult New(GroupVM vm)
         {        
@@ -45,8 +44,7 @@ namespace Wolfpack.Web.Controllers
             }
             return View(new GroupVM() { Message = _message });
         }
-
-
+        
         public ActionResult Manager(string message = "")
         {
             return View(new GroupVM() { Message = message });
