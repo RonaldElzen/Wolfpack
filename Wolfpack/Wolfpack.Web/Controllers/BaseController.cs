@@ -20,7 +20,7 @@ namespace Wolfpack.Web.Controllers
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            if(UserHelper.GetCurrentUser() == null && filterContext.Controller as AccountController == null)
+            if (UserHelper.GetCurrentUser() == null && filterContext.Controller as AccountController == null)
             {
                 filterContext.Result = new RedirectResult(Url.Action("Login", "Account"));
             }
