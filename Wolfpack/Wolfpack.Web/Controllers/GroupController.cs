@@ -18,9 +18,6 @@ namespace Wolfpack.Web.Controllers
         public GroupController(Context context) : base(context) { }
         public ActionResult New(string message = "")
         {
-            if (UserHelper.GetCurrentUser() == null)
-                return RedirectToAction("Login", "Home");
-
             return View(new GroupVM() { Message = message });
         }
 
@@ -48,5 +45,12 @@ namespace Wolfpack.Web.Controllers
             }
             return View(new GroupVM() { Message = _message });
         }
-  }
+
+
+        public ActionResult Manager(string message = "")
+        {
+            return View(new GroupVM() { Message = message });
+        }
+
+    }
 }
