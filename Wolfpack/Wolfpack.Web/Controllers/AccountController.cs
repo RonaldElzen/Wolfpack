@@ -242,7 +242,7 @@ namespace Wolfpack.Web.Controllers
         public ActionResult RecoveryForm(RecoveryVM vm)
         {
             string key = (string)Session["recoveryKey"];
-            if (vm.Password == vm.ConfirmPassword && key != null)
+            if (vm.Password == vm.PasswordCheck && key != null)
             {
                 Recovery recovery = Context.Recoveries.FirstOrDefault(r => r.Key == key);
                 if (recovery != null)
