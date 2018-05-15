@@ -64,6 +64,10 @@
     <Compile Include="Migrations\201805151036140_Groups.Designer.cs">
       <DependentUpon>201805151036140_Groups.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201805151121491_Events_renameGroup.cs" />
+    <Compile Include="Migrations\201805151121491_Events_renameGroup.Designer.cs">
+      <DependentUpon>201805151121491_Events_renameGroup.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -89,6 +93,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201805151036140_Groups.resx">
       <DependentUpon>201805151036140_Groups.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805151121491_Events_renameGroup.resx">
+      <DependentUpon>201805151121491_Events_renameGroup.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

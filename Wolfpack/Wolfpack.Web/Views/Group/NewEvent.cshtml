@@ -1,0 +1,25 @@
+﻿@model Wolfpack.Web.Models.Event.EventVM
+@{
+    ViewBag.Title = "New";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Create a new event</h2>
+<div class="form-box">
+    @using (Html.BeginForm("New"))
+    {
+        @Html.ValidationSummary()
+            <div class="form-item">
+                @Html.EditorFor(m => m.EventName, new { htmlAttributes = new { required = "required" } })
+                @Html.LabelFor(m => m.EventName, new { htmlAttributes = new { required = "required" } })
+            </div>
+
+        if (!string.IsNullOrEmpty(Model.Message))
+        {
+            <div class="form-item">
+                @Model.Message
+            </div>
+        }
+        <input type="submit" class="submit-button" />
+    }
+</div>

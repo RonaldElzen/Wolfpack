@@ -5,20 +5,20 @@
 }
 
 <h2>Create a new group</h2>
-<div class="form-box pre-form">
+<div class="form-box">
     @using (Html.BeginForm("New"))
     {
     @Html.ValidationSummary()
-    <div class="input-box">
         <div class="form-item">
-            @Html.LabelFor(m => m.GroupName)
+
             @Html.EditorFor(m => m.GroupName, new { htmlAttributes = new { required = "required" } })
+            @Html.LabelFor(m => m.GroupName, new { htmlAttributes = new { required = "required" } })
         </div>
         <div class="form-item">
-            @Html.LabelFor(m => m.Category)
-            @Html.EditorFor(m => m.Category, new { required = "required" })
+
+            @Html.EditorFor(m => m.Category, new { htmlAttributes = new { required = "required" } })
+            @Html.LabelFor(m => m.Category, new { htmlAttributes = new { required = "required" } })
         </div>
-    </div>
 
         if (!string.IsNullOrEmpty(Model.Message))
         {
