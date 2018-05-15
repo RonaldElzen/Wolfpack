@@ -7,13 +7,13 @@ namespace Wolfpack.Data.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class Events_renameGroup : IMigrationMetadata
+    public sealed partial class Events_Groups : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Events_renameGroup));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Events_Groups));
         
         string IMigrationMetadata.Id
         {
-            get { return "201805151121491_Events_renameGroup"; }
+            get { return "201805151250304_Events_Groups"; }
         }
         
         string IMigrationMetadata.Source

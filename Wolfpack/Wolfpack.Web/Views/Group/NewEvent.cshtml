@@ -9,10 +9,10 @@
     @using (Html.BeginForm("New"))
     {
         @Html.ValidationSummary()
-            <div class="form-item">
-                @Html.EditorFor(m => m.EventName, new { htmlAttributes = new { required = "required" } })
-                @Html.LabelFor(m => m.EventName, new { htmlAttributes = new { required = "required" } })
-            </div>
+        <div class="form-item">
+            @Html.EditorFor(m => m.EventName, new { htmlAttributes = new { required = "required" } })
+            @Html.LabelFor(m => m.EventName, new { htmlAttributes = new { required = "required" } })
+        </div>
 
         if (!string.IsNullOrEmpty(Model.Message))
         {

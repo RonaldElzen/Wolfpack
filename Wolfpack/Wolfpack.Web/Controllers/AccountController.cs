@@ -28,7 +28,7 @@ namespace Wolfpack.Web.Controllers
         /// </summary>
         /// <returns></returns>
         public ActionResult Register()
-        {           
+        {
             return View();
         }
 
@@ -37,10 +37,10 @@ namespace Wolfpack.Web.Controllers
         /// </summary>
         /// <returns>Login page</returns>
         public ActionResult Login(string message = "")
-        {           
+        {
             if (UserHelper.GetCurrentUser() != null)
                 return RedirectToAction("Index", "Home");
-           
+
             return View(new LoginVM() { Message = message });
         }
 
@@ -56,23 +56,20 @@ namespace Wolfpack.Web.Controllers
             var user = Context.Users
                 .SingleOrDefault(x => x.UserName == vm.LoginName || x.Mail == vm.LoginName);
 
-            if(user == null)
+            if (user == null)
             {
                 ModelState.AddModelError("LoginName", "Invalid combination of username and password");
-
                 return View("Login", vm);
             }
 
-            if(Hashing.Verify(vm.Password, user.Password))
+            if (Hashing.Verify(vm.Password, user.Password))
             {
                 UserHelper.SetCurrentUser(user);
-
                 return RedirectToAction("Index", "Home");
             }
             else
             {
                 ModelState.AddModelError("LoginName", "Invalid combination of username and password");
-                    
                 return View("Login", vm);
             }
         }
@@ -84,7 +81,6 @@ namespace Wolfpack.Web.Controllers
         public ActionResult Logout()
         {
             UserHelper.ClearCurrentUser();
-
             return RedirectToAction("Login");
         }
 
@@ -118,7 +114,7 @@ namespace Wolfpack.Web.Controllers
             if (_isEmailValid(vm.MailAdress))
             {
                 var userExists = Context.Users.Any(x => x.UserName == vm.UserName);
-                var mailExists = Context.Users.Any(x => x.Mail == vm.MailAdress);              
+                var mailExists = Context.Users.Any(x => x.Mail == vm.MailAdress);
                 if (!userExists && !mailExists)
                 {
                     Context.Users.Add(new User
@@ -134,7 +130,7 @@ namespace Wolfpack.Web.Controllers
                 else
                 {
                     if (userExists)
-                    ModelState.AddModelError("MailAdress", "Email already in use.");
+                        ModelState.AddModelError("MailAdress", "Email already in use.");
 
                     if (mailExists)
                         ModelState.AddModelError("UserName", "Username already in use.");
@@ -176,7 +172,6 @@ namespace Wolfpack.Web.Controllers
             return true;
         }
 
-
         /// <summary>
         /// Check for a key in the params. If it exists in the database redirect to the reset password form.
         /// </summary>
@@ -184,7 +179,7 @@ namespace Wolfpack.Web.Controllers
         /// <returns></returns>
         public ActionResult Recovery(string key)
         {
-            if(key != null)
+            if (key != null)
             {
                 Recovery recovery = Context.Recoveries.FirstOrDefault(r => r.Key == key);
                 if (recovery != null)
@@ -213,7 +208,7 @@ namespace Wolfpack.Web.Controllers
         [HttpPost]
         public ActionResult RecoveryForm(RecoveryVM vm)
         {
-            string key = (string) Session["recoveryKey"];
+            string key = (string)Session["recoveryKey"];
             if (vm.Password == vm.ConfirmPassword && key != null)
             {
                 Recovery recovery = Context.Recoveries.FirstOrDefault(r => r.Key == key);
@@ -255,7 +250,7 @@ namespace Wolfpack.Web.Controllers
         private void _resetPassword(string email)
         {
             User user = Context.Users.SingleOrDefault(u => u.Mail == email);
-            if(user != null)
+            if (user != null)
             {
                 string key = Guid.NewGuid().ToString();
                 string baseUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath.TrimEnd('/') + "/";

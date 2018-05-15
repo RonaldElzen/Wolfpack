@@ -60,13 +60,9 @@
     <Compile Include="Migrations\201805131205212_Recovery.Designer.cs">
       <DependentUpon>201805131205212_Recovery.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201805151036140_Groups.cs" />
-    <Compile Include="Migrations\201805151036140_Groups.Designer.cs">
-      <DependentUpon>201805151036140_Groups.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201805151121491_Events_renameGroup.cs" />
-    <Compile Include="Migrations\201805151121491_Events_renameGroup.Designer.cs">
-      <DependentUpon>201805151121491_Events_renameGroup.cs</DependentUpon>
+    <Compile Include="Migrations\201805151250304_Events_Groups.cs" />
+    <Compile Include="Migrations\201805151250304_Events_Groups.Designer.cs">
+      <DependentUpon>201805151250304_Events_Groups.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -91,11 +87,8 @@
     <EmbeddedResource Include="Migrations\201805131205212_Recovery.resx">
       <DependentUpon>201805131205212_Recovery.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201805151036140_Groups.resx">
-      <DependentUpon>201805151036140_Groups.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201805151121491_Events_renameGroup.resx">
-      <DependentUpon>201805151121491_Events_renameGroup.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201805151250304_Events_Groups.resx">
+      <DependentUpon>201805151250304_Events_Groups.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
