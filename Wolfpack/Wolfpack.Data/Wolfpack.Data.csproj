@@ -98,6 +98,12 @@
     <EmbeddedResource Include="Migrations\201805141430084_LockedAccounts.resx">
       <DependentUpon>201805141430084_LockedAccounts.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805151209036_SkillRating.resx">
+      <DependentUpon>201805151209036_SkillRating.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805151250304_Events_Groups.resx">
+      <DependentUpon>201805151250304_Events_Groups.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
