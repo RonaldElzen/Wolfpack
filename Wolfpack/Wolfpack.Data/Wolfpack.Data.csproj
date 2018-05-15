@@ -64,6 +64,10 @@
     <Compile Include="Migrations\201805141430084_LockedAccounts.Designer.cs">
       <DependentUpon>201805141430084_LockedAccounts.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201805151250304_Events_Groups.cs" />
+    <Compile Include="Migrations\201805151250304_Events_Groups.Designer.cs">
+      <DependentUpon>201805151250304_Events_Groups.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -89,6 +93,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201805141430084_LockedAccounts.resx">
       <DependentUpon>201805141430084_LockedAccounts.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805151250304_Events_Groups.resx">
+      <DependentUpon>201805151250304_Events_Groups.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -153,6 +153,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\GroupController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
     <Compile Include="Global.asax.cs">
@@ -164,6 +165,8 @@
     <Compile Include="Models\Account\RecoveryVM.cs" />
     <Compile Include="Models\Account\RegisterVM.cs" />
     <Compile Include="Models\Account\UnlockVM.cs" />
+    <Compile Include="Models\Event\EventVM.cs" />
+    <Compile Include="Models\Group\GroupVM.cs" />
     <Compile Include="Models\Home\HomeVM.cs" />
     <Compile Include="Models\Profile\ProfileVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -237,6 +240,8 @@
     <Content Include="Views\Shared\_NoSidebarLayout.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Account\Unlock.cshtml" />
+    <Content Include="Views\Group\NewGroup.cshtml" />
+    <Content Include="Views\Group\NewEvent.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
