@@ -1,0 +1,25 @@
+﻿@model Wolfpack.Web.Models.Dummy.DummyVM
+
+@{
+    ViewBag.Title = "Dummy";
+}
+
+<h2>Dummy</h2>
+<p>By clicking on submit below, you will create 18 users with 11 skills in your database</p>
+@if (Model != null && Model.Message != null)
+{
+    <p>@Model.Message</p>
+}
+@using (Html.BeginForm("CreateUsersWithSkills", "Dummy", FormMethod.Post))
+{
+    <text>
+        <table>
+            <tr>
+                <td></td>
+                <td><input type="submit" /></td>
+                <td></td>
+            </tr>
+        </table>
+    </text>
+}
+

@@ -21,5 +21,7 @@ namespace Wolfpack.Data
         public DbSet<Models.LockedAccount> LockedAccounts { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<Event> Events { get; set; }
+        public DbSet<Models.Skill> Skills { get; set; }
+        public DbSet<Models.UserRating> UserRatings { get; set; }
     }
 }
