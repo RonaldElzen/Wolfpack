@@ -63,8 +63,37 @@ namespace Wolfpack.Web.Controllers
                 return View("Login", vm);
             }
 
-            if(Hashing.Verify(vm.Password, user.Password))
+            if(user.LastLoginAttempt != null && user.LoginAttempts > 0 && user.LoginAttempts < 4)
             {
+                TimeSpan diff = DateTime.Now - user.LastLoginAttempt;
+                if (diff.TotalMinutes > 30) user.LoginAttempts = 0;
+            }
+            else if (user.LoginAttempts > 3)
+            {
+                ModelState.AddModelError("Locked", "This account is currently locked. To unlock your account, please check your email");
+
+                string key = Guid.NewGuid().ToString();
+                string baseUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath.TrimEnd('/') + "/";
+                string link = baseUrl + "Account/Unlock?key=" + key;
+                Context.LockedAccounts.Add(new LockedAccount
+                {
+                    Key = key,
+                    User = user
+                });
+                Context.SaveChanges();
+
+                MailService ms = new MailService();
+                ms.SendLoginAttemptMail(user.Mail, link);
+
+                return View("Login", vm);
+            }
+
+            user.LastLoginAttempt = DateTime.Now;
+
+            if (Hashing.Verify(vm.Password, user.Password))
+            {
+                user.LoginAttempts = 0;
+                Context.SaveChanges();
                 UserHelper.SetCurrentUser(user);
 
                 return RedirectToAction("Index", "Home");
@@ -72,7 +101,9 @@ namespace Wolfpack.Web.Controllers
             else
             {
                 ModelState.AddModelError("LoginName", "Invalid combination of username and password");
-                    
+                user.LoginAttempts += 1;
+                Context.SaveChanges();
+
                 return View("Login", vm);
             }
         }
@@ -182,23 +213,23 @@ namespace Wolfpack.Web.Controllers
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public ActionResult Recovery(string key)
+        public ActionResult Recovery(RecoveryVM vm)
         {
-            if(key != null)
+            if(vm.Key != null)
             {
-                Recovery recovery = Context.Recoveries.FirstOrDefault(r => r.Key == key);
+                Recovery recovery = Context.Recoveries.FirstOrDefault(r => r.Key == vm.Key);
                 if (recovery != null)
                 {
                     User user = recovery.User;
                     if (user != null)
                     {
-                        Session["recoveryKey"] = key;
+                        Session["recoveryKey"] = vm.Key;
                         return View("Recovery", new RecoveryVM());
                     }
                 }
                 else
                 {
-                    return RedirectToAction("Recovery", new { Status = "invalid" });
+                    return View("Recovery", new RecoveryVM { Status = "invalid" });
                 }
             }
             return View();
@@ -214,7 +245,7 @@ namespace Wolfpack.Web.Controllers
         public ActionResult RecoveryForm(RecoveryVM vm)
         {
             string key = (string) Session["recoveryKey"];
-            if (vm.Password == vm.ConfirmPassword && key != null)
+            if (vm.Password == vm.PasswordCheck && key != null)
             {
                 Recovery recovery = Context.Recoveries.FirstOrDefault(r => r.Key == key);
                 if (recovery != null)
@@ -222,14 +253,14 @@ namespace Wolfpack.Web.Controllers
                     User user = recovery.User;
                     if (user != null)
                     {
-                        user.Password = vm.Password;
+                        user.Password = Hashing.Hash(vm.Password);
                         Context.Recoveries.Remove(recovery);
                         Context.SaveChanges();
-                        return RedirectToAction("Recovery", new { Status = "changed" });
+                        return View("Recovery", new RecoveryVM { Status = "changed" });
                     }
                 }
             }
-            return RedirectToAction("Recovery", new { Status = "failed" });
+            return View("Recovery", new RecoveryVM { Status = "failed" });
         }
 
         /// <summary>
@@ -245,7 +276,28 @@ namespace Wolfpack.Web.Controllers
                 User user = Context.Users.FirstOrDefault(u => u.Mail == vm.Email);
                 if (user != null) _resetPassword(vm.Email);
             }
-            return RedirectToAction("Recovery", new { Status = "sent" });
+            return View("Recovery", new RecoveryVM { Status = "sent"});
+        }
+
+        public ActionResult Unlock(UnlockVM vm)
+        {
+            if (vm.Key != null)
+            {
+                LockedAccount lockedAccount = Context.LockedAccounts.FirstOrDefault(r => r.Key == vm.Key);
+                if (lockedAccount != null)
+                {
+                    User user = lockedAccount.User;
+                    if (user != null)
+                    {
+                        user.LoginAttempts = 0;
+                        Context.LockedAccounts.Remove(lockedAccount);
+                        Context.SaveChanges();
+                        vm.Status = "succes";
+                        return View("Unlock", vm);
+                    }
+                }
+            }
+            return View("Unlock");
         }
 
         /// <summary>

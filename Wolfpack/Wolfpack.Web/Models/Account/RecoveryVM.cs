@@ -9,14 +9,17 @@ namespace Wolfpack.Web.Models.Account
 {
     public class RecoveryVM
     {
+        //Password form
         [Required(ErrorMessage = "Please fill a correct email")]
         public string Email { get; set; }
         [Required(ErrorMessage = "Please fill in a new password")]
-        [StringLength(24, MinimumLength = 8)]
+        [RegularExpression("^((?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])|(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[^a-zA-Z0-9])|(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[^a-zA-Z0-9])|(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^a-zA-Z0-9])).{8,}$", ErrorMessage = "Passwords must be at least 8 characters and contain at 3 of 4 of the following: upper case (A-Z), lower case (a-z), number (0-9) and special character (e.g. !@#$%^&*)")]
         public string Password { get; set; }
         [Required(ErrorMessage = "Please fill in your password again")]
-        [Compare("Password", ErrorMessage = "Passwords do not match")]
-        [StringLength(24, MinimumLength = 8)]
-        public string ConfirmPassword { get; set; }
+        [RegularExpression("^((?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])|(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[^a-zA-Z0-9])|(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[^a-zA-Z0-9])|(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^a-zA-Z0-9])).{8,}$", ErrorMessage = "Passwords must be at least 8 characters and contain at 3 of 4 of the following: upper case (A-Z), lower case (a-z), number (0-9) and special character (e.g. !@#$%^&*)")]
+        public string PasswordCheck { get; set; }
+        //Key + Status
+        public string Key { get; set; }
+        public string Status { get; set; }
     }
 }
