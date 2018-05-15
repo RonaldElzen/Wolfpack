@@ -14,6 +14,7 @@ namespace Wolfpack.Web.Controllers
     public class DummyController : BaseController
     {
         public User currentUser;
+
         public DummyController(Context context) : base(context) {
             currentUser = UserHelper.GetCurrentDbUser(context);
         }
@@ -35,7 +36,7 @@ namespace Wolfpack.Web.Controllers
             string[] names = { "Roxy", "Brenton", "Carmina", "Ricarda", "Cesar", "Aundrea", "Randi", "Errol", "Clarinda", "Phyliss", "Julianne", "Dagmar", "Mervin", "Erminia", "Lovetta", "Tamisha", "Henk", "Cherryl" };
             string[] skills = { "Advising", "Coaching", "Conflict resolution", "Decision making", "Delegating", "Diplomacy", "Interviewing", "Motivation", "People management", "Problem solving", "Strategic thinking" };
 
-            //create users
+            //Create users
             foreach (string name in names)
             {
                 if (Context.Users.Any(x => x.FirstName == name))
@@ -57,7 +58,7 @@ namespace Wolfpack.Web.Controllers
             }
             Context.SaveChanges();
 
-            //create skills
+            //Create skills
             foreach (string skillName in skills)
             {
                 if(currentUser != null)
@@ -81,7 +82,7 @@ namespace Wolfpack.Web.Controllers
             }
             Context.SaveChanges();
 
-            //create user ratings for each user and skill
+            //Create user ratings for each user and skill
             Random random = new Random();
             foreach (string name in names)
             {
