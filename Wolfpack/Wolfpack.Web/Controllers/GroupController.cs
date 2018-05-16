@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Services;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
 using System.Web.Mvc;
@@ -25,11 +26,48 @@ namespace Wolfpack.Web.Controllers
         }
 
         /// <summary>
+        /// Standard view for adding users
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult AddUser()
+        {
+            //Static ID, needs to be added dynamic
+            return View(new AddUserVM() { Id = 1 });
+        }
+
+        /// <summary>
+        /// Submit action for adding user to a group
+        /// </summary>
+        /// <param name="vm"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult AddUser(AddUserVM vm)
+        {
+            var user = Context.Users.FirstOrDefault(g => g.UserName == vm.UserName);
+            //Return a list with possible users if the username is not found.
+            if (user == null)
+            {
+                var possibleUsers = Context.Users.Where(g => g.UserName.Contains(vm.UserName)).ToList();
+                return View(new AddUserVM { PossibleUsers = possibleUsers });
+            }
+            else
+            {
+                Group group = Context.Groups.FirstOrDefault(g => g.Id == 1);
+                if (group.Users == null)
+                {
+                    group.Users = new List<User>();
+                }
+                group.Users.ToList().Add(user);
+                Context.SaveChanges();
+                return View(new AddUserVM { });
+            }
+        }
+
+        /// <summary>
         /// Submit action for creating a new group, takes a Name and Catagory from inputfields
         /// </summary>
         /// <param name="vm"></param>
         /// <returns></returns>
-
         [HttpPost]
         public ActionResult NewGroup(GroupVM vm)
         {
@@ -60,7 +98,6 @@ namespace Wolfpack.Web.Controllers
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        /// 
         public ActionResult NewEvent(string message = "")
         {
             return View(new EventVM() { Message = message });

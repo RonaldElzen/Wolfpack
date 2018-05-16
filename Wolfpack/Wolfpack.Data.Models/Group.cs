@@ -12,6 +12,7 @@ namespace Wolfpack.Data.Models
         public int GroupCreator { get; set; }
         public string GroupName { get; set; }
         public string Category { get; set; }
-        public DateTime CreatedOn { get; set; }        
+        public DateTime CreatedOn { get; set; }
+        public virtual IEnumerable<User> Users { get; set; }
     }
 }

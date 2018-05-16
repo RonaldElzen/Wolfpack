@@ -76,6 +76,10 @@
     <Compile Include="Migrations\201805151722355_MergeChanges.Designer.cs">
       <DependentUpon>201805151722355_MergeChanges.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201805161813417_GroupUsers.cs" />
+    <Compile Include="Migrations\201805161813417_GroupUsers.Designer.cs">
+      <DependentUpon>201805161813417_GroupUsers.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -110,6 +114,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201805151722355_MergeChanges.resx">
       <DependentUpon>201805151722355_MergeChanges.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805161813417_GroupUsers.resx">
+      <DependentUpon>201805161813417_GroupUsers.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

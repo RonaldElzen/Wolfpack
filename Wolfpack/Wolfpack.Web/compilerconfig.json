@@ -2,5 +2,9 @@
   {
     "outputFile": "Content/css/Main.css",
     "inputFile": "Content/css/Main.scss"
+  },
+  {
+    "outputFile": "Content/css/StyleSheet1.css",
+    "inputFile": "Content/css/StyleSheet1.scss"
   }
 ]

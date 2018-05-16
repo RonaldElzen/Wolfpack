@@ -1,0 +1,27 @@
+﻿﻿@using System.Web.Mvc.Html
+@model Wolfpack.Web.Models.Group.AddUserVM
+@{
+    ViewBag.Title = "AddUsers";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Add users to group</h2>
+<div class="form-box">
+    @using (Html.BeginForm("AddUser"))
+    {
+        <div class="form-item">
+            @Html.EditorFor(m => m.UserName);
+        </div>
+        <input type="submit" class="submit-button" />
+        if (Model.PossibleUsers != null && Model.PossibleUsers.Count() > 0)
+        {
+            <h3>User not found, did you mean:</h3>
+            <ul>
+                @foreach (var User in Model.PossibleUsers)
+                {
+                    <li class="userNameSuggestion">@User.UserName</li>
+                }
+            </ul>
+        }
+    }
+</div>

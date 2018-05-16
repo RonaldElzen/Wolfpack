@@ -1,4 +1,5 @@
-﻿body {
+//Main Stylesheet﻿
+body {
     margin: 0;
     padding: 0;
     font-family: 'Open Sans', sans-serif;
@@ -12,10 +13,8 @@
     height: 100%;
     width: 100%;
     position: absolute;
-    overflow-x:hidden;
+    overflow-x: hidden;
 }
-
-
 
 .form-logo {
     max-width: 200px;
@@ -53,8 +52,8 @@ div, ul, li, a {
     overflow-x: hidden;
 }
 
-.no-sidebar{
-    display:block;
+.no-sidebar {
+    display: block;
 }
 
 .sidebar-wrapper {
@@ -220,6 +219,10 @@ div, ul, li, a {
     padding: 20px;
     margin: 10px;
     margin-left: 50px;
+
+    ul {
+        padding: 0;
+    }
 }
 
 input[type="text"],
@@ -263,7 +266,7 @@ label {
         margin: auto;
         display: block;
         margin-top: 10px;
-        color:#fff;
+        color: #fff;
     }
 
     input[type="text"],
@@ -290,7 +293,16 @@ label {
 .input-box {
     background: lighten(#455b65,2%);
     padding: 20px;
+}
 
+.userNameSuggestion {
+    list-style-type: none;
+    padding: 10px;
+    margin: 0;
+    margin-bottom: 10px;
+    cursor: pointer;
+    color: #fff;
+    background: #81939D;
 }
 
 .register-form {
@@ -310,8 +322,8 @@ h2 {
     font-size: 25pt;
 }
 
-.registration-box{
-    margin:auto;
+.registration-box {
+    margin: auto;
 }
 
 
@@ -336,7 +348,8 @@ h2 {
     max-width: 650px;
     text-align: center;
     height: 100%;
-    margin-top:50px;
+    margin-top: 50px;
+
     h2 {
         color: #fff;
     }
@@ -347,12 +360,12 @@ h2 {
     min-height: 60px;
 }
 
-.validation-summary-errors{
-    ul{
-        li{
-            list-style-type:none;
-            margin-bottom:10px;
-            color:#fff;
+.validation-summary-errors {
+    ul {
+        li {
+            list-style-type: none;
+            margin-bottom: 10px;
+            color: #fff;
         }
     }
 }
@@ -363,9 +376,9 @@ h2 {
     color: #ef5350;
 }
 
-.g-recaptcha{
-    div{
-        margin:auto;
+.g-recaptcha {
+    div {
+        margin: auto;
     }
 }
 
@@ -374,16 +387,17 @@ h2 {
         display: flex;
     }
 
-    .form-wrapper{
-        width:100%;
-        margin-left:20px;
-        margin-right:20px;
-        h2{
-            font-size:20pt;
-            max-width:100%;
-            padding:20px;
-            margin:10px;
-            box-sizing:border-box;
+    .form-wrapper {
+        width: 100%;
+        margin-left: 20px;
+        margin-right: 20px;
+
+        h2 {
+            font-size: 20pt;
+            max-width: 100%;
+            padding: 20px;
+            margin: 10px;
+            box-sizing: border-box;
         }
     }
 
@@ -424,11 +438,11 @@ h2 {
         -webkit-transform: scale(0.80);
         transform-origin: 0 0;
         -webkit-transform-origin: 0 0;
-        margin:auto;
+        margin: auto;
     }
 
-    .input-box{
-        margin:20px;
+    .input-box {
+        margin: 20px;
     }
 
     .sidebar-overlay {

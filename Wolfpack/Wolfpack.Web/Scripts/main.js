@@ -1,4 +1,4 @@
-﻿let isCollapsed = false;
+﻿﻿let isCollapsed = false;
 
 document.querySelector(".toggle-menu").addEventListener('click', function () {
     document.querySelector(".sidebar").style.marginLeft = "0"
@@ -33,3 +33,10 @@ document.querySelector("#toggle-collapse").addEventListener('click', function ()
         isCollapsed = true;
     }
 });
+
+let suggestions = document.querySelectorAll(".userNameSuggestion");
+for (let i = 0; i < suggestions.length; i++) {
+    suggestions[i].addEventListener('click', function () {
+        UserName.value = this.innerText;
+    });
+}
