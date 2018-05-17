@@ -10,6 +10,9 @@ namespace Wolfpack.BusinessLayer
 {
     public static class UserExtension
     {
+        /// <summary>
+        /// Gets the highest rated skill for the user
+        /// </summary>
         public static Skill GetBestSkill(this User user)
         {
             using (var context = new Context())
@@ -25,6 +28,9 @@ namespace Wolfpack.BusinessLayer
             }
         }
 
+        /// <summary>
+        /// Gets the lowest rated skill for the user
+        /// </summary>
         public static Skill GetWorstSkill(this User user)
         {
             using (var context = new Context())
@@ -38,6 +44,9 @@ namespace Wolfpack.BusinessLayer
             }
         }
 
+        /// <summary>
+        /// Gets all average skill ratings for the user
+        /// </summary>
         public static IEnumerable<double> GetSkillRatings(this User user)
         {
             using(var context = new Context())
