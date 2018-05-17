@@ -9,8 +9,13 @@ namespace Wolfpack.Data.Models
     public class Event
     {
         public int Id { get; set; }
+
         public string EventName { get; set; }
-        public int EventCreator { get; set; }
+
+        public virtual User EventCreator { get; set; }
+
         public DateTime CreatedOn { get; set; }
+
+        public virtual Group Group { get; set; }
     }
 }

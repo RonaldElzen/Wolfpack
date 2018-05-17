@@ -13,7 +13,7 @@ namespace Wolfpack.Data.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201805161813417_GroupUsers"; }
+            get { return "201805170907543_GroupUsers"; }
         }
         
         string IMigrationMetadata.Source

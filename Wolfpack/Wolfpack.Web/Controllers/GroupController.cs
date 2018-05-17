@@ -57,7 +57,7 @@ namespace Wolfpack.Web.Controllers
                 {
                     group.Users = new List<User>();
                 }
-                group.Users.ToList().Add(user);
+                group.Users.Add(user);
                 Context.SaveChanges();
                 return View(new AddUserVM { });
             }
@@ -100,11 +100,11 @@ namespace Wolfpack.Web.Controllers
         /// <returns></returns>
         public ActionResult NewEvent(string message = "")
         {
-            return View(new EventVM() { Message = message });
+            return View(new EventVM() { Message = message, GroupId = 1 }); // TODO dynamic group
         }
 
         /// <summary>
-        /// Submit action for creating a new group, takes an eventname from inputfield
+        /// Submit action for creating a new event, takes an eventname from inputfield
         /// </summary>
         /// <param name="vm"></param>
         /// <returns></returns>
@@ -114,12 +114,12 @@ namespace Wolfpack.Web.Controllers
             var message = "";
             if (!string.IsNullOrWhiteSpace(vm.EventName))
             {
-                var userId = UserHelper.GetCurrentUser().Id;
                 Context.Events.Add(new Event
                 {
                     EventName = vm.EventName,
-                    EventCreator = userId,
-                    CreatedOn = DateTime.Now
+                    EventCreator = UserHelper.GetCurrentDbUser(Context),
+                    CreatedOn = DateTime.Now,
+                    Group = Context.Groups.SingleOrDefault(e => e.Id == vm.Id) // TODO Implement this better (null checks etc)
                 });
 
                 Context.SaveChanges();

@@ -10,7 +10,7 @@
     @using (Html.BeginForm("AddUser"))
     {
         <div class="form-item">
-            @Html.EditorFor(m => m.UserName);
+            @Html.EditorFor(m => m.UserName)
         </div>
         <input type="submit" class="submit-button" />
         if (Model.PossibleUsers != null && Model.PossibleUsers.Count() > 0)
