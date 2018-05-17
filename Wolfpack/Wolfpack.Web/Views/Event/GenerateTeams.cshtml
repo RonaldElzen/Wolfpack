@@ -1,0 +1,43 @@
+﻿@model IEnumerable<Wolfpack.Web.Models.Event.TeamVM>
+
+@{
+    ViewBag.Title = "GenerateTeams";
+}
+
+<h2>GenerateTeams</h2>
+
+@foreach(var team in Model)
+{
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Advising</th>
+                    <th>Coaching</th>
+                    <th>Conflict resolution</th>
+                    <th>Decision making</th>
+                    <th>Delegating</th>
+                    <th>Diplomacy</th>
+                    <th>Interviewing</th>
+                    <th>Motivation</th>
+                    <th>People management</th>
+                    <th>Problem solving</th>
+                    <th>Strategic thinking</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var user in team.Users)
+                {
+                    <tr>
+                        <td>@user.UserName</td>
+                        @foreach(var skill in user.SkillRatings)
+                        {
+                            <td>@skill</td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

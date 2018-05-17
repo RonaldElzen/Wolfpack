@@ -8,6 +8,11 @@ namespace Wolfpack.Data.Models
 {
     public class Event
     {
+        public Event()
+        {
+            Teams = new List<EventTeam>();
+        }
+
         public int Id { get; set; }
 
         public string EventName { get; set; }
@@ -17,5 +22,7 @@ namespace Wolfpack.Data.Models
         public DateTime CreatedOn { get; set; }
 
         public virtual Group Group { get; set; }
+
+        public virtual ICollection<EventTeam> Teams { get; set; }
     }
 }

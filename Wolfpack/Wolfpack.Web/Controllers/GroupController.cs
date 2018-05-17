@@ -100,7 +100,7 @@ namespace Wolfpack.Web.Controllers
         /// <returns></returns>
         public ActionResult NewEvent(string message = "")
         {
-            return View(new EventVM() { Message = message, GroupId = 1 }); // TODO dynamic group
+            return View(new EventVM() { Message = message }); 
         }
 
         /// <summary>
@@ -114,12 +114,13 @@ namespace Wolfpack.Web.Controllers
             var message = "";
             if (!string.IsNullOrWhiteSpace(vm.EventName))
             {
+                var group = Context.Groups.SingleOrDefault(e => e.Id == 1); // TODO dynamic group
                 Context.Events.Add(new Event
                 {
                     EventName = vm.EventName,
                     EventCreator = UserHelper.GetCurrentDbUser(Context),
                     CreatedOn = DateTime.Now,
-                    Group = Context.Groups.SingleOrDefault(e => e.Id == vm.Id) // TODO Implement this better (null checks etc)
+                    Group = group // TODO Implement this better (null checks etc)
                 });
 
                 Context.SaveChanges();

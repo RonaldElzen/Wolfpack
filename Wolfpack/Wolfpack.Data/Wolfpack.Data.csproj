@@ -84,6 +84,10 @@
     <Compile Include="Migrations\201805170931394_EventGroup.Designer.cs">
       <DependentUpon>201805170931394_EventGroup.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201805171032511_EventTeams.cs" />
+    <Compile Include="Migrations\201805171032511_EventTeams.Designer.cs">
+      <DependentUpon>201805171032511_EventTeams.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -124,6 +128,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201805170931394_EventGroup.resx">
       <DependentUpon>201805170931394_EventGroup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805171032511_EventTeams.resx">
+      <DependentUpon>201805171032511_EventTeams.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
