@@ -169,6 +169,7 @@
     <Compile Include="Models\Account\UnlockVM.cs" />
     <Compile Include="Models\Dummy\DummyVM.cs" />
     <Compile Include="Models\Event\EventVM.cs" />
+    <Compile Include="Models\Event\TeamVM.cs" />
     <Compile Include="Models\Group\AddUserVM.cs" />
     <Compile Include="Models\Group\GroupVM.cs" />
     <Compile Include="Models\Home\HomeVM.cs" />
@@ -233,11 +234,11 @@
     <Content Include="Views\Group\AddUser.cshtml" />
     <Content Include="Views\Dummy\Dummy.cshtml" />
     <Content Include="Views\Dummy\Index.cshtml" />
+    <Content Include="Views\Event\GenerateTeams.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Base\" />
-    <Folder Include="Views\Event\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

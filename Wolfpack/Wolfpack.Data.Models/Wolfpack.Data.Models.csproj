@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EventTeam.cs" />
     <Compile Include="LockedAccount.cs" />
     <Compile Include="Event.cs" />
     <Compile Include="Group.cs" />

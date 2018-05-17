@@ -18,10 +18,11 @@ namespace Wolfpack.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<Models.Recovery> Recoveries { get; set; }
-        public DbSet<Models.LockedAccount> LockedAccounts { get; set; }
+        public DbSet<LockedAccount> LockedAccounts { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<Event> Events { get; set; }
-        public DbSet<Models.Skill> Skills { get; set; }
-        public DbSet<Models.UserRating> UserRatings { get; set; }
+        public DbSet<Skill> Skills { get; set; }
+        public DbSet<UserRating> UserRatings { get; set; }
+        public DbSet<EventTeam> EventTeams { get; set; }
     }
 }

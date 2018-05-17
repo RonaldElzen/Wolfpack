@@ -32,5 +32,7 @@ namespace Wolfpack.Data.Models
         public DateTime LastLoginAttempt { get; set; }
 
         public virtual ICollection<Group> Groups { get; set; }
+
+        public virtual ICollection<EventTeam> EventTeam { get; set; }
     }
 }
