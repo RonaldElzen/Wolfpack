@@ -158,6 +158,8 @@ div, ul, li, a {
   padding: 20px;
   margin: 10px;
   margin-left: 50px; }
+  .form-box ul {
+    padding: 0; }
 
 input[type="text"],
 input[type="password"],
@@ -211,6 +213,15 @@ label {
 .input-box {
   background: #49606b;
   padding: 20px; }
+
+.userNameSuggestion {
+  list-style-type: none;
+  padding: 10px;
+  margin: 0;
+  margin-bottom: 10px;
+  cursor: pointer;
+  color: #fff;
+  background: #81939D; }
 
 .register-form {
   width: 750px;

@@ -8,6 +8,11 @@ namespace Wolfpack.Data.Models
 {
     public class User
     {
+        public User()
+        {
+            Groups = new List<Group>();
+        }
+
         public int Id { get; set; }
 
         public string UserName { get; set; }
@@ -25,5 +30,7 @@ namespace Wolfpack.Data.Models
         public int LoginAttempts { get; set; }
 
         public DateTime LastLoginAttempt { get; set; }
+
+        public virtual ICollection<Group> Groups { get; set; }
     }
 }

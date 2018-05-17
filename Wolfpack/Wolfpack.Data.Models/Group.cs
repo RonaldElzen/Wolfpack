@@ -8,10 +8,21 @@ namespace Wolfpack.Data.Models
 {
     public class Group
     {
+        public Group()
+        {
+            Users = new List<User>();
+        }
+
         public int Id { get; set; }
+
         public int GroupCreator { get; set; }
+
         public string GroupName { get; set; }
+
         public string Category { get; set; }
-        public DateTime CreatedOn { get; set; }        
+
+        public DateTime CreatedOn { get; set; }
+
+        public virtual ICollection<User> Users { get; set; }
     }
 }

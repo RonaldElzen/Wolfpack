@@ -10,7 +10,6 @@ namespace Wolfpack.Data.Models
     {
         public int Id { get; set; }
         public string Key { get; set; }
-
         public virtual User User { get; set; }
     }
 }
