@@ -173,9 +173,28 @@ textarea {
 input:focus ~ label, input:valid ~ label, textarea:focus ~ label, textarea:valid ~ label {
   top: 0; }
 
-input:focus {
+input:focus,
+textarea:focus {
   border-bottom: 2px solid #455B65;
   outline: none; }
+
+/* Change Autocomplete styles in Chrome*/
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  border: 0;
+  border-bottom: 1px solid #666666;
+  -webkit-text-fill-color: #fff;
+  transition: background-color #fff;
+  -webkit-box-shadow: 0 0 0px 1000px #49606b inset;
+  transition: background-color 5000s ease-in-out 0s; }
 
 label {
   position: absolute;
