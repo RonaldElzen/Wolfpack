@@ -19,17 +19,30 @@ namespace Wolfpack.Web.Controllers
             currentUser = UserHelper.GetCurrentDbUser(context);
         }
 
-        // GET: Dummy
+        /// <summary>
+        /// Get Dummy Page
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Index()
         {
             return View("Dummy", new DummyVM());
         }
 
+        /// <summary>
+        /// Get Dummy Page with Dummy VM
+        /// </summary>
+        /// <param name="vm"></param>
+        /// <returns></returns>
         public ActionResult Dummy(DummyVM vm)
         {
             return View(vm);
         }
 
+        /// <summary>
+        /// Create dummy data. This will be 18 user with 11 self rated skills.
+        /// Also put all these users in a Dummy group.
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult CreateUsersWithSkills()
         {
@@ -43,13 +56,12 @@ namespace Wolfpack.Web.Controllers
                 {
                     return View("Dummy", new DummyVM { Message = "Dummy's have already been created" });
                 }
-                string username = Guid.NewGuid().ToString();
                 User u = new User
                 {
                     FirstName = name,
                     LastName = "Placeholder",
-                    UserName = username,
-                    Mail = username + "@nhlwolfpack.com",
+                    UserName = name,
+                    Mail = name + "@nhlwolfpack.com",
                     Password = Hashing.Hash("Pass!234"),
                     RegisterDate = DateTime.Now,
                     LastLoginAttempt = DateTime.Now
@@ -109,6 +121,27 @@ namespace Wolfpack.Web.Controllers
                 }
                 else return View("Dummy", new DummyVM { Message = "Could not find user: " + name });
             }
+            Context.SaveChanges();
+
+            //Put all users in a dummygroup
+            Group group = new Group
+            {
+                GroupCreator = currentUser.Id,
+                GroupName = "DummyGroup",
+                Category = "Does this even matter?",
+                CreatedOn = DateTime.Now
+            };
+
+            foreach (string name in names)
+            {
+                User u = Context.Users.FirstOrDefault(x => x.FirstName == name);
+                if (u != null)
+                {
+                    group.Users.Add(u);
+                }
+                else return View("Dummy", new DummyVM { Message = "Could not find user: " + name });
+            }
+            Context.Groups.Add(group);
             Context.SaveChanges();
 
             return View("Dummy", new DummyVM { Message = "Users have been added" });

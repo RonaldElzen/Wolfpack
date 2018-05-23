@@ -20,6 +20,36 @@ namespace Wolfpack.Web.Controllers
         /// </summary>
         /// <returns></returns>
         public GroupController(Context context) : base(context) { }
+
+        /// <summary>
+        /// View all groups
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Index()
+        {
+            int id = UserHelper.GetCurrentUser().Id;
+            var groups = Context.Groups.Where(x => x.GroupCreator == id);
+            return View(groups);
+        }
+
+        /// <summary>
+        /// View single group
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns></returns>
+        public ActionResult Details(int Id)
+        {
+            int id = UserHelper.GetCurrentUser().Id;
+            var singleGroup = Context.Groups.FirstOrDefault(x => x.Id == Id && x.GroupCreator == id);
+            if (singleGroup != null) return View(singleGroup);
+            else return RedirectToAction("Index", "GroupController");
+        }
+
+        /// <summary>
+        /// Create a new group
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         public ActionResult NewGroup(string message = "")
         {
             return View(new GroupVM() { Message = message });
@@ -98,9 +128,10 @@ namespace Wolfpack.Web.Controllers
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        public ActionResult NewEvent(string message = "")
+        public ActionResult NewEvent(int Id, string message = "")
         {
-            return View(new EventVM() { Message = message }); 
+            Session["selectedGroupId"] = Id;
+            return View(new EventVM() { GroupId = Id, Message = message }); 
         }
 
         /// <summary>
@@ -114,17 +145,24 @@ namespace Wolfpack.Web.Controllers
             var message = "";
             if (!string.IsNullOrWhiteSpace(vm.EventName))
             {
-                var group = Context.Groups.SingleOrDefault(e => e.Id == 1); // TODO dynamic group
-                Context.Events.Add(new Event
+                var group = Context.Groups.SingleOrDefault(e => e.Id == vm.GroupId);
+                if(group != null)
                 {
-                    EventName = vm.EventName,
-                    EventCreator = UserHelper.GetCurrentDbUser(Context),
-                    CreatedOn = DateTime.Now,
-                    Group = group // TODO Implement this better (null checks etc)
-                });
+                    Context.Events.Add(new Event
+                    {
+                        EventName = vm.EventName,
+                        EventCreator = UserHelper.GetCurrentDbUser(Context),
+                        CreatedOn = DateTime.Now,
+                        Group = group
+                    });
 
-                Context.SaveChanges();
-                message = "Event created!";
+                    Context.SaveChanges();
+                    message = "Event created!";
+                }
+                else {
+                    message = "Invalid group!";
+                }
+                
             }
             else
             {

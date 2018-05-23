@@ -169,6 +169,7 @@
     <Compile Include="Models\Account\UnlockVM.cs" />
     <Compile Include="Models\Dummy\DummyVM.cs" />
     <Compile Include="Models\Event\EventVM.cs" />
+    <Compile Include="Models\Event\GenerateTeamsVM.cs" />
     <Compile Include="Models\Event\TeamVM.cs" />
     <Compile Include="Models\Group\AddUserVM.cs" />
     <Compile Include="Models\Group\GroupVM.cs" />
@@ -235,6 +236,11 @@
     <Content Include="Views\Dummy\Dummy.cshtml" />
     <Content Include="Views\Dummy\Index.cshtml" />
     <Content Include="Views\Event\GenerateTeams.cshtml" />
+    <Content Include="Views\Group\Index.cshtml" />
+    <Content Include="Views\Event\Index.cshtml" />
+    <Content Include="Views\Group\Details.cshtml" />
+    <Content Include="Views\Event\Details.cshtml" />
+    <Content Include="Views\Event\GenerateTeamsForm.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

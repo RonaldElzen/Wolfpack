@@ -15,10 +15,33 @@ namespace Wolfpack.Web.Controllers
     {
         public EventController(Context context) : base(context) { }
 
-        // GET: Event
+        /// <summary>
+        /// Show all events of logged-in user
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Index()
         {
-            return View();
+            int Id = UserHelper.GetCurrentUser().Id;
+            var events = Context.Events.Where(x => x.EventCreator.Id == Id);
+            return View(events);
+        }
+
+        /// <summary>
+        /// View single event
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns></returns>
+        public ActionResult Details(int Id)
+        {
+            int id = UserHelper.GetCurrentUser().Id;
+            var singleEvent = Context.Events.FirstOrDefault(x => x.Id == Id && x.EventCreator.Id == id);
+            if (singleEvent != null) return View(singleEvent);
+            else return RedirectToAction("Index", "EventController");
+        }
+
+        public ActionResult GenerateTeams(int Id)
+        {
+            return View("GenerateTeamsForm", new GenerateTeamsVM { EventId = Id });
         }
 
         /// <summary>
@@ -27,23 +50,40 @@ namespace Wolfpack.Web.Controllers
         /// </summary>
         /// <param name="id">Event id for which to generate teams</param>
         /// <returns>Overview of the new team</returns>
-        public ActionResult GenerateTeams(int id)
+        [HttpPost]
+        public ActionResult GenerateTeams(GenerateTeamsVM vm)
         {
-            var currentEvent = Context.Events.SingleOrDefault(e => e.Id == id);
+            var currentEvent = Context.Events.SingleOrDefault(e => e.Id == vm.EventId);
 
             currentEvent.Teams.Clear();
 
             if(currentEvent != null)
             {
                 var groupUsers = currentEvent.Group.Users;
-                var groupSize = 7; // TODO implement dynamic groupsize
-                var amountOfGroups = groupUsers.Count / groupSize; // TODO implement ability to choose amount of groups
+                var teamSize = 7; // TODO implement dynamic groupsize
 
-                for (int i = 0; i < amountOfGroups; i++)
+                //WIP
+                var teamSizeMin = 0;
+                var teamSizeMax = 0;
+                var maxTeams = 0;
+                if (vm.MinTeamSize > 0) teamSizeMin = vm.MinTeamSize;
+                if (vm.MaxTeamSize > 0 && vm.MaxTeamSize >= vm.MinTeamSize) teamSizeMax = vm.MaxTeamSize;
+                if (vm.MaxTeamsAmount > 0) maxTeams = vm.MaxTeamsAmount;
+
+                if(teamSizeMin < 1 || teamSizeMax < 1 || maxTeams < 1)
+                {
+                    vm.Message = "Please make sure you have filled in everything and that max team size isnt higher than min team size";
+                    return View("GenerateTeamsForm", vm);
+                }
+                //WIP
+
+                var amountOfTeams = groupUsers.Count / teamSize; // TODO implement ability to choose amount of teams
+
+                for (int i = 0; i < amountOfTeams; i++)
                 {
                     var team = new EventTeam { Name = $"{currentEvent.EventName}-Team {i + 1}" };
 
-                    for (int j = 0; j < groupSize; j++)
+                    for (int j = 0; j < teamSize; j++)
                     {
                         if (team.Users.Count > 0)
                         {

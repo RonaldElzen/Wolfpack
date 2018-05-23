@@ -1,0 +1,34 @@
+﻿@model Wolfpack.Web.Models.Event.GenerateTeamsVM
+@{
+    ViewBag.Title = "GenerateTeamsForm";
+}
+
+<h2>Generate teams</h2>
+<div class="form-box">
+    @using (Html.BeginForm("GenerateTeams"))
+    {
+        <div class="form-item">
+            @Html.Label("Max amount of teams", new { htmlAttributes = new { required = "required" } })
+            @Html.EditorFor(m => m.MaxTeamsAmount, new { htmlAttributes = new { required = "required" } })
+        </div>
+        <div class="form-item">
+            @Html.Label("Minimum person per team", new { htmlAttributes = new { required = "required" } })
+            @Html.EditorFor(m => m.MinTeamSize, new { htmlAttributes = new { required = "required" } })
+        </div>
+        <div class="form-item">
+            @Html.Label("Maximum persons per team", new { htmlAttributes = new { required = "required" } })
+            @Html.EditorFor(m => m.MaxTeamSize, new { htmlAttributes = new { required = "required" } })
+        </div>
+
+        @Html.HiddenFor(m => m.EventId)
+
+        <input type="submit" class="submit-button" value="Submit" />
+        if (Model.Message != null && Model.Message != "")
+        {
+            <p>
+                @Model.Message
+            </p>
+        }
+    }
+</div>
+
