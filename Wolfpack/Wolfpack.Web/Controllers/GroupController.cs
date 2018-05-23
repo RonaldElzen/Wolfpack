@@ -35,14 +35,14 @@ namespace Wolfpack.Web.Controllers
         /// <summary>
         /// View single group
         /// </summary>
+        /// <param name="Id"></param>
         /// <returns></returns>
         public ActionResult Details(int Id)
         {
             int id = UserHelper.GetCurrentUser().Id;
-            var group = Context.Groups.FirstOrDefault(x => x.Id == Id && x.GroupCreator == id);
-            if (group != null) return View(group);
+            var singleGroup = Context.Groups.FirstOrDefault(x => x.Id == Id && x.GroupCreator == id);
+            if (singleGroup != null) return View(singleGroup);
             else return RedirectToAction("Index", "GroupController");
-
         }
 
         /// <summary>
@@ -128,9 +128,9 @@ namespace Wolfpack.Web.Controllers
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        public ActionResult NewEvent(string message = "")
+        public ActionResult NewEvent(int Id, string message = "")
         {
-            return View(new EventVM() { Message = message }); 
+            return View(new EventVM() { GroupId = Id, Message = message }); 
         }
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace Wolfpack.Web.Controllers
             var message = "";
             if (!string.IsNullOrWhiteSpace(vm.EventName))
             {
-                var group = Context.Groups.SingleOrDefault(e => e.Id == 1); // TODO dynamic group
+                var group = Context.Groups.SingleOrDefault(e => e.Id == vm.GroupId); // TODO dynamic group
                 Context.Events.Add(new Event
                 {
                     EventName = vm.EventName,

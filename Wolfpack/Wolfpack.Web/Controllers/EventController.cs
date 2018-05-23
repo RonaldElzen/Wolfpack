@@ -27,6 +27,19 @@ namespace Wolfpack.Web.Controllers
         }
 
         /// <summary>
+        /// View single event
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns></returns>
+        public ActionResult Details(int Id)
+        {
+            int id = UserHelper.GetCurrentUser().Id;
+            var singleEvent = Context.Events.FirstOrDefault(x => x.Id == Id && x.EventCreator.Id == id);
+            if (singleEvent != null) return View(singleEvent);
+            else return RedirectToAction("Index", "EventController");
+        }
+
+        /// <summary>
         /// Generate teams for the event based on the teamsize and amount of teams to be made. 
         /// This method tries to put together the most efficient teams.
         /// </summary>
