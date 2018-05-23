@@ -39,15 +39,21 @@ namespace Wolfpack.Web.Controllers
             else return RedirectToAction("Index", "EventController");
         }
 
+        public ActionResult GenerateTeams(int Id)
+        {
+            return View("GenerateTeamsForm", new GenerateTeamsVM { EventId = Id });
+        }
+
         /// <summary>
         /// Generate teams for the event based on the teamsize and amount of teams to be made. 
         /// This method tries to put together the most efficient teams.
         /// </summary>
         /// <param name="id">Event id for which to generate teams</param>
         /// <returns>Overview of the new team</returns>
-        public ActionResult GenerateTeams(int id)
+        [HttpPost]
+        public ActionResult GenerateTeams(GenerateTeamsVM vm)
         {
-            var currentEvent = Context.Events.SingleOrDefault(e => e.Id == id);
+            var currentEvent = Context.Events.SingleOrDefault(e => e.Id == vm.EventId);
 
             currentEvent.Teams.Clear();
 
@@ -56,9 +62,20 @@ namespace Wolfpack.Web.Controllers
                 var groupUsers = currentEvent.Group.Users;
                 var teamSize = 7; // TODO implement dynamic groupsize
 
+                //WIP
                 var teamSizeMin = 0;
                 var teamSizeMax = 0;
                 var maxTeams = 0;
+                if (vm.MinTeamSize > 0) teamSizeMin = vm.MinTeamSize;
+                if (vm.MaxTeamSize > 0 && vm.MaxTeamSize >= vm.MinTeamSize) teamSizeMax = vm.MaxTeamSize;
+                if (vm.MaxTeamsAmount > 0) maxTeams = vm.MaxTeamsAmount;
+
+                if(teamSizeMin < 1 || teamSizeMax < 1 || maxTeams < 1)
+                {
+                    vm.Message = "Please make sure you have filled in everything and that max team size isnt higher than min team size";
+                    return View("GenerateTeamsForm", vm);
+                }
+                //WIP
 
                 var amountOfTeams = groupUsers.Count / teamSize; // TODO implement ability to choose amount of teams
 
