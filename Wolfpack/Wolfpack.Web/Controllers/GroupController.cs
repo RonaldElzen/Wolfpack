@@ -20,6 +20,36 @@ namespace Wolfpack.Web.Controllers
         /// </summary>
         /// <returns></returns>
         public GroupController(Context context) : base(context) { }
+
+        /// <summary>
+        /// View all groups
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Index()
+        {
+            int id = UserHelper.GetCurrentUser().Id;
+            var groups = Context.Groups.Where(x => x.GroupCreator == id);
+            return View(groups);
+        }
+
+        /// <summary>
+        /// View single group
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Details(int Id)
+        {
+            int id = UserHelper.GetCurrentUser().Id;
+            var group = Context.Groups.FirstOrDefault(x => x.Id == Id && x.GroupCreator == id);
+            if (group != null) return View(group);
+            else return RedirectToAction("Index", "GroupController");
+
+        }
+
+        /// <summary>
+        /// Create a new group
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         public ActionResult NewGroup(string message = "")
         {
             return View(new GroupVM() { Message = message });

@@ -15,10 +15,15 @@ namespace Wolfpack.Web.Controllers
     {
         public EventController(Context context) : base(context) { }
 
-        // GET: Event
+        /// <summary>
+        /// Show all events of logged-in user
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Index()
         {
-            return View();
+            int Id = UserHelper.GetCurrentUser().Id;
+            var events = Context.Events.Where(x => x.EventCreator.Id == Id);
+            return View(events);
         }
 
         /// <summary>
@@ -36,14 +41,19 @@ namespace Wolfpack.Web.Controllers
             if(currentEvent != null)
             {
                 var groupUsers = currentEvent.Group.Users;
-                var groupSize = 7; // TODO implement dynamic groupsize
-                var amountOfGroups = groupUsers.Count / groupSize; // TODO implement ability to choose amount of groups
+                var teamSize = 7; // TODO implement dynamic groupsize
 
-                for (int i = 0; i < amountOfGroups; i++)
+                var teamSizeMin = 0;
+                var teamSizeMax = 0;
+                var maxTeams = 0;
+
+                var amountOfTeams = groupUsers.Count / teamSize; // TODO implement ability to choose amount of teams
+
+                for (int i = 0; i < amountOfTeams; i++)
                 {
                     var team = new EventTeam { Name = $"{currentEvent.EventName}-Team {i + 1}" };
 
-                    for (int j = 0; j < groupSize; j++)
+                    for (int j = 0; j < teamSize; j++)
                     {
                         if (team.Users.Count > 0)
                         {
