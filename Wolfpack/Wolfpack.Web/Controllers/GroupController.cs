@@ -130,6 +130,7 @@ namespace Wolfpack.Web.Controllers
         /// <returns></returns>
         public ActionResult NewEvent(int Id, string message = "")
         {
+            Session["selectedGroupId"] = Id;
             return View(new EventVM() { GroupId = Id, Message = message }); 
         }
 
@@ -144,17 +145,24 @@ namespace Wolfpack.Web.Controllers
             var message = "";
             if (!string.IsNullOrWhiteSpace(vm.EventName))
             {
-                var group = Context.Groups.SingleOrDefault(e => e.Id == vm.GroupId); // TODO dynamic group
-                Context.Events.Add(new Event
+                var group = Context.Groups.SingleOrDefault(e => e.Id == vm.GroupId);
+                if(group != null)
                 {
-                    EventName = vm.EventName,
-                    EventCreator = UserHelper.GetCurrentDbUser(Context),
-                    CreatedOn = DateTime.Now,
-                    Group = group // TODO Implement this better (null checks etc)
-                });
+                    Context.Events.Add(new Event
+                    {
+                        EventName = vm.EventName,
+                        EventCreator = UserHelper.GetCurrentDbUser(Context),
+                        CreatedOn = DateTime.Now,
+                        Group = group
+                    });
 
-                Context.SaveChanges();
-                message = "Event created!";
+                    Context.SaveChanges();
+                    message = "Event created!";
+                }
+                else {
+                    message = "Invalid group!";
+                }
+                
             }
             else
             {

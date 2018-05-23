@@ -19,12 +19,20 @@ namespace Wolfpack.Web.Controllers
             currentUser = UserHelper.GetCurrentDbUser(context);
         }
 
-        // GET: Dummy
+        /// <summary>
+        /// Get Dummy Page
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Index()
         {
             return View("Dummy", new DummyVM());
         }
 
+        /// <summary>
+        /// Get Dummy Page with Dummy VM
+        /// </summary>
+        /// <param name="vm"></param>
+        /// <returns></returns>
         public ActionResult Dummy(DummyVM vm)
         {
             return View(vm);

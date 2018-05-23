@@ -1,4 +1,5 @@
 ﻿@model Wolfpack.Web.Models.Event.EventVM
+
 @{
     ViewBag.Title = "New";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -13,6 +14,8 @@
             @Html.EditorFor(m => m.EventName, new { htmlAttributes = new { required = "required" } })
             @Html.LabelFor(m => m.EventName, new { htmlAttributes = new { required = "required" } })
         </div>
+
+        @Html.HiddenFor(m => m.GroupId)
 
         if (!string.IsNullOrEmpty(Model.Message))
         {
