@@ -9,19 +9,14 @@ using Wolfpack.BusinessLayer;
 using Wolfpack.Data;
 using Wolfpack.Data.Models;
 using Wolfpack.Web.Helpers;
+using Wolfpack.Web.Helpers.Interfaces;
 using Wolfpack.Web.Models.Account;
 
 namespace Wolfpack.Web.Controllers
 {
     public class AccountController : BaseController
     {
-        public AccountController(Context context) : base(context) { }
-
-        // GET: Account
-        public ActionResult Index()
-        {
-            return View();
-        }
+        public AccountController(Context context, IUserHelper userHelper = null) : base(context, userHelper) { }
 
         /// <summary>
         /// Standard View
@@ -62,11 +57,13 @@ namespace Wolfpack.Web.Controllers
                 return View("Login", vm);
             }
 
-            if(user.LastLoginAttempt != null && user.LoginAttempts > 0 && user.LoginAttempts < 4)
-            if (Hashing.Verify(vm.Password, user.Password))
+            if (user.LastLoginAttempt != null && user.LoginAttempts > 0 && user.LoginAttempts < 4)
             {
-                TimeSpan diff = DateTime.Now - user.LastLoginAttempt;
-                if (diff.TotalMinutes > 30) user.LoginAttempts = 0;
+                if (Hashing.Verify(vm.Password, user.Password))
+                {
+                    TimeSpan diff = DateTime.Now - user.LastLoginAttempt;
+                    if (diff.TotalMinutes > 30) user.LoginAttempts = 0;
+                }
             }
             else if (user.LoginAttempts > 3)
             {
