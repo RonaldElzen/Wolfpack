@@ -13,7 +13,6 @@ namespace Wolfpack.Web.Models.Event
     public class UserVM
     {
         public string UserName { get; set; }
-
         public IEnumerable<double> SkillRatings { get; set; }
     }
 }

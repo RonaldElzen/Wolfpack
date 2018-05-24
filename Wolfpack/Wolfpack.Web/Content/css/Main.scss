@@ -67,6 +67,7 @@ div, ul, li, a {
 .main {
     flex: 1;
     padding: 5px;
+    padding-left:20px;
 }
 
 .sidebar {
@@ -227,6 +228,11 @@ div, ul, li, a {
     }
 }
 
+.input-box{
+    padding:20px;
+    background:#ff6600;
+}
+
 input[type="text"],
 input[type="password"],
 textarea {
@@ -316,6 +322,33 @@ label {
     background: lighten(#455b65,2%);
     padding: 20px;
 }
+
+.info-box {
+ 
+    margin: 10px;
+    max-width:350px;
+    ul {
+        margin: 0;
+        padding: 0;
+
+        li {
+            margin-top:10px;
+            margin-bottom:10px;
+            padding: 10px;
+            list-style-type: none;
+            color: #fff;
+            background: #455B65;
+        }
+    }
+}
+
+h3 {
+    font-size: 25px;
+    color: #82949e;
+}
+    th{
+        text-align:left;
+    }
 
 .userNameSuggestion {
     list-style-type: none;

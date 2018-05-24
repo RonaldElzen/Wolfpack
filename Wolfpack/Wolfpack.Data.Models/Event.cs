@@ -11,6 +11,7 @@ namespace Wolfpack.Data.Models
         public Event()
         {
             Teams = new List<EventTeam>();
+            Skills = new List<Skill>();
         }
 
         public int Id { get; set; }
@@ -24,5 +25,7 @@ namespace Wolfpack.Data.Models
         public virtual Group Group { get; set; }
 
         public virtual ICollection<EventTeam> Teams { get; set; }
+
+        public virtual ICollection<Skill> Skills { get; set; }
     }
 }

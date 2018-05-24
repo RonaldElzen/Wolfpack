@@ -39,9 +39,49 @@ namespace Wolfpack.Web.Controllers
             else return RedirectToAction("Index", "EventController");
         }
 
+        /// <summary>
+        /// View edit
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns></returns>
+        public ActionResult Edit(int Id)
+        {
+            return View(new EditVM { Id = Id });
+        }
+        
+        /// <summary>
+        /// View for generating teams
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns></returns>
         public ActionResult GenerateTeams(int Id)
         {
             return View("GenerateTeamsForm", new GenerateTeamsVM { EventId = Id });
+        }
+
+        /// <summary>
+        /// Form handling for adding skill to Event
+        /// </summary>
+        /// <param name="vm"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult AddSkill(EditVM vm)
+        {
+            var currentEvent = Context.Events.FirstOrDefault(g => g.Id == vm.Id);
+            Group group = Context.Groups.FirstOrDefault(g => g.Id == vm.Id);
+            var userId = UserHelper.GetCurrentUser().Id;
+
+            Skill NewSkill = new Skill
+            {
+                Name = vm.NewSkillName,
+                Description = vm.NewSkillDescription,
+                CreatedBy = Context.Users.FirstOrDefault(g => g.Id == userId),
+                CreatedAt = DateTime.Now
+            };
+            group.Skills.Add(NewSkill);
+
+            Context.SaveChanges();
+            return View("Edit", new EditVM { Message = "Skill added" });
         }
 
         /// <summary>

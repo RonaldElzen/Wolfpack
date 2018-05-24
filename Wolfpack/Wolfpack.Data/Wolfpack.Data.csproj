@@ -88,6 +88,14 @@
     <Compile Include="Migrations\201805171032511_EventTeams.Designer.cs">
       <DependentUpon>201805171032511_EventTeams.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201805240857303_SkillsToGroup.cs" />
+    <Compile Include="Migrations\201805240857303_SkillsToGroup.Designer.cs">
+      <DependentUpon>201805240857303_SkillsToGroup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201805241135317_SkillsInEvent.cs" />
+    <Compile Include="Migrations\201805241135317_SkillsInEvent.Designer.cs">
+      <DependentUpon>201805241135317_SkillsInEvent.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -131,6 +139,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201805171032511_EventTeams.resx">
       <DependentUpon>201805171032511_EventTeams.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805240857303_SkillsToGroup.resx">
+      <DependentUpon>201805240857303_SkillsToGroup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805241135317_SkillsInEvent.resx">
+      <DependentUpon>201805241135317_SkillsInEvent.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
