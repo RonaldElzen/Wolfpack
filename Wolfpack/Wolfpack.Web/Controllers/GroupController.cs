@@ -33,6 +33,16 @@ namespace Wolfpack.Web.Controllers
         }
 
         /// <summary>
+        /// View for edit
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns></returns>
+        public ActionResult Edit(int Id)
+        {
+            return View(new GroupVM() { Id = Id });
+        }
+
+        /// <summary>
         /// View single group
         /// </summary>
         /// <param name="Id"></param>
@@ -63,6 +73,23 @@ namespace Wolfpack.Web.Controllers
         {
             //Static ID, needs to be added dynamic
             return View(new AddUserVM() { Id = 1 });
+        }
+
+        /// <summary>
+        /// Form handling for adding skill to Group
+        /// </summary>
+        /// <param name="vm"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult AddSkill(GroupVM vm)
+        {
+            Group group = Context.Groups.FirstOrDefault(g => g.Id == vm.Id);
+            var userId = UserHelper.GetCurrentUser().Id;
+            vm.NewSkill.CreatedBy = Context.Users.FirstOrDefault(g => g.Id == userId);
+            vm.NewSkill.CreatedAt = DateTime.Now;
+            group.Skills.Add(vm.NewSkill);
+            Context.SaveChanges();
+            return View("Edit" , new GroupVM {Message = "Skill added" });
         }
 
         /// <summary>
@@ -131,7 +158,7 @@ namespace Wolfpack.Web.Controllers
         public ActionResult NewEvent(int Id, string message = "")
         {
             Session["selectedGroupId"] = Id;
-            return View(new EventVM() { GroupId = Id, Message = message }); 
+            return View(new EventVM() { GroupId = Id, Message = message });
         }
 
         /// <summary>
@@ -146,7 +173,7 @@ namespace Wolfpack.Web.Controllers
             if (!string.IsNullOrWhiteSpace(vm.EventName))
             {
                 var group = Context.Groups.SingleOrDefault(e => e.Id == vm.GroupId);
-                if(group != null)
+                if (group != null)
                 {
                     Context.Events.Add(new Event
                     {
@@ -159,10 +186,10 @@ namespace Wolfpack.Web.Controllers
                     Context.SaveChanges();
                     message = "Event created!";
                 }
-                else {
+                else
+                {
                     message = "Invalid group!";
                 }
-                
             }
             else
             {

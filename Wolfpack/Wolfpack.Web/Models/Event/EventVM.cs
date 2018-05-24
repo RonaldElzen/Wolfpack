@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Wolfpack.Data.Models;
 
 namespace Wolfpack.Web.Models.Event
 {
@@ -18,5 +19,7 @@ namespace Wolfpack.Web.Models.Event
         public DateTime CreatedOn { get; set; }
 
         public int GroupId { get; set; }
+
+        public Skill NewSkill { get; set;  }
     }
 }

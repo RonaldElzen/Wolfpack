@@ -4,33 +4,25 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
-<p>
-    @Html.ActionLink("Generate Teams", "GenerateTeams", new { Id = Model.Id })
-</p>
-<div>
-    <h4>Event</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.EventName)
-        </dt>
+<div class="info-box">
+    <h2>Details for @Html.DisplayFor(model => model.EventName)</h2>
+    <p>
+        @Html.ActionLink("Generate Teams", "GenerateTeams", new { Id = Model.Id })
+    </p>
 
-        <dd>
-            @Html.DisplayFor(model => model.EventName)
-        </dd>
+    <h3>Basic info</h3>
+    <h4>@Html.DisplayNameFor(model => model.CreatedOn)</h4>
+    <p>@Html.DisplayFor(model => model.CreatedOn)</p>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.CreatedOn)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.CreatedOn)
-        </dd>
-
-    </dl>
+    <h3>Skills in this Event</h3>
+    <ul>
+        @foreach (var Skill in Model.Skills)
+        {
+            <li>@Skill.Name</li>
+        }
+    </ul>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
