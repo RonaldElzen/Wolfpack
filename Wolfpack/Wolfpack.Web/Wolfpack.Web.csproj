@@ -168,10 +168,12 @@
     <Compile Include="Models\Account\RegisterVM.cs" />
     <Compile Include="Models\Account\UnlockVM.cs" />
     <Compile Include="Models\Dummy\DummyVM.cs" />
+    <Compile Include="Models\Event\EditVM.cs" />
     <Compile Include="Models\Event\EventVM.cs" />
     <Compile Include="Models\Event\GenerateTeamsVM.cs" />
     <Compile Include="Models\Event\TeamVM.cs" />
     <Compile Include="Models\Group\AddUserVM.cs" />
+    <Compile Include="Models\Group\EditVM.cs" />
     <Compile Include="Models\Group\GroupVM.cs" />
     <Compile Include="Models\Home\HomeVM.cs" />
     <Compile Include="Models\Profile\ProfileVM.cs" />

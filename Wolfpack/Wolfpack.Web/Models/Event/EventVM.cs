@@ -19,7 +19,5 @@ namespace Wolfpack.Web.Models.Event
         public DateTime CreatedOn { get; set; }
 
         public int GroupId { get; set; }
-
-        public Skill NewSkill { get; set;  }
     }
 }

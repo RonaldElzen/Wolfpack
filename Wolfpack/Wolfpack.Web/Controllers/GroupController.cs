@@ -39,7 +39,7 @@ namespace Wolfpack.Web.Controllers
         /// <returns></returns>
         public ActionResult Edit(int Id)
         {
-            return View(new GroupVM() { Id = Id });
+            return View(new Models.Group.EditVM { Id = Id });
         }
 
         /// <summary>
@@ -81,15 +81,22 @@ namespace Wolfpack.Web.Controllers
         /// <param name="vm"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult AddSkill(GroupVM vm)
+        public ActionResult AddSkill(Models.Group.EditVM vm)
         {
             Group group = Context.Groups.FirstOrDefault(g => g.Id == vm.Id);
             var userId = UserHelper.GetCurrentUser().Id;
-            vm.NewSkill.CreatedBy = Context.Users.FirstOrDefault(g => g.Id == userId);
-            vm.NewSkill.CreatedAt = DateTime.Now;
-            group.Skills.Add(vm.NewSkill);
+
+            Skill NewSkill = new Skill
+            {
+                Name = vm.NewSkillName,
+                Description = vm.NewSkillDescription,
+                CreatedBy = Context.Users.FirstOrDefault(g => g.Id == userId),
+                CreatedAt = DateTime.Now
+            };
+            group.Skills.Add(NewSkill);
+
             Context.SaveChanges();
-            return View("Edit" , new GroupVM {Message = "Skill added" });
+            return View("Edit" , new Models.Group.EditVM { Message = "Skill added" });
         }
 
         /// <summary>

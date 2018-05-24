@@ -1,4 +1,4 @@
-﻿@model Wolfpack.Web.Models.Event.EventVM
+﻿@model Wolfpack.Web.Models.Event.EditVM
 
 @{
     ViewBag.Title = "Edit";
@@ -11,12 +11,12 @@
     {
         @Html.ValidationSummary()
         <div class="form-item">
-            @Html.EditorFor(m => m.NewSkill.Name, new { htmlAttributes = new { required = "required" } })
-            @Html.LabelFor(m => m.NewSkill.Name, new { htmlAttributes = new { required = "required" } })
+            @Html.EditorFor(m =>  m.NewSkillName, new { htmlAttributes = new { required = "required" } })
+            @Html.LabelFor(m => m.NewSkillName, new { htmlAttributes = new { required = "required" } })
         </div>
         <div class="form-item">
-            @Html.EditorFor(m => m.NewSkill.Description, new { htmlAttributes = new { required = "required" } })
-            @Html.LabelFor(m => m.NewSkill.Description, new { htmlAttributes = new { required = "required" } })
+            @Html.EditorFor(m => m.NewSkillDescription, new { htmlAttributes = new { required = "required" } })
+            @Html.LabelFor(m => m.NewSkillDescription, new { htmlAttributes = new { required = "required" } })
         </div>
         @Html.HiddenFor(m => m.Id)
         <input type="submit" class="submit-button" value="Submit" />

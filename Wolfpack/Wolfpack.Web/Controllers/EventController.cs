@@ -46,7 +46,7 @@ namespace Wolfpack.Web.Controllers
         /// <returns></returns>
         public ActionResult Edit(int Id)
         {
-            return View(new EventVM() { Id = Id });
+            return View(new EditVM { Id = Id });
         }
         
         /// <summary>
@@ -65,15 +65,23 @@ namespace Wolfpack.Web.Controllers
         /// <param name="vm"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult AddSkill(EventVM vm)
+        public ActionResult AddSkill(EditVM vm)
         {
             var currentEvent = Context.Events.FirstOrDefault(g => g.Id == vm.Id);
+            Group group = Context.Groups.FirstOrDefault(g => g.Id == vm.Id);
             var userId = UserHelper.GetCurrentUser().Id;
-            vm.NewSkill.CreatedBy = Context.Users.FirstOrDefault(g => g.Id == userId);
-            vm.NewSkill.CreatedAt = DateTime.Now;
-            currentEvent.Skills.Add(vm.NewSkill);
+
+            Skill NewSkill = new Skill
+            {
+                Name = vm.NewSkillName,
+                Description = vm.NewSkillDescription,
+                CreatedBy = Context.Users.FirstOrDefault(g => g.Id == userId),
+                CreatedAt = DateTime.Now
+            };
+            group.Skills.Add(NewSkill);
+
             Context.SaveChanges();
-            return View("Edit", new EventVM { Message = "Skill added" });
+            return View("Edit", new EditVM { Message = "Skill added" });
         }
 
         /// <summary>

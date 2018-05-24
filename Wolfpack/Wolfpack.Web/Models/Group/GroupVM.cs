@@ -12,7 +12,5 @@ namespace Wolfpack.Web.Models.Group
         public string Message { get; set; }
         public int GroupCreator { get; set; }
         public DateTime CreatedOn { get; set; }
-        public IEnumerable<Skill> Skills { get; set; }
-        public Skill NewSkill { get; set; }
     }
 }
