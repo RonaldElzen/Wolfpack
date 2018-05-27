@@ -62,7 +62,8 @@ namespace Wolfpack.Web.Controllers
                 if (Hashing.Verify(vm.Password, user.Password))
                 {
                     TimeSpan diff = DateTime.Now - user.LastLoginAttempt;
-                    if (diff.TotalMinutes > 30) user.LoginAttempts = 0;
+                    if (diff.TotalMinutes > 30)
+                        user.LoginAttempts = 0;
                 }
             }
             else if (user.LoginAttempts > 3)

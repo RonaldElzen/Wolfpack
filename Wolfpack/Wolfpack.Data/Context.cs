@@ -16,13 +16,13 @@ namespace Wolfpack.Data
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<Context, Configuration>());
         }
 
-        public DbSet<User> Users { get; set; }
-        public DbSet<Models.Recovery> Recoveries { get; set; }
-        public DbSet<LockedAccount> LockedAccounts { get; set; }
-        public DbSet<Group> Groups { get; set; }
-        public DbSet<Event> Events { get; set; }
-        public DbSet<Skill> Skills { get; set; }
-        public DbSet<UserRating> UserRatings { get; set; }
-        public DbSet<EventTeam> EventTeams { get; set; }
+        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Models.Recovery> Recoveries { get; set; }
+        public virtual DbSet<LockedAccount> LockedAccounts { get; set; }
+        public virtual DbSet<Group> Groups { get; set; }
+        public virtual DbSet<Event> Events { get; set; }
+        public virtual DbSet<Skill> Skills { get; set; }
+        public virtual DbSet<UserRating> UserRatings { get; set; }
+        public virtual DbSet<EventTeam> EventTeams { get; set; }
     }
 }

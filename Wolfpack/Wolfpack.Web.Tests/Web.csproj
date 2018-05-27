@@ -38,6 +38,7 @@
     <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>..\packages\Castle.Core.4.2.1\lib\net45\Castle.Core.dll</HintPath>
     </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework">
       <HintPath>..\packages\MSTest.TestFramework.1.1.17\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.dll</HintPath>
@@ -102,6 +103,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AccountControllerTest.cs" />
+    <Compile Include="MockHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\HomeControllerTest.cs" />
   </ItemGroup>
@@ -112,6 +114,14 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Wolfpack.BusinessLayer\Wolfpack.BusinessLayer.csproj">
+      <Project>{FE495A93-3268-4EA8-9EA7-100390EF8D67}</Project>
+      <Name>Wolfpack.BusinessLayer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Wolfpack.Data.Models\Wolfpack.Data.Models.csproj">
+      <Project>{DFDE6E5C-9BBE-4F7F-A6B1-926581D7CB41}</Project>
+      <Name>Wolfpack.Data.Models</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Wolfpack.Data\Wolfpack.Data.csproj">
       <Project>{F22ED104-C171-489E-B5B1-6D63D85DC3B5}</Project>
       <Name>Wolfpack.Data</Name>
