@@ -28,7 +28,18 @@ namespace Wolfpack.Web.Controllers
         public ActionResult Index()
         {
             int id = UserHelper.GetCurrentUser().Id;
-            var groups = Context.Groups.Where(x => x.GroupCreator == id);
+            var groups = new List<GroupVM>();
+            var allGroups = Context.Groups.Where(x => x.GroupCreator == id);
+            foreach (var group in allGroups)
+            {
+                groups.Add(new GroupVM
+                {
+                    Id = group.Id,
+                    Category = group.Category,
+                    CreatedOn = group.CreatedOn,
+                    GroupName = group.GroupName,
+                });
+            }
             return View(groups);
         }
 
@@ -37,9 +48,49 @@ namespace Wolfpack.Web.Controllers
         /// </summary>
         /// <param name="Id"></param>
         /// <returns></returns>
-        public ActionResult Edit(int Id)
+        public ActionResult Edit(int id, string message = "")
         {
-            return View(new Models.Group.EditVM { Id = Id });
+            var users = new List<EditVMUser>();
+            var group = Context.Groups.FirstOrDefault(x => x.Id == id);
+            foreach (var user in group.Users)
+            {
+                users.Add(new EditVMUser
+                {
+                    Id = user.Id,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName
+                });
+            }
+
+            var vm = new Models.Group.EditVM
+            {
+                Id = id,
+                GroupUsers = users,
+                Message = message
+            };
+            return View(vm);
+        }
+
+        /// <summary>
+        /// Remove provided user from provided group
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="groupId"></param>
+        /// <returns></returns>
+        public ActionResult RemoveUserFromGroup(int userId, int groupId)
+        {
+            int loggedInUserId = UserHelper.GetCurrentUser().Id;
+            var group = Context.Groups.FirstOrDefault(x => x.Id == groupId && x.GroupCreator == loggedInUserId);
+            if(group != null)
+            {
+                System.Diagnostics.Debug.WriteLine("YES!!");
+                var user = Context.Users.FirstOrDefault(x => x.Id == userId);
+                group.Users.Remove(user);
+                Context.SaveChanges();
+
+                //TODO Send notification to removed user (waiting for notification system)
+            }
+            return RedirectToAction("Edit", new { Id = groupId });
         }
 
         /// <summary>
@@ -47,12 +98,70 @@ namespace Wolfpack.Web.Controllers
         /// </summary>
         /// <param name="Id"></param>
         /// <returns></returns>
-        public ActionResult Details(int Id)
+        public ActionResult Details(int id)
         {
-            int id = UserHelper.GetCurrentUser().Id;
-            var singleGroup = Context.Groups.FirstOrDefault(x => x.Id == Id && x.GroupCreator == id);
-            if (singleGroup != null) return View(singleGroup);
-            else return RedirectToAction("Index", "GroupController");
+            int loggedInUserId = UserHelper.GetCurrentUser().Id;
+            var singleGroup = Context.Groups.FirstOrDefault(x => x.Id == id && x.GroupCreator == loggedInUserId);
+            if (singleGroup != null)
+            {
+                var skills = new List<Models.Group.SkillVM>();
+                foreach(var skill in singleGroup.Skills)
+                {
+                    skills.Add(new Models.Group.SkillVM
+                    {
+                        CreatedAt = skill.CreatedAt,
+                        Description = skill.Description,
+                        Id = skill.Id,
+                        Name = skill.Name
+                    });
+                }
+
+                var groupUsers = new List<Models.Group.UserVM>();
+                foreach(var user in singleGroup.Users)
+                {
+                    groupUsers.Add(new Models.Group.UserVM
+                    {
+                        FirstName = user.FirstName,
+                        Id = user.Id,
+                        LastName = user.LastName,
+                        UserName = user.UserName
+                    });
+                }
+
+                return View(new GroupVM
+                {
+                    Category = singleGroup.Category,
+                    CreatedOn = singleGroup.CreatedOn,
+                    GroupCreator = singleGroup.GroupCreator,
+                    GroupName = singleGroup.GroupName,
+                    Id = singleGroup.Id,
+                    Skills = skills,
+                    GroupUsers = groupUsers
+                });
+            }
+            return RedirectToAction("Index", "GroupController");
+        }
+
+        /// <summary>
+        /// Form for deleting group
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult Delete(int id)
+        {
+            //TODO: Add actual deletion after post [HttpDelete]? Dont forget to remove all items that depend on a group
+            int loggedInUserId = UserHelper.GetCurrentUser().Id;
+            var singleGroup = Context.Groups.FirstOrDefault(x => x.Id == id && x.GroupCreator == loggedInUserId);
+            if (singleGroup != null)
+            {
+                return View(new GroupVM
+                {
+                    GroupName = singleGroup.GroupName,
+                    Category = singleGroup.Category,
+                    CreatedOn = singleGroup.CreatedOn
+                });
+            }
+            return RedirectToAction("Index");
         }
 
         /// <summary>

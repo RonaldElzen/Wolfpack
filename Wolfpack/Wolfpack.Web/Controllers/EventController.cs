@@ -21,8 +21,18 @@ namespace Wolfpack.Web.Controllers
         /// <returns></returns>
         public ActionResult Index()
         {
-            int Id = UserHelper.GetCurrentUser().Id;
-            var events = Context.Events.Where(x => x.EventCreator.Id == Id);
+            int id = UserHelper.GetCurrentUser().Id;
+            var events = new List<EventVM>();
+            var allEvents = Context.Events.Where(x => x.EventCreator.Id == id);
+            foreach (var singleEvent in allEvents)
+            {
+                events.Add(new EventVM
+                {
+                    Id = singleEvent.Id,
+                    CreatedOn = singleEvent.CreatedOn,
+                    EventName = singleEvent.EventName,
+                });
+            }
             return View(events);
         }
 
@@ -35,7 +45,30 @@ namespace Wolfpack.Web.Controllers
         {
             int id = UserHelper.GetCurrentUser().Id;
             var singleEvent = Context.Events.FirstOrDefault(x => x.Id == Id && x.EventCreator.Id == id);
-            if (singleEvent != null) return View(singleEvent);
+            if (singleEvent != null)
+            {
+                var skills = new List<SkillVM>();
+                foreach (var skill in singleEvent.Skills)
+                {
+                    skills.Add(new SkillVM
+                    {
+                        CreatedAt = skill.CreatedAt,
+                        Description = skill.Description,
+                        Id = skill.Id,
+                        Name = skill.Name
+                    });
+                }
+
+                return View(new EventVM
+                {
+                    CreatedOn = singleEvent.CreatedOn,
+                    EventCreator = singleEvent.EventCreator.Id,
+                    EventName = singleEvent.EventName,
+                    GroupId = singleEvent.Group.Id,
+                    Id = singleEvent.Id,
+                    Skills = skills
+                });
+            }
             else return RedirectToAction("Index", "EventController");
         }
 
@@ -48,7 +81,28 @@ namespace Wolfpack.Web.Controllers
         {
             return View(new EditVM { Id = Id });
         }
-        
+
+        /// <summary>
+        /// Form for deleting event
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult Delete(int id)
+        {
+            //TODO: Add actual deletion after post [HttpDelete]? Dont forget to remove all items that depend on an event
+            int loggedInUserId = UserHelper.GetCurrentUser().Id;
+            var singleEvent = Context.Events.FirstOrDefault(x => x.Id == id && x.EventCreator.Id == loggedInUserId);
+            if (singleEvent != null)
+            {
+                return View(new EventVM
+                {
+                    EventName = singleEvent.EventName,
+                    CreatedOn = singleEvent.CreatedOn
+                });
+            }
+            return RedirectToAction("Index");
+        }
+
         /// <summary>
         /// View for generating teams
         /// </summary>
@@ -102,20 +156,25 @@ namespace Wolfpack.Web.Controllers
                 var groupUsers = currentEvent.Group.Users;
                 var teamSize = 7; // TODO implement dynamic groupsize
 
-                //WIP
+                //TODO Actually implement this
                 var teamSizeMin = 0;
                 var teamSizeMax = 0;
                 var maxTeams = 0;
-                if (vm.MinTeamSize > 0) teamSizeMin = vm.MinTeamSize;
-                if (vm.MaxTeamSize > 0 && vm.MaxTeamSize >= vm.MinTeamSize) teamSizeMax = vm.MaxTeamSize;
-                if (vm.MaxTeamsAmount > 0) maxTeams = vm.MaxTeamsAmount;
+                if (vm.MinTeamSize > 0)
+                    teamSizeMin = vm.MinTeamSize;
+                if (vm.MaxTeamSize > 0 && vm.MaxTeamSize >= vm.MinTeamSize)
+                    teamSizeMax = vm.MaxTeamSize;
+                if (vm.MaxTeamsAmount > 0)
+                    maxTeams = vm.MaxTeamsAmount;
 
                 if(teamSizeMin < 1 || teamSizeMax < 1 || maxTeams < 1)
                 {
                     vm.Message = "Please make sure you have filled in everything and that max team size isnt higher than min team size";
                     return View("GenerateTeamsForm", vm);
                 }
-                //WIP
+
+                //set teamsize to max teamsize for now
+                teamSize = teamSizeMax;
 
                 var amountOfTeams = groupUsers.Count / teamSize; // TODO implement ability to choose amount of teams
 
