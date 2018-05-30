@@ -221,8 +221,9 @@ namespace Wolfpack.Web.Controllers
                     User user = recovery.User;
                     if (user != null)
                     {
-                        Session["recoveryKey"] = vm.Key;
-                        return View("Recovery", new RecoveryVM());
+                        return View("Recovery", new RecoveryVM {
+                            Key = vm.Key
+                        });
                     }
                 }
                 else
@@ -242,10 +243,9 @@ namespace Wolfpack.Web.Controllers
         [HttpPost]
         public ActionResult RecoveryForm(RecoveryVM vm)
         {
-            string key = (string)Session["recoveryKey"];
-            if (vm.Password == vm.PasswordCheck && key != null)
+            if (vm.Password == vm.PasswordCheck && vm.Key != null)
             {
-                Recovery recovery = Context.Recoveries.FirstOrDefault(r => r.Key == key);
+                Recovery recovery = Context.Recoveries.FirstOrDefault(r => r.Key == vm.Key);
                 if (recovery != null)
                 {
                     User user = recovery.User;
