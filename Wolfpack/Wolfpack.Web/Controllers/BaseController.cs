@@ -16,10 +16,13 @@ namespace Wolfpack.Web.Controllers
 
         protected IUserHelper UserHelper { get; set; }
 
-        public BaseController(Context context, IUserHelper userHelper = null)
+        protected ISessionHelper SessionHelper { get; set; }
+
+        public BaseController(Context context, IUserHelper userHelper = null, ISessionHelper sessionHelper = null)
         {
             Context = context;
             UserHelper = userHelper ?? new UserHelper();
+            SessionHelper = sessionHelper ?? new SessionHelper();
         }
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)

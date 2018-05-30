@@ -162,7 +162,10 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\CustomControllerFactory.cs" />
+    <Compile Include="Helpers\Enums\RecoveryStatus.cs" />
+    <Compile Include="Helpers\Interfaces\ISessionHelper.cs" />
     <Compile Include="Helpers\Interfaces\IUserHelper.cs" />
+    <Compile Include="Helpers\SessionHelper.cs" />
     <Compile Include="Helpers\UserHelper.cs" />
     <Compile Include="Models\Account\LoginVM.cs" />
     <Compile Include="Models\Account\RecoveryVM.cs" />

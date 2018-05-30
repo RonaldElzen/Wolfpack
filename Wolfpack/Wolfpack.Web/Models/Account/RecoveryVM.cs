@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 using Wolfpack.Data.Models;
+using Wolfpack.Web.Helpers.Enums;
 
 namespace Wolfpack.Web.Models.Account
 {
@@ -20,6 +21,6 @@ namespace Wolfpack.Web.Models.Account
         public string PasswordCheck { get; set; }
         //Key + Status
         public string Key { get; set; }
-        public string Status { get; set; }
+        public RecoveryStatus Status { get; set; }
     }
 }

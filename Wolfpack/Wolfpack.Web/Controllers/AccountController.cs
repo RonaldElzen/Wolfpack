@@ -9,6 +9,7 @@ using Wolfpack.BusinessLayer;
 using Wolfpack.Data;
 using Wolfpack.Data.Models;
 using Wolfpack.Web.Helpers;
+using Wolfpack.Web.Helpers.Enums;
 using Wolfpack.Web.Helpers.Interfaces;
 using Wolfpack.Web.Models.Account;
 
@@ -16,7 +17,8 @@ namespace Wolfpack.Web.Controllers
 {
     public class AccountController : BaseController
     {
-        public AccountController(Context context, IUserHelper userHelper = null) : base(context, userHelper) { }
+        public AccountController(Context context, IUserHelper userHelper = null, ISessionHelper sessionHelper = null) 
+            : base(context, userHelper, sessionHelper) { }
 
         /// <summary>
         /// Standard View
@@ -219,13 +221,13 @@ namespace Wolfpack.Web.Controllers
                     User user = recovery.User;
                     if (user != null)
                     {
-                        Session["recoveryKey"] = vm.Key;
+                        SessionHelper.SetSessionItem("recoveryKey", vm.Key);
                         return View("Recovery", new RecoveryVM());
                     }
                 }
                 else
                 {
-                    return View("Recovery", new RecoveryVM { Status = "invalid" });
+                    return View("Recovery", new RecoveryVM { Status = RecoveryStatus.Invalid });
                 }
             }
             return View();
@@ -240,7 +242,7 @@ namespace Wolfpack.Web.Controllers
         [HttpPost]
         public ActionResult RecoveryForm(RecoveryVM vm)
         {
-            string key = (string)Session["recoveryKey"];
+            string key = (string)SessionHelper.GetSessionItem("recoveryKey");
             if (vm.Password == vm.PasswordCheck && key != null)
             {
                 Recovery recovery = Context.Recoveries.FirstOrDefault(r => r.Key == key);
@@ -252,11 +254,11 @@ namespace Wolfpack.Web.Controllers
                         user.Password = Hashing.Hash(vm.Password);
                         Context.Recoveries.Remove(recovery);
                         Context.SaveChanges();
-                        return View("Recovery", new RecoveryVM { Status = "changed" });
+                        return View("Recovery", new RecoveryVM { Status = RecoveryStatus.Changed });
                     }
                 }
             }
-            return View("Recovery", new RecoveryVM { Status = "failed" });
+            return View("Recovery", new RecoveryVM { Status = RecoveryStatus.Failed });
         }
 
         /// <summary>
@@ -267,12 +269,12 @@ namespace Wolfpack.Web.Controllers
         [HttpPost]
         public ActionResult RecoveryNew(RecoveryVM vm)
         {
-            if (vm.Email != null)
+            if (!string.IsNullOrWhiteSpace(vm.Email))
             {
                 User user = Context.Users.FirstOrDefault(u => u.Mail == vm.Email);
                 if (user != null) _resetPassword(vm.Email);
             }
-            return View("Recovery", new RecoveryVM { Status = "sent"});
+            return View("Recovery", new RecoveryVM { Status = RecoveryStatus.Sent });
         }
 
         public ActionResult Unlock(UnlockVM vm)

@@ -1,5 +1,7 @@
 ﻿@model Wolfpack.Web.Models.Account.RecoveryVM
 
+@using Wolfpack.Web.Helpers.Enums
+
 @{
     ViewBag.Title = "Recovery";
     ViewBag.Status = Request["Status"];
@@ -34,23 +36,23 @@ else if (Model.Status != null)
 {
     switch (Model.Status)
     {
-        case "sent":
+        case RecoveryStatus.Sent:
             <text>
                 <h3>If your email is linked to an account on our services, an email will be sent.</h3>
             </text>
             break;
-        case "changed":
+        case RecoveryStatus.Changed:
             <text>
                 <h3>Your password has been changed.</h3>
                 <p><a href="@Url.Action("Login", "Account")">Click here to go to the login page</a></p>
             </text>
             break;
-        case "failed":
+        case RecoveryStatus.Failed:
             <text>
                 <h3>Something went wrong.</h3>
             </text>
             break;
-        case "invalid":
+        case RecoveryStatus.Invalid:
             <text>
                 <h3>Invalid key</h3>
                 <p>The key is either invalid or has expired.</p>

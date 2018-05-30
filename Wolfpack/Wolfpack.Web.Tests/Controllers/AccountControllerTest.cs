@@ -11,6 +11,7 @@ using Wolfpack.Data;
 using Wolfpack.Data.Models;
 using Wolfpack.Web.Controllers;
 using Wolfpack.Web.Helpers;
+using Wolfpack.Web.Helpers.Enums;
 using Wolfpack.Web.Helpers.Interfaces;
 using Wolfpack.Web.Models.Account;
 
@@ -287,20 +288,195 @@ namespace Wolfpack.Web.Tests.Controllers
                 }
             }.AsQueryable();
 
-            // TODO Mock session
+            var vm = new RecoveryVM { Key = "TestKey" };
 
             var mockSet = MockHelper.MockDbSet(data);
-
             var mockContext = new Mock<Context>();
             mockContext.SetupGet(c => c.Recoveries).Returns(mockSet.Object);
 
-            var mockUserHelper = new Mock<IUserHelper>();
-            var controller = new AccountController(mockContext.Object, mockUserHelper.Object);
+            var mockSession = new Mock<ISessionHelper>();
+            mockSession.Setup(s => s.SetSessionItem("recoveryKey", vm.Key));
 
-            var vm = new RecoveryVM { Key = "TestKey" };
+            var mockUserHelper = new Mock<IUserHelper>();
+            var controller = new AccountController(mockContext.Object, mockUserHelper.Object, mockSession.Object);
 
             // Act
             var result = controller.Recovery(vm) as ViewResult;
+
+            // Assert
+            Assert.IsNotNull(result);
+        }
+
+        #endregion
+
+        #region RecoveryForm
+
+        [TestMethod]
+        public void RecoveryForm_NotSamePassword_ViewResultWithFailedModel()
+        {
+            // Arrange
+            var vm = new RecoveryVM { Password = "Test", PasswordCheck = "Test2" };
+            
+            var mockSession = new Mock<ISessionHelper>();
+            mockSession.Setup(s => s.GetSessionItem("recoveryKey")).Returns("TestKey");
+
+            var mockContext = new Mock<Context>();
+            var mockUserHelper = new Mock<IUserHelper>();
+            var controller = new AccountController(mockContext.Object, mockUserHelper.Object, mockSession.Object);
+
+            // Act
+            var result = controller.RecoveryForm(vm) as ViewResult;
+            var resultModel = result.Model as RecoveryVM;
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(resultModel.Status, RecoveryStatus.Failed);
+        }
+
+        [TestMethod]
+        public void RecoveryForm_KeyIsNull_ViewResult()
+        {
+            // Arrange
+            var vm = new RecoveryVM { Password = "Test", PasswordCheck = "Test" };
+
+            var mockSession = new Mock<ISessionHelper>();
+            mockSession.Setup(s => s.GetSessionItem("recoveryKey")).Returns(null);
+
+            var mockContext = new Mock<Context>();
+            var mockUserHelper = new Mock<IUserHelper>();
+            var controller = new AccountController(mockContext.Object, mockUserHelper.Object, mockSession.Object);
+
+            // Act
+            var result = controller.RecoveryForm(vm) as ViewResult;
+            var resultModel = result.Model as RecoveryVM;
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(resultModel.Status, RecoveryStatus.Failed);
+        }
+
+        [TestMethod]
+        public void RecoveryForm_RecoveryIsNull_ViewResultWithFailedModel()
+        {
+            // Arrange
+            var data = new List<Recovery>()
+            {
+                new Recovery
+                {
+                    Id = 1,
+                    Key = "TestKey",
+                    User = null
+                }
+            }.AsQueryable();
+
+            var mockSet = MockHelper.MockDbSet(data);
+            var mockContext = new Mock<Context>();
+            mockContext.SetupGet(c => c.Recoveries).Returns(mockSet.Object);
+
+            var vm = new RecoveryVM { Password = "Test", PasswordCheck = "Test" };
+
+            var mockSession = new Mock<ISessionHelper>();
+            mockSession.Setup(s => s.GetSessionItem("recoveryKey")).Returns("NotTestKey");
+            
+            var mockUserHelper = new Mock<IUserHelper>();
+            var controller = new AccountController(mockContext.Object, mockUserHelper.Object, mockSession.Object);
+
+            // Act
+            var result = controller.RecoveryForm(vm) as ViewResult;
+            var resultModel = result.Model as RecoveryVM;
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(resultModel.Status, RecoveryStatus.Failed);
+        }
+
+        [TestMethod]
+        public void RecoveryForm_UserIsNull_ViewResultWithFailedModel()
+        {
+            // Arrange
+            var data = new List<Recovery>()
+            {
+                new Recovery
+                {
+                    Id = 1,
+                    Key = "TestKey",
+                    User = null
+                }
+            }.AsQueryable();
+
+            var mockSet = MockHelper.MockDbSet(data);
+            var mockContext = new Mock<Context>();
+            mockContext.SetupGet(c => c.Recoveries).Returns(mockSet.Object);
+
+            var vm = new RecoveryVM { Password = "Test", PasswordCheck = "Test" };
+
+            var mockSession = new Mock<ISessionHelper>();
+            mockSession.Setup(s => s.GetSessionItem("recoveryKey")).Returns("TestKey");
+
+            var mockUserHelper = new Mock<IUserHelper>();
+            var controller = new AccountController(mockContext.Object, mockUserHelper.Object, mockSession.Object);
+
+            // Act
+            var result = controller.RecoveryForm(vm) as ViewResult;
+            var resultModel = result.Model as RecoveryVM;
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(resultModel.Status, RecoveryStatus.Failed);
+        }
+
+        [TestMethod]
+        public void RecoveryForm_Succesfull_ViewResultWithFailedModel()
+        {
+            // Arrange
+            var data = new List<Recovery>()
+            {
+                new Recovery
+                {
+                    Id = 1,
+                    Key = "TestKey",
+                    User = new User { Password = Hashing.Hash("Test") }
+                }
+            }.AsQueryable();
+
+            var mockSet = MockHelper.MockDbSet(data);
+            var mockContext = new Mock<Context>();
+            mockContext.SetupGet(c => c.Recoveries).Returns(mockSet.Object);
+
+            var vm = new RecoveryVM { Password = "Test", PasswordCheck = "Test" };
+
+            var mockSession = new Mock<ISessionHelper>();
+            mockSession.Setup(s => s.GetSessionItem("recoveryKey")).Returns("TestKey");
+
+            var mockUserHelper = new Mock<IUserHelper>();
+            var controller = new AccountController(mockContext.Object, mockUserHelper.Object, mockSession.Object);
+
+            // Act
+            var result = controller.RecoveryForm(vm) as ViewResult;
+            var resultModel = result.Model as RecoveryVM;
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(resultModel.Status, RecoveryStatus.Changed);
+        }
+
+        #endregion
+
+        #region RecoveryNew
+
+        [TestMethod]
+        public void RecoveryNew_EmailIsNull_ViewResult()
+        {
+            // Arrange
+            var vm = new RecoveryVM { Email = null };
+            
+            var mockContext = new Mock<Context>();
+            var mockUserHelper = new Mock<IUserHelper>();
+            var mockSession = new Mock<ISessionHelper>();
+            var controller = new AccountController(mockContext.Object, mockUserHelper.Object, mockSession.Object);
+
+            // Act
+            var result = controller.RecoveryNew(vm) as ViewResult;
 
             // Assert
             Assert.IsNotNull(result);
