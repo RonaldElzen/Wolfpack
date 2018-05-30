@@ -22,17 +22,12 @@ namespace Wolfpack.Web.Controllers
         public ActionResult Index()
         {
             int id = UserHelper.GetCurrentUser().Id;
-            var events = new List<EventVM>();
-            var allEvents = Context.Events.Where(x => x.EventCreator.Id == id);
-            foreach (var singleEvent in allEvents)
+            var events = Context.Events.Where(x => x.EventCreator.Id == id).Select(e => new EventVM
             {
-                events.Add(new EventVM
-                {
-                    Id = singleEvent.Id,
-                    CreatedOn = singleEvent.CreatedOn,
-                    EventName = singleEvent.EventName,
-                });
-            }
+                Id = e.Id,
+                CreatedOn = e.CreatedOn,
+                EventName = e.EventName
+            });
             return View(events);
         }
 
@@ -44,20 +39,16 @@ namespace Wolfpack.Web.Controllers
         public ActionResult Details(int Id)
         {
             int id = UserHelper.GetCurrentUser().Id;
-            var singleEvent = Context.Events.FirstOrDefault(x => x.Id == Id && x.EventCreator.Id == id);
+            var singleEvent = Context.Events.SingleOrDefault(x => x.Id == Id && x.EventCreator.Id == id);
             if (singleEvent != null)
             {
-                var skills = new List<SkillVM>();
-                foreach (var skill in singleEvent.Skills)
+                var skills = singleEvent.Skills.Select(s => new SkillVM
                 {
-                    skills.Add(new SkillVM
-                    {
-                        CreatedAt = skill.CreatedAt,
-                        Description = skill.Description,
-                        Id = skill.Id,
-                        Name = skill.Name
-                    });
-                }
+                    CreatedAt = s.CreatedAt,
+                    Description = s.Description,
+                    Id = s.Id,
+                    Name = s.Name
+                });
 
                 return View(new EventVM
                 {
@@ -69,7 +60,10 @@ namespace Wolfpack.Web.Controllers
                     Skills = skills
                 });
             }
-            else return RedirectToAction("Index", "EventController");
+            else
+            {
+                return RedirectToAction("Index", "EventController");
+            }    
         }
 
         /// <summary>
@@ -91,7 +85,7 @@ namespace Wolfpack.Web.Controllers
         {
             //TODO: Add actual deletion after post [HttpDelete]? Dont forget to remove all items that depend on an event
             int loggedInUserId = UserHelper.GetCurrentUser().Id;
-            var singleEvent = Context.Events.FirstOrDefault(x => x.Id == id && x.EventCreator.Id == loggedInUserId);
+            var singleEvent = Context.Events.SingleOrDefault(x => x.Id == id && x.EventCreator.Id == loggedInUserId);
             if (singleEvent != null)
             {
                 return View(new EventVM
@@ -122,14 +116,14 @@ namespace Wolfpack.Web.Controllers
         public ActionResult AddSkill(EditVM vm)
         {
             var currentEvent = Context.Events.FirstOrDefault(g => g.Id == vm.Id);
-            Group group = Context.Groups.FirstOrDefault(g => g.Id == vm.Id);
+            var group = Context.Groups.SingleOrDefault(g => g.Id == vm.Id);
             var userId = UserHelper.GetCurrentUser().Id;
 
             Skill NewSkill = new Skill
             {
                 Name = vm.NewSkillName,
                 Description = vm.NewSkillDescription,
-                CreatedBy = Context.Users.FirstOrDefault(g => g.Id == userId),
+                CreatedBy = Context.Users.SingleOrDefault(g => g.Id == userId),
                 CreatedAt = DateTime.Now
             };
             group.Skills.Add(NewSkill);

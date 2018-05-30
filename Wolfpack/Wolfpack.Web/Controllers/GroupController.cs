@@ -28,18 +28,13 @@ namespace Wolfpack.Web.Controllers
         public ActionResult Index()
         {
             int id = UserHelper.GetCurrentUser().Id;
-            var groups = new List<GroupVM>();
-            var allGroups = Context.Groups.Where(x => x.GroupCreator == id);
-            foreach (var group in allGroups)
+            var groups = Context.Groups.Where(x => x.GroupCreator == id).Select(g => new GroupVM
             {
-                groups.Add(new GroupVM
-                {
-                    Id = group.Id,
-                    Category = group.Category,
-                    CreatedOn = group.CreatedOn,
-                    GroupName = group.GroupName,
-                });
-            }
+                Id = g.Id,
+                Category = g.Category,
+                CreatedOn = g.CreatedOn,
+                GroupName = g.GroupName,
+            });
             return View(groups);
         }
 
@@ -50,25 +45,18 @@ namespace Wolfpack.Web.Controllers
         /// <returns></returns>
         public ActionResult Edit(int id, string message = "")
         {
-            var users = new List<EditVMUser>();
-            var group = Context.Groups.FirstOrDefault(x => x.Id == id);
-            foreach (var user in group.Users)
-            {
-                users.Add(new EditVMUser
-                {
-                    Id = user.Id,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName
-                });
-            }
+            var users = Context.Groups.SingleOrDefault(x => x.Id == id).Users.Select(u => new EditVMUser {
+                Id = u.Id,
+                FirstName = u.FirstName,
+                LastName = u.LastName
+            });
 
-            var vm = new Models.Group.EditVM
+            return View(new Models.Group.EditVM
             {
                 Id = id,
                 GroupUsers = users,
                 Message = message
-            };
-            return View(vm);
+            });
         }
 
         /// <summary>
@@ -80,12 +68,11 @@ namespace Wolfpack.Web.Controllers
         public ActionResult RemoveUserFromGroup(int userId, int groupId)
         {
             int loggedInUserId = UserHelper.GetCurrentUser().Id;
-            var group = Context.Groups.FirstOrDefault(x => x.Id == groupId && x.GroupCreator == loggedInUserId);
-            if(group != null)
+            var singleGroup = Context.Groups.SingleOrDefault(x => x.Id == groupId && x.GroupCreator == loggedInUserId);
+            if(singleGroup != null)
             {
-                System.Diagnostics.Debug.WriteLine("YES!!");
                 var user = Context.Users.FirstOrDefault(x => x.Id == userId);
-                group.Users.Remove(user);
+                singleGroup.Users.Remove(user);
                 Context.SaveChanges();
 
                 //TODO Send notification to removed user (waiting for notification system)
@@ -101,32 +88,24 @@ namespace Wolfpack.Web.Controllers
         public ActionResult Details(int id)
         {
             int loggedInUserId = UserHelper.GetCurrentUser().Id;
-            var singleGroup = Context.Groups.FirstOrDefault(x => x.Id == id && x.GroupCreator == loggedInUserId);
+            var singleGroup = Context.Groups.SingleOrDefault(x => x.Id == id && x.GroupCreator == loggedInUserId);
             if (singleGroup != null)
             {
-                var skills = new List<Models.Group.SkillVM>();
-                foreach(var skill in singleGroup.Skills)
+                var skills = singleGroup.Skills.Select(s => new Models.Group.SkillVM
                 {
-                    skills.Add(new Models.Group.SkillVM
-                    {
-                        CreatedAt = skill.CreatedAt,
-                        Description = skill.Description,
-                        Id = skill.Id,
-                        Name = skill.Name
-                    });
-                }
+                    CreatedAt = s.CreatedAt,
+                    Description = s.Description,
+                    Id = s.Id,
+                    Name = s.Name
+                });
 
-                var groupUsers = new List<Models.Group.UserVM>();
-                foreach(var user in singleGroup.Users)
+                var groupUsers = singleGroup.Users.Select(u => new Models.Group.UserVM
                 {
-                    groupUsers.Add(new Models.Group.UserVM
-                    {
-                        FirstName = user.FirstName,
-                        Id = user.Id,
-                        LastName = user.LastName,
-                        UserName = user.UserName
-                    });
-                }
+                    FirstName = u.FirstName,
+                    Id = u.Id,
+                    LastName = u.LastName,
+                    UserName = u.UserName
+                });
 
                 return View(new GroupVM
                 {
