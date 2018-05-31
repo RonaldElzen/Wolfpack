@@ -84,7 +84,6 @@ namespace Wolfpack.Web.Controllers
                         {
                             Name = skillName,
                             Description = "A skill description",
-                            CreatedAt = DateTime.Now,
                             CreatedBy = currentUser
                         };
                         Context.Skills.Add(s);
@@ -106,15 +105,23 @@ namespace Wolfpack.Web.Controllers
                         Skill s = Context.Skills.FirstOrDefault(x => x.Name == skillName);
                         if (s != null)
                         {
-                            UserRating ur = new UserRating
+                            var userSkill = u.UserSkills.FirstOrDefault(x => x.Skill.Id == s.Id);
+
+                            if(userSkill == null)
                             {
-                                Rating = Math.Round((random.NextDouble() * 9 + 1), 1),
-                                RatedUser = u,
+                                userSkill = new UserSkill
+                                {
+                                    Skill = s,
+                                };
+                                u.UserSkills.Add(userSkill);
+                            }
+
+                            userSkill.Ratings.Add(new Rating
+                            {
                                 RatedBy = u,
-                                RatedQuality = s,
-                                RatedAt = DateTime.Now
-                            };
-                            Context.UserRatings.Add(ur);
+                                RatedAt = DateTime.Now,
+                                Mark = Math.Round((random.NextDouble() * 9 + 1), 1)
+                            });
                         }
                         else return View("Dummy", new DummyVM { Message = "Could not find skill: " + skillName });
                     }

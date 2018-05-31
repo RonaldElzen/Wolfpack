@@ -44,7 +44,6 @@ namespace Wolfpack.Web.Controllers
             {
                 var skills = singleEvent.Skills.Select(s => new SkillVM
                 {
-                    CreatedAt = s.CreatedAt,
                     Description = s.Description,
                     Id = s.Id,
                     Name = s.Name
@@ -124,7 +123,6 @@ namespace Wolfpack.Web.Controllers
                 Name = vm.NewSkillName,
                 Description = vm.NewSkillDescription,
                 CreatedBy = Context.Users.SingleOrDefault(g => g.Id == userId),
-                CreatedAt = DateTime.Now
             };
             group.Skills.Add(NewSkill);
 

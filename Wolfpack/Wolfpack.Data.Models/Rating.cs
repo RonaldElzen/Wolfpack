@@ -6,18 +6,16 @@ using System.Threading.Tasks;
 
 namespace Wolfpack.Data.Models
 {
-    public class UserRating
+    public class Rating
     {
         public int Id { get; set; }
 
-        public double Rating { get; set; }
-
-        public virtual User RatedUser { get; set; }
+        public double Mark { get; set; }
 
         public virtual User RatedBy { get; set; }
 
-        public virtual Skill RatedQuality { get; set; }
-
         public DateTime RatedAt { get; set; }
+
+        public virtual UserSkill UserSkill { get; set; }
     }
 }
