@@ -7,6 +7,8 @@ namespace Wolfpack.Web.Models.Profile
 {
     public class ProfileVM
     {
+        public String UserName { get; set; }
+        public DateTime MemberSince { get; set; }
         public IEnumerable<SkillVM> Skills { get; set; }
     }
 }

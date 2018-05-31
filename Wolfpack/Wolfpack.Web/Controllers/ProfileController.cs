@@ -19,6 +19,8 @@ namespace Wolfpack.Web.Controllers
             var userId = UserHelper.GetCurrentUser().Id;
             var profileVM = new ProfileVM { };
 
+            profileVM.UserName = UserHelper.GetCurrentUser().UserName;
+            profileVM.MemberSince = Context.Users.SingleOrDefault(x => x.Id == userId).RegisterDate;
             profileVM.Skills = Context.UserRatings
                 .Where(x => x.RatedUser.Id == userId)
                 .GroupBy(u => u.RatedQuality)
