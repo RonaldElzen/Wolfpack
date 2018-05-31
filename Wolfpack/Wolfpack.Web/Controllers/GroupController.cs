@@ -93,7 +93,6 @@ namespace Wolfpack.Web.Controllers
             {
                 var skills = singleGroup.Skills.Select(s => new Models.Group.SkillVM
                 {
-                    CreatedAt = s.CreatedAt,
                     Description = s.Description,
                     Id = s.Id,
                     Name = s.Name
@@ -179,7 +178,6 @@ namespace Wolfpack.Web.Controllers
                 Name = vm.NewSkillName,
                 Description = vm.NewSkillDescription,
                 CreatedBy = Context.Users.FirstOrDefault(g => g.Id == userId),
-                CreatedAt = DateTime.Now
             };
             group.Skills.Add(NewSkill);
 

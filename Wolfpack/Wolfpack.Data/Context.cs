@@ -22,7 +22,8 @@ namespace Wolfpack.Data
         public DbSet<Group> Groups { get; set; }
         public DbSet<Event> Events { get; set; }
         public DbSet<Skill> Skills { get; set; }
-        public DbSet<UserRating> UserRatings { get; set; }
         public DbSet<EventTeam> EventTeams { get; set; }
+        public DbSet<UserSkill> UserSkills { get; set; }
+        public DbSet<Rating> Ratings { get; set; }
     }
 }

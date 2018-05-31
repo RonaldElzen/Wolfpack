@@ -52,10 +52,11 @@
     <Compile Include="Event.cs" />
     <Compile Include="Group.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rating.cs" />
     <Compile Include="Skill.cs" />
-    <Compile Include="UserRating.cs" />
     <Compile Include="Recovery.cs" />
     <Compile Include="User.cs" />
+    <Compile Include="UserSkills.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -17,14 +17,10 @@ namespace Wolfpack.BusinessLayer
         {
             using (var context = new Context())
             {
-                return context.UserRatings
-                    .Where(r => r.RatedUser.Id == user.Id)
-                    .GroupBy(r => r.RatedQuality)
-                    .OrderByDescending(r => r.Average(x => x.Rating))
+                return user.UserSkills
+                    .OrderByDescending(r => r.Ratings.Average(a => a.Mark))
                     .FirstOrDefault()
-                    .Key;
-
-
+                    .Skill;
             }
         }
 
@@ -35,12 +31,10 @@ namespace Wolfpack.BusinessLayer
         {
             using (var context = new Context())
             {
-                return context.UserRatings
-                    .Where(r => r.RatedUser.Id == user.Id)
-                    .GroupBy(r => r.RatedQuality)
-                    .OrderBy(r => r.Average(x => x.Rating))
+                return user.UserSkills
+                    .OrderBy(r => r.Ratings.Average(a => a.Mark))
                     .FirstOrDefault()
-                    .Key;
+                    .Skill;
             }
         }
 
@@ -51,11 +45,8 @@ namespace Wolfpack.BusinessLayer
         {
             using(var context = new Context())
             {
-                return context.UserRatings
-                    .Where(r => r.RatedUser.Id == user.Id)
-                    .OrderBy(r => r.RatedQuality.Id)
-                    .GroupBy(r => r.RatedQuality)
-                    .Select(r => r.Average(x => x.Rating))
+                return user.UserSkills
+                    .Select(u => u.Ratings.Average(r => r.Mark))
                     .ToList();
             }
         }
