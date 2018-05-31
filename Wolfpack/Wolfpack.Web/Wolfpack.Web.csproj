@@ -175,11 +175,13 @@
     <Compile Include="Models\Event\TeamVM.cs" />
     <Compile Include="Models\Group\AddUserVM.cs" />
     <Compile Include="Models\Group\EditVM.cs" />
+    <Compile Include="Models\Group\RateVM.cs" />
     <Compile Include="Models\Group\UserVM.cs" />
     <Compile Include="Models\Group\GroupVM.cs" />
     <Compile Include="Models\Group\SkillVM.cs" />
     <Compile Include="Models\Home\HomeVM.cs" />
     <Compile Include="Models\Profile\ProfileVM.cs" />
+    <Compile Include="Models\Profile\SkillVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -231,7 +233,7 @@
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\Index.cshtml" />
     <Content Include="Views\Account\Recovery.cshtml" />
-    <Content Include="Views\Profile\UserProfile.cshtml" />
+    <Content Include="Views\Profile\Index.cshtml" />
     <Content Include="Views\Shared\_NoSidebarLayout.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Account\Unlock.cshtml" />
@@ -250,6 +252,7 @@
     <Content Include="Views\Event\Edit.cshtml" />
     <Content Include="Views\Group\Delete.cshtml" />
     <Content Include="Views\Event\Delete.cshtml" />
+    <Content Include="Views\Group\RateUser.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

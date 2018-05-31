@@ -59,6 +59,31 @@ namespace Wolfpack.Web.Controllers
             });
         }
 
+        public ActionResult RateUser(int id)
+        {
+            int loggedInUserId = UserHelper.GetCurrentUser().Id;
+            var currentGroup = Context.Groups.SingleOrDefault(x => x.Id == id && x.GroupCreator == loggedInUserId);
+            var skills = currentGroup.Skills.Select(s => new Models.Group.SkillVM
+            {
+                CreatedAt = s.CreatedAt,
+                Description = s.Description,
+                Id = s.Id,
+                Name = s.Name
+            });
+
+            var groupUsers = currentGroup.Users.Select(u => new Models.Group.UserVM
+            {
+                FirstName = u.FirstName,
+                Id = u.Id,
+                LastName = u.LastName,
+                UserName = u.UserName
+            });
+
+            var userList = groupUsers.Select(a => new SelectListItem() { Text = a.FirstName, Value = a.Id.ToString()});
+            var skillsList = skills.Select(a => new SelectListItem() { Text = a.Name, Value = a.Id.ToString()});
+            return View(new Models.Group.RateVM {GroupId = id,Skills = skills, GroupUsers = groupUsers,SkillsList = skillsList, UsersList = userList});
+        }
+
         /// <summary>
         /// Remove provided user from provided group
         /// </summary>
@@ -151,16 +176,6 @@ namespace Wolfpack.Web.Controllers
         public ActionResult NewGroup(string message = "")
         {
             return View(new GroupVM() { Message = message });
-        }
-
-        /// <summary>
-        /// Standard view for adding users
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult AddUser()
-        {
-            //Static ID, needs to be added dynamic
-            return View(new AddUserVM() { Id = 1 });
         }
 
         /// <summary>

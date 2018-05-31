@@ -1,0 +1,33 @@
+﻿@model Wolfpack.Web.Models.Profile.ProfileVM
+@{
+    ViewBag.Title = "UserProfile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>UserProfile</h2>
+
+<p>
+    @Html.ActionLink("Add Skill", "NewSkill")
+</p>
+
+<div class="form-box">
+    <form action="" method="post">
+        <table>
+            @foreach (var skill in Model.Skills)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => skill.Name)
+                        @Html.DisplayFor(modelItem => skill.Description)
+                        @Html.DisplayFor(modelItem => skill.NumberOfRatings)
+                        @Html.DisplayFor(modelItem => skill.AverageRating)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Details", "Details") |
+                    </td>
+                </tr>
+            }
+        </table>
+        <input type="submit" class="submit-button" />
+    </form>
+</div>

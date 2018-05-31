@@ -1,0 +1,28 @@
+﻿@model Wolfpack.Web.Models.Group.RateVM
+@{
+    ViewBag.Title = "New";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="form-box">
+    @using (Html.BeginForm("New"))
+    {
+        @Html.ValidationSummary()
+        <div class="form-item">
+            @Html.LabelFor(m => m.UserToRate)
+            @Html.DropDownListFor(m => Model.UserToRate,
+                                        Model.UsersList,
+                                        "- Please select a state -",
+                                        new { @class = "form-control" })
+        </div>
+        <div class="form-item">
+            @Html.LabelFor(m => m.SkillToRate)
+            @Html.DropDownListFor(m => Model.SkillToRate,
+                                        Model.SkillsList,
+                                        "- Please select a state -",
+                                        new { @class = "form-control" })
+        </div>
+        <input type="submit" class="submit-button" value="Submit" />
+    }
+</div>
+
