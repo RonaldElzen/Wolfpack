@@ -5,22 +5,32 @@
 }
 
 <div class="form-box">
-    @using (Html.BeginForm("New"))
+    @using (Html.BeginForm("SubmitRating", "Group"))
     {
         @Html.ValidationSummary()
         <div class="form-item">
-            @Html.LabelFor(m => m.UserToRate)
-            @Html.DropDownListFor(m => Model.UserToRate,
+            @Html.LabelFor(m => m.UserToRateId)
+            @Html.DropDownListFor(m => Model.UserToRateId,
                                         Model.UsersList,
                                         "- Please select a state -",
                                         new { @class = "form-control" })
         </div>
         <div class="form-item">
-            @Html.LabelFor(m => m.SkillToRate)
-            @Html.DropDownListFor(m => Model.SkillToRate,
+            @Html.LabelFor(m => m.SkillToRateId)
+            @Html.DropDownListFor(m => Model.SkillToRateId,
                                         Model.SkillsList,
                                         "- Please select a state -",
                                         new { @class = "form-control" })
+        </div>
+
+        <div class="form-item">
+            @Html.EditorFor(m => m.RateComment)
+            @Html.LabelFor(m => m.RateComment)
+        </div>
+
+        <div class="form-item">
+            @Html.EditorFor(m => m.Rating)
+            @Html.LabelFor(m => m.Rating)
         </div>
         <input type="submit" class="submit-button" value="Submit" />
     }

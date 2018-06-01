@@ -84,6 +84,26 @@ namespace Wolfpack.Web.Controllers
             return View(new Models.Group.RateVM {GroupId = id,Skills = skills, GroupUsers = groupUsers,SkillsList = skillsList, UsersList = userList});
         }
 
+        [HttpPost]
+        public ActionResult SubmitRating(RateVM vm)
+        {
+            //Gets the user and skill that needs to be rated. 
+            var UserToRate = Context.Users.FirstOrDefault(x => x.Id == vm.UserToRateId);
+            var SkillToRate = Context.Skills.FirstOrDefault(x => x.Id == vm.SkillToRateId);
+            //Adding the rating to the database.
+            Context.UserRatings.Add(new UserRating
+            {
+                Rating = vm.Rating,
+                RatedAt = DateTime.Now,
+                RatedBy = UserHelper.GetCurrentDbUser(Context),
+                RatedQuality = SkillToRate,
+                RatedUser = UserToRate,
+                Comment = vm.RateComment
+            });
+            Context.SaveChanges();
+            return RedirectToAction("Index", "Group");
+        }
+
         /// <summary>
         /// Remove provided user from provided group
         /// </summary>

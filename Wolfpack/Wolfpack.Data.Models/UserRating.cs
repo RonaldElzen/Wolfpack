@@ -19,5 +19,7 @@ namespace Wolfpack.Data.Models
         public virtual Skill RatedQuality { get; set; }
 
         public DateTime RatedAt { get; set; }
+   
+        public String Comment {get; set;}
     }
 }
