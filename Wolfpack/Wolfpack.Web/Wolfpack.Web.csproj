@@ -181,7 +181,9 @@
     <Compile Include="Models\Group\SkillVM.cs" />
     <Compile Include="Models\Home\HomeVM.cs" />
     <Compile Include="Models\Profile\ProfileVM.cs" />
+    <Compile Include="Models\Profile\SearchVM.cs" />
     <Compile Include="Models\Profile\SkillVM.cs" />
+    <Compile Include="Models\Profile\UserVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -253,6 +255,7 @@
     <Content Include="Views\Group\Delete.cshtml" />
     <Content Include="Views\Event\Delete.cshtml" />
     <Content Include="Views\Group\RateUser.cshtml" />
+    <Content Include="Views\Profile\SearchProfile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

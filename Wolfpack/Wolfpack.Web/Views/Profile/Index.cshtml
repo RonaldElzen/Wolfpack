@@ -4,14 +4,13 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-        <h2>Profile info</h2>
-
-        <h4>Name</h4>
-        <p>@Model.UserName</p>
-        <h4>Member since</h4>
-        <p>@Model.MemberSince</p>
-        <h4>Your bio</h4>
-        <p>Coming soon</p>
+<h2>Profile info</h2>
+<h4>Name</h4>
+<p>@Model.UserName</p>
+<h4>Member since</h4>
+<p>@Model.MemberSince</p>
+<h4>Your bio</h4>
+<p>Coming soon</p>
 <h3>Skills</h3>
 <div class="overview">
     @foreach (var skill in Model.Skills)
