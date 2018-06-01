@@ -5,11 +5,9 @@ using System.Web;
 
 namespace Wolfpack.Web.Models.Profile
 {
-    public class ProfileVM
+    public class SearchVM
     {
-        public int id { get; set; }
         public String UserName { get; set; }
-        public DateTime MemberSince { get; set; }
-        public IEnumerable<SkillVM> Skills { get; set; }
+        public IEnumerable<UserVM> PossibleUsers { get; set; }
     }
 }

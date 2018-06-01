@@ -14,15 +14,17 @@ namespace Wolfpack.Web.Controllers
     {
         public ProfileController(Context context) : base(context) { }
 
-        public ActionResult Index()
+        public ActionResult Index(int? id )
         {
-            var userId = UserHelper.GetCurrentUser().Id;
+            if (!id.HasValue)
+            {
+                id = UserHelper.GetCurrentUser().Id;
+            }
             var profileVM = new ProfileVM { };
-
-            profileVM.UserName = UserHelper.GetCurrentUser().UserName;
-            profileVM.MemberSince = Context.Users.SingleOrDefault(x => x.Id == userId).RegisterDate;
+            profileVM.UserName = Context.Users.SingleOrDefault(x => x.Id == id).UserName;
+            profileVM.MemberSince = Context.Users.SingleOrDefault(x => x.Id == id).RegisterDate;
             profileVM.Skills = Context.UserRatings
-                .Where(x => x.RatedUser.Id == userId)
+                .Where(x => x.RatedUser.Id == id)
                 .GroupBy(u => u.RatedQuality)
                 .Select(s => new SkillVM
                 {
@@ -31,8 +33,34 @@ namespace Wolfpack.Web.Controllers
                     AverageRating = s.Average(y => y.Rating),
                     Description = s.Key.Description
                 });
-
             return View(profileVM);
+        }
+
+        public ActionResult SearchProfile()
+        {
+            return View(new SearchVM());
+        }
+
+        [HttpPost]
+        public ActionResult SearchProfile(SearchVM vm)
+        {
+            var user = Context.Users.FirstOrDefault(g => g.UserName == vm.UserName);
+            //Return a list with possible users if the username is not found.
+            if (user == null)
+            {
+                var possibleUsers = Context.Users.Select(g => new UserVM
+                {
+                    Id = g.Id,
+                    FirstName = g.FirstName,
+                    LastName = g.LastName,
+                    UserName = g.UserName
+                }).Where(g => g.UserName.Contains(vm.UserName));
+                return View(new SearchVM { PossibleUsers = possibleUsers });
+            }
+            else
+            {
+                return RedirectToAction("Index", new { id = user.Id });
+            }
         }
     }
 }

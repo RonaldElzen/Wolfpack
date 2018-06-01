@@ -214,7 +214,13 @@ namespace Wolfpack.Web.Controllers
             //Return a list with possible users if the username is not found.
             if (user == null)
             {
-                var possibleUsers = Context.Users.Where(g => g.UserName.Contains(vm.UserName)).ToList();
+                var possibleUsers = Context.Users.Select(g => new Web.Models.Group.UserVM
+                {
+                    Id = g.Id,
+                    UserName = g.UserName,
+                    FirstName = g.FirstName,
+                    LastName = g.LastName
+                }).Where(g => g.UserName.Contains(vm.UserName));
                 return View(new AddUserVM { PossibleUsers = possibleUsers });
             }
             else

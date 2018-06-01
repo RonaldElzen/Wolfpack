@@ -10,6 +10,6 @@ namespace Wolfpack.Web.Models.Group
     {
         public int Id { get; set; }
         public String UserName { get; set; }
-        public IEnumerable<User> PossibleUsers { get; set; }
+        public IEnumerable<UserVM> PossibleUsers { get; set; }
     }
 }
