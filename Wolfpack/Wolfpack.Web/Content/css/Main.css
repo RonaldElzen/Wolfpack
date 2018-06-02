@@ -13,6 +13,15 @@
   position: absolute;
   overflow-x: hidden; }
 
+.star {
+  width: 35px;
+  height: 35px;
+  background: lightgray;
+  margin-left: 5px;
+  display: inline-block;
+  cursor: pointer;
+  transition: all 1s ease; }
+
 .form-logo {
   max-width: 200px;
   min-height: 200px;
@@ -276,9 +285,7 @@ th {
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center; }
+  flex-direction: row; }
 
 .overview-item {
   width: 250px;
@@ -369,6 +376,10 @@ h2 {
 .form-item {
   position: relative;
   min-height: 60px; }
+
+.form-normal label {
+  position: initial;
+  display: block; }
 
 .validation-summary-errors ul li {
   list-style-type: none;

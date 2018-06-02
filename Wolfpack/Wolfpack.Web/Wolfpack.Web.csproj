@@ -176,6 +176,7 @@
     <Compile Include="Models\Group\AddUserVM.cs" />
     <Compile Include="Models\Group\EditVM.cs" />
     <Compile Include="Models\Group\RateVM.cs" />
+    <Compile Include="Models\Group\UserGroupsVM.cs" />
     <Compile Include="Models\Group\UserVM.cs" />
     <Compile Include="Models\Group\GroupVM.cs" />
     <Compile Include="Models\Group\SkillVM.cs" />
@@ -190,6 +191,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Models\Event\UserEventsVM.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\css\Main.css">

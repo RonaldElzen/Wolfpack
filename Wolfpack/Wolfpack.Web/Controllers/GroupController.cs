@@ -28,14 +28,27 @@ namespace Wolfpack.Web.Controllers
         public ActionResult Index()
         {
             int id = UserHelper.GetCurrentUser().Id;
-            var groups = Context.Groups.Where(x => x.GroupCreator == id).Select(g => new GroupVM
+
+            //Get the groups created by user
+            var createdGroups = Context.Groups.Where(x => x.GroupCreator == id).Select(g => new GroupVM
+            {
+                Id = g.Id,
+                Category = g.Category,
+                CreatedOn = g.CreatedOn,
+                GroupName = g.GroupName
+            });
+
+            //Get the groups in which user participates
+            var user = UserHelper.GetCurrentDbUser(Context);
+            var participatingGroups = user.Groups.Select(g => new GroupVM
             {
                 Id = g.Id,
                 Category = g.Category,
                 CreatedOn = g.CreatedOn,
                 GroupName = g.GroupName,
             });
-            return View(groups);
+
+            return View(new UserGroupsVM{CreatedGroups = createdGroups, ParticipatingGroups = participatingGroups });
         }
 
         /// <summary>
@@ -59,10 +72,15 @@ namespace Wolfpack.Web.Controllers
             });
         }
 
+        /// <summary>
+        /// Method to rate a user
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ActionResult RateUser(int id)
         {
             int loggedInUserId = UserHelper.GetCurrentUser().Id;
-            var currentGroup = Context.Groups.SingleOrDefault(x => x.Id == id && x.GroupCreator == loggedInUserId);
+            var currentGroup = Context.Groups.SingleOrDefault(x => x.Id == id);
             var skills = currentGroup.Skills.Select(s => new Models.Group.SkillVM
             {
                 CreatedAt = s.CreatedAt,
@@ -81,7 +99,7 @@ namespace Wolfpack.Web.Controllers
 
             var userList = groupUsers.Select(a => new SelectListItem() { Text = a.FirstName, Value = a.Id.ToString()});
             var skillsList = skills.Select(a => new SelectListItem() { Text = a.Name, Value = a.Id.ToString()});
-            return View(new Models.Group.RateVM {GroupId = id,Skills = skills, GroupUsers = groupUsers,SkillsList = skillsList, UsersList = userList});
+            return View(new Models.Group.RateVM {GroupId = id,SkillsList = skillsList, UsersList = userList});
         }
 
         [HttpPost]
