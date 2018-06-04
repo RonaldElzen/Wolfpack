@@ -170,14 +170,14 @@ namespace Wolfpack.Web.Controllers
         [HttpPost]
         public ActionResult AddSkill(Models.Group.EditVM vm)
         {
-            var group = Context.Groups.FirstOrDefault(g => g.Id == vm.Id);
+            var group = Context.Groups.SingleOrDefault(g => g.Id == vm.Id);
             var userId = UserHelper.GetCurrentUser().Id;
 
             Skill NewSkill = new Skill
             {
                 Name = vm.NewSkillName,
                 Description = vm.NewSkillDescription,
-                CreatedBy = Context.Users.FirstOrDefault(g => g.Id == userId),
+                CreatedBy = Context.Users.SingleOrDefault(g => g.Id == userId),
                 CreatedAt = DateTime.Now
             };
             group.Skills.Add(NewSkill);
@@ -210,7 +210,7 @@ namespace Wolfpack.Web.Controllers
             if (user == null)
             {
                 var possibleUsers = Context.Users.Where(g => g.UserName.Contains(vm.UserName)).ToList();
-                if(possibleUsers != null)
+                if(possibleUsers != null && possibleUsers.Count > 0)
                     return View(new AddUserVM { PossibleUsers = possibleUsers });
                 else
                     return View(new AddUserVM { Message = "No user found" });
@@ -297,7 +297,7 @@ namespace Wolfpack.Web.Controllers
                 }
                 else
                 {
-                    message = "Invalid group!";
+                    message = "No group users found!";
                 }
             }
             else

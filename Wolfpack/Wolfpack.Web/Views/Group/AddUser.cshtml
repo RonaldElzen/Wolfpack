@@ -13,7 +13,7 @@
             @Html.EditorFor(m => m.UserName)
         </div>
         <input type="submit" class="submit-button" value="Submit" />
-        if (!string.IsNullOrEmpty(Model.Message)) {
+        if (!string.IsNullOrWhiteSpace(Model.Message)) {
             <h3>
                 @Model.Message
             </h3>
