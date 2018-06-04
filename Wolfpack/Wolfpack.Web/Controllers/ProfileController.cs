@@ -24,15 +24,13 @@ namespace Wolfpack.Web.Controllers
             var user = Context.Users.SingleOrDefault(x => x.Id == id);
             profileVM.UserName = user.UserName;
             profileVM.MemberSince = user.RegisterDate;
-            profileVM.Skills = Context.UserRatings
-                .Where(x => x.RatedUser.Id == id)
-                .GroupBy(u => u.RatedQuality)
+            profileVM.Skills = user.UserSkills
                 .Select(s => new SkillVM
                 {
-                    Name = s.Key.Name,
-                    NumberOfRatings = s.Count(),
-                    AverageRating = s.Average(y => y.Rating),
-                    Description = s.Key.Description
+                    Name = s.Skill.Name,
+                    NumberOfRatings = s.Ratings.Count,
+                    AverageRating = s.Ratings.Average(r => r.Mark),
+                    Description = s.Skill.Description
                 });
             return View(profileVM);
         }

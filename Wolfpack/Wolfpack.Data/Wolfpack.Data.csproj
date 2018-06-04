@@ -100,9 +100,9 @@
     <Compile Include="Migrations\201805311129118_SkillRatingsRework.Designer.cs">
       <DependentUpon>201805311129118_SkillRatingsRework.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201806011131072_RatingComment.cs" />
-    <Compile Include="Migrations\201806011131072_RatingComment.Designer.cs">
-      <DependentUpon>201806011131072_RatingComment.cs</DependentUpon>
+    <Compile Include="Migrations\201806040907356_RatingComment.cs" />
+    <Compile Include="Migrations\201806040907356_RatingComment.Designer.cs">
+      <DependentUpon>201806040907356_RatingComment.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -157,8 +157,8 @@
     <EmbeddedResource Include="Migrations\201805311129118_SkillRatingsRework.resx">
       <DependentUpon>201805311129118_SkillRatingsRework.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201806011131072_RatingComment.resx">
-      <DependentUpon>201806011131072_RatingComment.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201806040907356_RatingComment.resx">
+      <DependentUpon>201806040907356_RatingComment.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

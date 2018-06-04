@@ -7,12 +7,12 @@ namespace Wolfpack.Data.Migrations
     {
         public override void Up()
         {
-            AddColumn("dbo.UserRatings", "Comment", c => c.String());
+            AddColumn("dbo.Ratings", "Comment", c => c.String());
         }
         
         public override void Down()
         {
-            DropColumn("dbo.UserRatings", "Comment");
+            DropColumn("dbo.Ratings", "Comment");
         }
     }
 }

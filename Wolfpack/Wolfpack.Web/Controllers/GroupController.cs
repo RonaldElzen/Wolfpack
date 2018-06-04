@@ -80,7 +80,6 @@ namespace Wolfpack.Web.Controllers
             var currentGroup = Context.Groups.SingleOrDefault(x => x.Id == id);
             var skills = currentGroup.Skills.Select(s => new Models.Group.SkillVM
             {
-                CreatedAt = s.CreatedAt,
                 Description = s.Description,
                 Id = s.Id,
                 Name = s.Name
@@ -103,18 +102,29 @@ namespace Wolfpack.Web.Controllers
         public ActionResult SubmitRating(RateVM vm)
         {
             //Gets the user and skill that needs to be rated. 
-            var UserToRate = Context.Users.FirstOrDefault(x => x.Id == vm.UserToRateId);
-            var SkillToRate = Context.Skills.FirstOrDefault(x => x.Id == vm.SkillToRateId);
+            var userToRate = Context.Users.FirstOrDefault(x => x.Id == vm.UserToRateId);
+            var skillToRate = Context.Skills.FirstOrDefault(x => x.Id == vm.SkillToRateId);
+            var userSkill = userToRate.UserSkills.Where(s => s.Skill.Id == skillToRate.Id).FirstOrDefault();
+            
             //Adding the rating to the database.
-            Context.UserRatings.Add(new UserRating
+            if(userSkill == null)
             {
-                Rating = vm.Rating,
+                userSkill = new UserSkill
+                {
+                    Skill = skillToRate
+                };
+
+                userToRate.UserSkills.Add(userSkill);
+            }
+
+            userSkill.Ratings.Add(new Rating
+            {
+                Mark = vm.Rating,
                 RatedAt = DateTime.Now,
                 RatedBy = UserHelper.GetCurrentDbUser(Context),
-                RatedQuality = SkillToRate,
-                RatedUser = UserToRate,
                 Comment = vm.RateComment
             });
+
             Context.SaveChanges();
             return RedirectToAction("Index", "Group");
         }

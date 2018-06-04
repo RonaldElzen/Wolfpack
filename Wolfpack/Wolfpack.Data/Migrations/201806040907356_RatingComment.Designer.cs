@@ -13,7 +13,7 @@ namespace Wolfpack.Data.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201806011131072_RatingComment"; }
+            get { return "201806040907356_RatingComment"; }
         }
         
         string IMigrationMetadata.Source

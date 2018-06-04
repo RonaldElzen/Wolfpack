@@ -16,6 +16,8 @@ namespace Wolfpack.Data.Models
 
         public DateTime RatedAt { get; set; }
 
+        public string Comment { get; set; }
+
         public virtual UserSkill UserSkill { get; set; }
     }
 }

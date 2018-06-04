@@ -33,7 +33,7 @@ namespace Wolfpack.Web.Controllers
                         CreatedOn = e.CreatedOn,
                         EventName = e.EventName
                     }),
-                ParticipatingEvents = user.EventTeam
+                ParticipatingEvents = user.EventTeams
                     .Select(e => new EventVM
                     {
                         Id = e.Event.Id,
