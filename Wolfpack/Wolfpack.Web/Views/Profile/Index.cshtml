@@ -1,0 +1,33 @@
+﻿@model Wolfpack.Web.Models.Profile.ProfileVM
+@{
+    ViewBag.Title = "UserProfile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Profile info</h2>
+<h4>Name</h4>
+<p>@Model.UserName</p>
+<h4>Member since</h4>
+<p>@Model.MemberSince</p>
+<h4>Your bio</h4>
+<p>Coming soon</p>
+<h3>Skills</h3>
+<div class="overview">
+    @foreach (var skill in Model.Skills)
+    {
+        <div class="overview-item">
+            <div class="overview-header">
+                <h3>@skill.Name</h3>
+            </div>
+            <div class="overview-text">
+                <h4>Description</h4>
+                <p>@skill.Description</p>
+                <h4>Times rated</h4>
+                <p>@skill.NumberOfRatings</p>
+                <h4>Average</h4>
+                <p>@skill.AverageRating</p>
+            </div>
+        </div>
+    }
+</div>
+

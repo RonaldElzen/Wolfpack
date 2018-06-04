@@ -1,0 +1,53 @@
+﻿@model Wolfpack.Web.Models.Group.RateVM
+@{
+    ViewBag.Title = "New";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="form-box">
+    @using (Html.BeginForm("SubmitRating", "Group"))
+    {
+        @Html.ValidationSummary()
+        <div class="form-item form-normal">
+            @Html.LabelFor(m => m.UserToRateId)
+            @Html.DropDownListFor(m => Model.UserToRateId,
+                                             Model.UsersList,
+                                             "Select user to rate",
+                                             new { @class = "form-control" })
+        </div>
+        <div class="form-item form-normal">
+            @Html.LabelFor(m => m.SkillToRateId)
+            @Html.DropDownListFor(m => Model.SkillToRateId,
+                                             Model.SkillsList,
+                                             "Select skill to rate",
+                                             new { @class = "form-control" })
+        </div>
+        @Html.HiddenFor(m => m.Rating)
+        <div class="form-item">
+            <div class="rating">
+                <div class="star" data-value="1"><i class="fas fa-star fa-lg"></i></div>
+                <div class="star" data-value="2"><i class="fas fa-star fa-lg"></i></div>
+                <div class="star" data-value="3"><i class="fas fa-star fa-lg"></i></div>
+                <div class="star" data-value="4"><i class="fas fa-star fa-lg"></i></div>
+                <div class="star" data-value="5"><i class="fas fa-star fa-lg"></i></div>
+                <div class="star" data-value="6"><i class="fas fa-star fa-lg"></i></div>
+                <div class="star" data-value="7"><i class="fas fa-star fa-lg"></i></div>
+                <div class="star" data-value="8"><i class="fas fa-star fa-lg"></i></div>
+                <div class="star" data-value="9"><i class="fas fa-star fa-lg"></i></div>
+                <div class="star" data-value="10"><i class="fas fa-star fa-lg"></i></div>
+            </div>
+            </div>
+            <div class="form-item">
+                @Html.EditorFor(m => m.RateComment)
+                @Html.LabelFor(m => m.RateComment)
+            </div>
+
+            @*<div class="form-item">
+                @Html.EditorFor(m => m.Rating)
+                @Html.LabelFor(m => m.Rating)
+            </div>*@
+            <input type="submit" class="submit-button" value="Submit" />
+            }
+
+        </div>
+

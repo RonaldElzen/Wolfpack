@@ -1,0 +1,25 @@
+﻿@model Wolfpack.Web.Models.Profile.SearchVM
+@{
+        ViewBag.Title = "SearchProfile";
+    }
+        
+    <h2>SearchProfile</h2>
+    <div class="form-box">
+        @using (Html.BeginForm("SearchProfile"))
+        {
+            <div class="form-item">
+                @Html.EditorFor(m => m.UserName)
+            </div>
+            <input type="submit" class="submit-button" value="Submit" />
+            if (Model.PossibleUsers != null && Model.PossibleUsers.Count() > 0)
+            {
+                <h3>User not found, did you mean:</h3>
+                <ul>
+                    @foreach (var User in Model.PossibleUsers)
+                    {
+                        <li class="userNameSuggestion">@User.UserName</li>
+                    }
+                </ul>
+            }
+        }
+    </div>

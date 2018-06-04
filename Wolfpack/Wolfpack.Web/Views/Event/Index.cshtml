@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Wolfpack.Web.Models.Event.EventVM>
+﻿@model Wolfpack.Web.Models.Event.UserEventsVM
 
 @{
     ViewBag.Title = "Index";
@@ -6,34 +6,53 @@
 
 <h2>Index</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.EventName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CreatedOn)
-        </th>
-        <th></th>
-    </tr>
+@Html.ActionLink("Create new event", "Create", null, new { @class = "action-button" })
+<h3>Events created by you</h3>
+<div class="overview">
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.EventName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CreatedOn)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model.CreatedEvents)
+    {
+        <div class="overview-item item-large">
+            <div class="overview-header">
+                <h3>@item.EventName</h3>
+            </div>
+            <div class="overview-text">
+                <h4>Created by</h4>
+                <p>@Html.DisplayFor(modelItem => item.EventCreator)</p>
+                <h4>Date created</h4>
+                <p>@Html.DisplayFor(modelItem => item.CreatedOn)</p>
+                <h4>Actions</h4>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "action-button" })
+                @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "action-button" })
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "action-button" })
+                @Html.ActionLink("RateUser", "RateUser", new { id = item.Id }, new { @class = "action-button" })
+            </div>
+        </div>
+    }
+</div>
 
-</table>
+<h3>Events you participate in</h3>
+<div class="overview">
+
+    @foreach (var item in Model.ParticipatingEvents)
+    {
+        <div class="overview-item item-large">
+            <div class="overview-header">
+                <h3>@item.EventName</h3>
+            </div>
+            <div class="overview-text">
+                <h4>Created by</h4>
+                <p>@Html.DisplayFor(modelItem => item.EventCreator)</p>
+                <h4>Date created</h4>
+                <p>@Html.DisplayFor(modelItem => item.CreatedOn)</p>
+                <h4>Actions</h4>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "action-button" })
+                @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "action-button" })
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "action-button" })
+                @Html.ActionLink("RateUser", "RateUser", new { id = item.Id }, new { @class = "action-button" })
+            </div>
+        </div>
+    }
+</div>
+
+

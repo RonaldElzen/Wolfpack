@@ -21,14 +21,26 @@ namespace Wolfpack.Web.Controllers
         /// <returns></returns>
         public ActionResult Index()
         {
-            int id = UserHelper.GetCurrentUser().Id;
-            var events = Context.Events.Where(x => x.EventCreator.Id == id).Select(e => new EventVM
+            //Get events started by user
+            var user = UserHelper.GetCurrentDbUser(Context);
+            return View(new UserEventsVM
             {
-                Id = e.Id,
-                CreatedOn = e.CreatedOn,
-                EventName = e.EventName
+                CreatedEvents = Context.Events
+                    .Where(x => x.EventCreator.Id == user.Id)
+                    .Select(e => new EventVM
+                    {
+                        Id = e.Id,
+                        CreatedOn = e.CreatedOn,
+                        EventName = e.EventName
+                    }),
+                ParticipatingEvents = user.EventTeam
+                    .Select(e => new EventVM
+                    {
+                        Id = e.Event.Id,
+                        CreatedOn = e.Event.CreatedOn,
+                        EventName = e.Event.EventName
+                    })
             });
-            return View(events);
         }
 
         /// <summary>
@@ -62,7 +74,7 @@ namespace Wolfpack.Web.Controllers
             else
             {
                 return RedirectToAction("Index", "EventController");
-            }    
+            }
         }
 
         /// <summary>
@@ -143,7 +155,7 @@ namespace Wolfpack.Web.Controllers
 
             currentEvent.Teams.Clear();
 
-            if(currentEvent != null)
+            if (currentEvent != null)
             {
                 var groupUsers = currentEvent.Group.Users;
                 var teamSize = 7; // TODO implement dynamic groupsize
@@ -159,7 +171,7 @@ namespace Wolfpack.Web.Controllers
                 if (vm.MaxTeamsAmount > 0)
                     maxTeams = vm.MaxTeamsAmount;
 
-                if(teamSizeMin < 1 || teamSizeMax < 1 || maxTeams < 1)
+                if (teamSizeMin < 1 || teamSizeMax < 1 || maxTeams < 1)
                 {
                     vm.Message = "Please make sure you have filled in everything and that max team size isnt higher than min team size";
                     return View("GenerateTeamsForm", vm);
@@ -183,7 +195,7 @@ namespace Wolfpack.Web.Controllers
                             if (usersWithoutOpposite != null && usersWithoutOpposite.Count() > 0)
                             {
                                 var user = usersWithoutOpposite.Last();
-                                var oppositeUser = groupUsers.Where(u => u != null && user != null && !currentEvent.Teams.Any(t => t.Users.Contains(u)) 
+                                var oppositeUser = groupUsers.Where(u => u != null && user != null && !currentEvent.Teams.Any(t => t.Users.Contains(u))
                                     && !team.Users.Contains(u) && u.GetWorstSkill().Id == user.GetBestSkill().Id).FirstOrDefault();
 
                                 if (oppositeUser != null)

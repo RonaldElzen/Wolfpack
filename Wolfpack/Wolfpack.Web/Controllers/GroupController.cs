@@ -27,15 +27,26 @@ namespace Wolfpack.Web.Controllers
         /// <returns></returns>
         public ActionResult Index()
         {
-            int id = UserHelper.GetCurrentUser().Id;
-            var groups = Context.Groups.Where(x => x.GroupCreator == id).Select(g => new GroupVM
+            var user = UserHelper.GetCurrentDbUser(Context);
+            //Get the groups created by user
+            var createdGroups = Context.Groups.Where(x => x.GroupCreator == user.Id).Select(g => new GroupVM
+            {
+                Id = g.Id,
+                Category = g.Category,
+                CreatedOn = g.CreatedOn,
+                GroupName = g.GroupName
+            });
+
+            //Get the groups in which user participates
+            var participatingGroups = user.Groups.Select(g => new GroupVM
             {
                 Id = g.Id,
                 Category = g.Category,
                 CreatedOn = g.CreatedOn,
                 GroupName = g.GroupName,
             });
-            return View(groups);
+
+            return View(new UserGroupsVM{CreatedGroups = createdGroups, ParticipatingGroups = participatingGroups });
         }
 
         /// <summary>
@@ -57,6 +68,55 @@ namespace Wolfpack.Web.Controllers
                 GroupUsers = users,
                 Message = message
             });
+        }
+
+        /// <summary>
+        /// Method to rate a user
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult RateUser(int id)
+        {
+            var currentGroup = Context.Groups.SingleOrDefault(x => x.Id == id);
+            var skills = currentGroup.Skills.Select(s => new Models.Group.SkillVM
+            {
+                CreatedAt = s.CreatedAt,
+                Description = s.Description,
+                Id = s.Id,
+                Name = s.Name
+            });
+
+            var groupUsers = currentGroup.Users.Select(u => new Models.Group.UserVM
+            {
+                FirstName = u.FirstName,
+                Id = u.Id,
+                LastName = u.LastName,
+                UserName = u.UserName
+            });
+
+            var userList = groupUsers.Select(a => new SelectListItem() { Text = a.FirstName, Value = a.Id.ToString()});
+            var skillsList = skills.Select(a => new SelectListItem() { Text = a.Name, Value = a.Id.ToString()});
+            return View(new Models.Group.RateVM {GroupId = id,SkillsList = skillsList, UsersList = userList});
+        }
+
+        [HttpPost]
+        public ActionResult SubmitRating(RateVM vm)
+        {
+            //Gets the user and skill that needs to be rated. 
+            var UserToRate = Context.Users.FirstOrDefault(x => x.Id == vm.UserToRateId);
+            var SkillToRate = Context.Skills.FirstOrDefault(x => x.Id == vm.SkillToRateId);
+            //Adding the rating to the database.
+            Context.UserRatings.Add(new UserRating
+            {
+                Rating = vm.Rating,
+                RatedAt = DateTime.Now,
+                RatedBy = UserHelper.GetCurrentDbUser(Context),
+                RatedQuality = SkillToRate,
+                RatedUser = UserToRate,
+                Comment = vm.RateComment
+            });
+            Context.SaveChanges();
+            return RedirectToAction("Index", "Group");
         }
 
         /// <summary>
@@ -153,16 +213,6 @@ namespace Wolfpack.Web.Controllers
         }
 
         /// <summary>
-        /// Standard view for adding users
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult AddUser()
-        {
-            //Static ID, needs to be added dynamic
-            return View(new AddUserVM() { Id = 1 });
-        }
-
-        /// <summary>
         /// Form handling for adding skill to Group
         /// </summary>
         /// <param name="vm"></param>
@@ -197,7 +247,13 @@ namespace Wolfpack.Web.Controllers
             //Return a list with possible users if the username is not found.
             if (user == null)
             {
-                var possibleUsers = Context.Users.Where(g => g.UserName.Contains(vm.UserName)).ToList();
+                var possibleUsers = Context.Users.Select(g => new Web.Models.Group.UserVM
+                {
+                    Id = g.Id,
+                    UserName = g.UserName,
+                    FirstName = g.FirstName,
+                    LastName = g.LastName
+                }).Where(g => g.UserName.Contains(vm.UserName));
                 return View(new AddUserVM { PossibleUsers = possibleUsers });
             }
             else

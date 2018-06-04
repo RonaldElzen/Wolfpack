@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Wolfpack.Web.Models.Group.GroupVM>
+﻿@model Wolfpack.Web.Models.Group.UserGroupsVM
 
 @{
     ViewBag.Title = "Index";
@@ -6,46 +6,52 @@
 
 <h2>Index</h2>
 
-<p>
-    @Html.ActionLink("Create New", "NewGroup")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.GroupCreator)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.GroupName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Category)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CreatedOn)
-        </th>
-        <th></th>
-    </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.GroupCreator)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.GroupName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Category)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CreatedOn)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
-}
+@Html.ActionLink("Create new group", "NewGroup", null, new { @class = "action-button" })
+<h3>Groups created by you</h3>
+<div class="overview">
+    @foreach (var item in Model.CreatedGroups)
+    {
+        <div class="overview-item item-large">
+            <div class="overview-header">
+                <h3>@item.GroupName</h3>
+            </div>
+            <div class="overview-text">
+                <h4>Created by</h4>
+                <p>@Html.DisplayFor(modelItem => item.GroupCreator)</p>
+                <h4>Category</h4>
+                <p>@Html.DisplayFor(modelItem => item.Category)</p>
+                <h4>Date created</h4>
+                <p>@Html.DisplayFor(modelItem => item.CreatedOn)</p>
+                <h4>Actions</h4>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "action-button" })
+                @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "action-button" })
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "action-button" })
+                @Html.ActionLink("RateUser", "RateUser", new { id = item.Id }, new { @class = "action-button" })
+            </div>
+        </div>
+    }
+</div>
+<h3>Groups you participate in</h3>
+<div class="overview">
+    @foreach (var item in Model.ParticipatingGroups)
+    {
+        <div class="overview-item item-large">
+            <div class="overview-header">
+                <h3>@item.GroupName</h3>
+            </div>
+            <div class="overview-text">
+                <h4>Created by</h4>
+                <p>@Html.DisplayFor(modelItem => item.GroupCreator)</p>
+                <h4>Category</h4>
+                <p>@Html.DisplayFor(modelItem => item.Category)</p>
+                <h4>Date created</h4>
+                <p>@Html.DisplayFor(modelItem => item.CreatedOn)</p>
+                <h4>Actions</h4>
+                @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "action-button" })
+                @Html.ActionLink("RateUser", "RateUser", new { id = item.Id }, new { @class = "action-button" })
+            </div>
+        </div>
+    }
 
-</table>
+</div>
