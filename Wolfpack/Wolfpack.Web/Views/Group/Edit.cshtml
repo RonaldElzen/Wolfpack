@@ -24,32 +24,42 @@
 </div>
 
 <h3>
-    Group users
+    Add user to group
 </h3>
-<table class="table">
-    <tr>
-        <th>
-            Firstname
-        </th>
-        <th>
-            Lastname
-        </th>
-        <th>
-        </th>
-    </tr>
+<p>
+    @Html.ActionLink("Add User", "AddUser", new { id = Model.Id })
+</p>
 
-    @foreach (var item in Model.GroupUsers)
-    {
+@if (Model.GroupUsers != null && Model.GroupUsers.Count() > 0)
+{
+    <h3>
+        Group users
+    </h3>
+    <table class="table">
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastName)
-            </td>
-            <td>
-                @Html.ActionLink("X", "RemoveUserFromGroup", new { userId = item.Id, groupId = Model.Id })
-            </td>
+            <th>
+                Firstname
+            </th>
+            <th>
+                Lastname
+            </th>
+            <th>
+            </th>
         </tr>
-    }
-</table>
+
+        @foreach (var item in Model.GroupUsers)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.ActionLink("X", "RemoveUserFromGroup", new { userId = item.Id, groupId = Model.Id })
+                </td>
+            </tr>
+        }
+    </table>
+}
