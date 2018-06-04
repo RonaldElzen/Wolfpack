@@ -46,10 +46,10 @@ for (let i = 0; i < stars.length; i++) {
     stars[i].addEventListener('click', function () {
         let starsInParent = this.parentElement.children;
         for (let i = 0; i < starsInParent.length; i++) {
-            starsInParent[i].style.backgroundColor = "#d3d3d3";
+            starsInParent[i].children[0].style.color = "#d3d3d3";
         }
         for (let i = 0; i < this.dataset.value; i++) {
-            this.parentElement.children[i].style.backgroundColor = "#455B65";
+            this.parentElement.children[i].children[0].style.color = "#455B65";
         }
         document.querySelector("#Rating").value = this.dataset.value;
     });

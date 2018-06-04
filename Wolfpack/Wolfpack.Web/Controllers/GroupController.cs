@@ -27,10 +27,9 @@ namespace Wolfpack.Web.Controllers
         /// <returns></returns>
         public ActionResult Index()
         {
-            int id = UserHelper.GetCurrentUser().Id;
-
+            var user = UserHelper.GetCurrentDbUser(Context);
             //Get the groups created by user
-            var createdGroups = Context.Groups.Where(x => x.GroupCreator == id).Select(g => new GroupVM
+            var createdGroups = Context.Groups.Where(x => x.GroupCreator == user.Id).Select(g => new GroupVM
             {
                 Id = g.Id,
                 Category = g.Category,
@@ -39,7 +38,6 @@ namespace Wolfpack.Web.Controllers
             });
 
             //Get the groups in which user participates
-            var user = UserHelper.GetCurrentDbUser(Context);
             var participatingGroups = user.Groups.Select(g => new GroupVM
             {
                 Id = g.Id,
@@ -79,7 +77,6 @@ namespace Wolfpack.Web.Controllers
         /// <returns></returns>
         public ActionResult RateUser(int id)
         {
-            int loggedInUserId = UserHelper.GetCurrentUser().Id;
             var currentGroup = Context.Groups.SingleOrDefault(x => x.Id == id);
             var skills = currentGroup.Skills.Select(s => new Models.Group.SkillVM
             {

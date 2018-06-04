@@ -17,13 +17,14 @@ body {
 }
 
 .star {
-    width: 35px;
-    height: 35px;
-    background: rgb(211, 211, 211);
     margin-left: 5px;
     display: inline-block;
     cursor: pointer;
-    transition: all 1s ease;
+    i {
+        font-size: 20pt;
+        color: rgb(211, 211, 211);
+        transition: all 1s ease;
+    }
 }
 
 .form-logo {

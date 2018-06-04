@@ -22,23 +22,25 @@ namespace Wolfpack.Web.Controllers
         public ActionResult Index()
         {
             //Get events started by user
-            int id = UserHelper.GetCurrentUser().Id;
-            var createdEvents = Context.Events.Where(x => x.EventCreator.Id == id).Select(e => new EventVM
-            {
-                Id = e.Id,
-                CreatedOn = e.CreatedOn,
-                EventName = e.EventName
-            });
-
-            //Get events in which user participates
             var user = UserHelper.GetCurrentDbUser(Context);
-            var participatingEvents = user.EventTeam.Select(e => new EventVM
+            return View(new UserEventsVM
             {
-                Id = e.Event.Id,
-                CreatedOn = e.Event.CreatedOn,
-                EventName = e.Event.EventName
+                CreatedEvents = Context.Events
+                    .Where(x => x.EventCreator.Id == user.Id)
+                    .Select(e => new EventVM
+                    {
+                        Id = e.Id,
+                        CreatedOn = e.CreatedOn,
+                        EventName = e.EventName
+                    }),
+                ParticipatingEvents = user.EventTeam
+                    .Select(e => new EventVM
+                    {
+                        Id = e.Event.Id,
+                        CreatedOn = e.Event.CreatedOn,
+                        EventName = e.Event.EventName
+                    })
             });
-            return View(new UserEventsVM { CreatedEvents = createdEvents, ParticipatingEvents = participatingEvents});
         }
 
         /// <summary>

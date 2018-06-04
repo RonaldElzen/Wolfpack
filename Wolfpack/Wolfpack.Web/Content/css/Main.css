@@ -14,13 +14,13 @@
   overflow-x: hidden; }
 
 .star {
-  width: 35px;
-  height: 35px;
-  background: lightgray;
   margin-left: 5px;
   display: inline-block;
-  cursor: pointer;
-  transition: all 1s ease; }
+  cursor: pointer; }
+  .star i {
+    font-size: 20pt;
+    color: lightgray;
+    transition: all 1s ease; }
 
 .form-logo {
   max-width: 200px;
