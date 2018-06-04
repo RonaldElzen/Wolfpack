@@ -187,7 +187,7 @@ namespace Wolfpack.Web.Controllers
                     GroupUsers = groupUsers
                 });
             }
-            return RedirectToAction("Index", "GroupController");
+            return RedirectToAction("Index");
         }
 
         /// <summary>
