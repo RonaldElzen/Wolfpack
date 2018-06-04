@@ -9,7 +9,8 @@ namespace Wolfpack.Web.Models.Group
     public class AddUserVM
     {
         public int Id { get; set; }
-        public String UserName { get; set; }
+        public string UserName { get; set; }
         public IEnumerable<User> PossibleUsers { get; set; }
+        public string Message { get; set; }
     }
 }

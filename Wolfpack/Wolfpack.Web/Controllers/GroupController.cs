@@ -157,10 +157,9 @@ namespace Wolfpack.Web.Controllers
         /// Standard view for adding users
         /// </summary>
         /// <returns></returns>
-        public ActionResult AddUser()
+        public ActionResult AddUser(int id)
         {
-            //Static ID, needs to be added dynamic
-            return View(new AddUserVM() { Id = 1 });
+            return View(new AddUserVM() { Id = id });
         }
 
         /// <summary>
@@ -171,7 +170,7 @@ namespace Wolfpack.Web.Controllers
         [HttpPost]
         public ActionResult AddSkill(Models.Group.EditVM vm)
         {
-            Group group = Context.Groups.FirstOrDefault(g => g.Id == vm.Id);
+            var group = Context.Groups.FirstOrDefault(g => g.Id == vm.Id);
             var userId = UserHelper.GetCurrentUser().Id;
 
             Skill NewSkill = new Skill
@@ -184,7 +183,18 @@ namespace Wolfpack.Web.Controllers
             group.Skills.Add(NewSkill);
 
             Context.SaveChanges();
-            return View("Edit" , new Models.Group.EditVM { Message = "Skill added" });
+            var users = Context.Groups.SingleOrDefault(x => x.Id == vm.Id).Users.Select(u => new EditVMUser
+            {
+                Id = u.Id,
+                FirstName = u.FirstName,
+                LastName = u.LastName
+            });
+            
+            return View("Edit" , new Models.Group.EditVM {
+                Id = group.Id,
+                GroupUsers = users,
+                Message = "Skill added"
+            });
         }
 
         /// <summary>
@@ -200,7 +210,11 @@ namespace Wolfpack.Web.Controllers
             if (user == null)
             {
                 var possibleUsers = Context.Users.Where(g => g.UserName.Contains(vm.UserName)).ToList();
-                return View(new AddUserVM { PossibleUsers = possibleUsers });
+                if(possibleUsers != null)
+                    return View(new AddUserVM { PossibleUsers = possibleUsers });
+                else
+                    return View(new AddUserVM { Message = "No user found" });
+
             }
             else
             {
@@ -211,7 +225,7 @@ namespace Wolfpack.Web.Controllers
                 }
                 group.Users.Add(user);
                 Context.SaveChanges();
-                return View(new AddUserVM { });
+                return View("Edit", new Models.Group.EditVM { Message = "User added" });
             }
         }
 

@@ -13,6 +13,11 @@
             @Html.EditorFor(m => m.UserName)
         </div>
         <input type="submit" class="submit-button" value="Submit" />
+        if (!string.IsNullOrEmpty(Model.Message)) {
+            <h3>
+                @Model.Message
+            </h3>
+        }
         if (Model.PossibleUsers != null && Model.PossibleUsers.Count() > 0)
         {
             <h3>User not found, did you mean:</h3>
