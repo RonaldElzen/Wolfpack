@@ -274,7 +274,7 @@ namespace Wolfpack.Web.Controllers
                     UserName = g.UserName,
                     FirstName = g.FirstName,
                     LastName = g.LastName
-                }).Where(g => g.UserName.Contains(vm.UserName));
+                }).Where(g => g.UserName.Contains(vm.UserName)).ToList();
 
                 if(possibleUsers != null && possibleUsers.Count > 0)
                     return View(new AddUserVM { PossibleUsers = possibleUsers });
