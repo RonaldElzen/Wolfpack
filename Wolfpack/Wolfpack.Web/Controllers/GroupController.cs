@@ -45,7 +45,8 @@ namespace Wolfpack.Web.Controllers
         /// <returns></returns>
         public ActionResult Edit(int id, string message = "")
         {
-            var users = Context.Groups.SingleOrDefault(x => x.Id == id).Users.Select(u => new EditVMUser {
+            var users = Context.Groups.SingleOrDefault(x => x.Id == id).Users.Select(u => new EditVMUser
+            {
                 Id = u.Id,
                 FirstName = u.FirstName,
                 LastName = u.LastName
@@ -69,7 +70,7 @@ namespace Wolfpack.Web.Controllers
         {
             int loggedInUserId = UserHelper.GetCurrentUser().Id;
             var singleGroup = Context.Groups.SingleOrDefault(x => x.Id == groupId && x.GroupCreator == loggedInUserId);
-            if(singleGroup != null)
+            if (singleGroup != null)
             {
                 var user = Context.Users.FirstOrDefault(x => x.Id == userId);
                 singleGroup.Users.Remove(user);
@@ -118,6 +119,19 @@ namespace Wolfpack.Web.Controllers
                 });
             }
             return RedirectToAction("Index", "GroupController");
+        }
+
+        /// <summary>
+        /// Skills in json format for autocomplete
+        /// </summary>
+        /// <param name="prefix"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [ActionName("GetSkills")]
+        public ActionResult GetSkills(String prefix)
+        {
+            var skills = Context.Skills.Where(g => g.Name.StartsWith(prefix)).Select(g => g.Name).ToList();
+            return Json(skills);
         }
 
         /// <summary>
@@ -173,16 +187,20 @@ namespace Wolfpack.Web.Controllers
             Group group = Context.Groups.FirstOrDefault(g => g.Id == vm.Id);
             var userId = UserHelper.GetCurrentUser().Id;
 
-            Skill NewSkill = new Skill
-            {
-                Name = vm.NewSkillName,
-                Description = vm.NewSkillDescription,
-                CreatedBy = Context.Users.FirstOrDefault(g => g.Id == userId),
-            };
-            group.Skills.Add(NewSkill);
+            Skill skill = Context.Skills.FirstOrDefault(g => g.Name == vm.NewSkillName);
 
+            if (skill == null)
+            {
+                skill = new Skill
+                {
+                    Name = vm.NewSkillName,
+                    Description = vm.NewSkillDescription,
+                    CreatedBy = Context.Users.FirstOrDefault(g => g.Id == userId),
+                };
+            }
+            group.Skills.Add(skill);
             Context.SaveChanges();
-            return View("Edit" , new Models.Group.EditVM { Message = "Skill added" });
+            return View("Edit", new Models.Group.EditVM { Message = "Skill added" });
         }
 
         /// <summary>
