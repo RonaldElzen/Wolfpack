@@ -51,6 +51,19 @@ namespace Wolfpack.Web.Controllers
                     Name = s.Name
                 });
 
+                var teams = singleEvent.Teams.Select(t => new TeamVM
+                {
+                    Users = t.Users.Select(u => new UserVM
+                    {
+                        FirstName = u.FirstName,
+                        Id = u.Id,
+                        LastName = u.LastName,
+                        UserName = u.UserName
+                    }),
+                    Name = t.Name,
+                    Id = t.Id
+                });
+
                 return View(new EventVM
                 {
                     CreatedOn = singleEvent.CreatedOn,
@@ -58,7 +71,8 @@ namespace Wolfpack.Web.Controllers
                     EventName = singleEvent.EventName,
                     GroupId = singleEvent.Group.Id,
                     Id = singleEvent.Id,
-                    Skills = skills
+                    Skills = skills,
+                    Teams = teams
                 });
             }
             else
@@ -96,6 +110,32 @@ namespace Wolfpack.Web.Controllers
                 });
             }
             return RedirectToAction("Index");
+        }
+
+        public ActionResult Team(int id)
+        {
+            var team = Context.EventTeams.SingleOrDefault(x => x.Id == id);
+            var vm = new TeamVM
+            {
+                Name = team.Name,
+                Users = team.Users.Select(u => new UserVM
+                {
+                    FirstName = u.FirstName,
+                    Id = u.Id,
+                    LastName = u.LastName,
+                    UserName = u.UserName,
+                    SkillRatings = u.UserSkills.Select(us => new SkillRatingVM
+                    {
+                        Mark = us.Ratings.Average(r => r.Mark),
+                        Name = us.Skill.Name
+                    })
+                }),
+                //SkillNames = team.Event.Skills.Select(s => s.Name) TODO: Only get skills from event not all in users
+            };
+
+            vm.SkillNames = vm.Users.First().SkillRatings.Select(x => x.Name).ToList();
+
+            return View(vm);
         }
 
         /// <summary>
@@ -210,7 +250,10 @@ namespace Wolfpack.Web.Controllers
                     Users = t.Users.Select(u => new UserVM
                     {
                         UserName = u != null ? u.FirstName : "null",
-                        SkillRatings = u.GetSkillRatings()
+                        SkillRatings = u.GetSkillRatings().Select(x => new SkillRatingVM
+                        {
+                            Mark = x
+                        })
                     })
                 });
 

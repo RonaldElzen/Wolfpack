@@ -175,8 +175,10 @@
     <Compile Include="Models\Event\EditVM.cs" />
     <Compile Include="Models\Event\EventVM.cs" />
     <Compile Include="Models\Event\GenerateTeamsVM.cs" />
+    <Compile Include="Models\Event\SkillRatingVM.cs" />
     <Compile Include="Models\Event\SkillVM.cs" />
     <Compile Include="Models\Event\TeamVM.cs" />
+    <Compile Include="Models\Event\UserVM.cs" />
     <Compile Include="Models\Group\AddUserVM.cs" />
     <Compile Include="Models\Group\EditVM.cs" />
     <Compile Include="Models\Group\UserVM.cs" />
@@ -252,6 +254,7 @@
     <Content Include="Views\Event\Edit.cshtml" />
     <Content Include="Views\Group\Delete.cshtml" />
     <Content Include="Views\Event\Delete.cshtml" />
+    <Content Include="Views\Event\Team.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
