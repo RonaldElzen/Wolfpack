@@ -162,6 +162,10 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\CustomControllerFactory.cs" />
+    <Compile Include="Helpers\Enums\RecoveryStatus.cs" />
+    <Compile Include="Helpers\Interfaces\ISessionHelper.cs" />
+    <Compile Include="Helpers\Interfaces\IUserHelper.cs" />
+    <Compile Include="Helpers\SessionHelper.cs" />
     <Compile Include="Helpers\UserHelper.cs" />
     <Compile Include="Models\Account\LoginVM.cs" />
     <Compile Include="Models\Account\RecoveryVM.cs" />
@@ -229,7 +233,6 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
-    <Content Include="Views\Account\Index.cshtml" />
     <Content Include="Views\Account\Recovery.cshtml" />
     <Content Include="Views\Profile\UserProfile.cshtml" />
     <Content Include="Views\Shared\_NoSidebarLayout.cshtml" />
@@ -253,6 +256,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Models\Home\" />
     <Folder Include="Views\Base\" />
   </ItemGroup>
   <ItemGroup>

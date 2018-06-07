@@ -1,11 +1,6 @@
-﻿@model Wolfpack.Web.Models.Home.HomeVM
-
-@{
+﻿@{
     ViewBag.Title = "Home Page";
 }
-
-@if (Model == null || string.IsNullOrWhiteSpace(Model.Test))
-{
 
 <div class="form-box">
     <h2> Form demo</h2>
@@ -25,17 +20,3 @@
         <input type="submit" class="submit-button" />
     </form>
 </div>
-}
-else
-{
-    using(Html.BeginForm("FormTest", "Home"))
-    {
-        <text>
-        @Html.EditorFor(m => m.Test)
-
-        <input type="submit" />
-        </text>
-    }
-
-    <text>@Model.Test</text>
-}

@@ -9,19 +9,16 @@ using Wolfpack.BusinessLayer;
 using Wolfpack.Data;
 using Wolfpack.Data.Models;
 using Wolfpack.Web.Helpers;
+using Wolfpack.Web.Helpers.Enums;
+using Wolfpack.Web.Helpers.Interfaces;
 using Wolfpack.Web.Models.Account;
 
 namespace Wolfpack.Web.Controllers
 {
     public class AccountController : BaseController
     {
-        public AccountController(Context context) : base(context) { }
-
-        // GET: Account
-        public ActionResult Index()
-        {
-            return View();
-        }
+        public AccountController(Context context, IUserHelper userHelper = null, ISessionHelper sessionHelper = null) 
+            : base(context, userHelper, sessionHelper) { }
 
         /// <summary>
         /// Standard View
@@ -62,11 +59,14 @@ namespace Wolfpack.Web.Controllers
                 return View("Login", vm);
             }
 
-            if(user.LastLoginAttempt != null && user.LoginAttempts > 0 && user.LoginAttempts < 4)
-            if (Hashing.Verify(vm.Password, user.Password))
+            if (user.LastLoginAttempt != null && user.LoginAttempts > 0 && user.LoginAttempts < 4)
             {
-                TimeSpan diff = DateTime.Now - user.LastLoginAttempt;
-                if (diff.TotalMinutes > 30) user.LoginAttempts = 0;
+                if (Hashing.Verify(vm.Password, user.Password))
+                {
+                    TimeSpan diff = DateTime.Now - user.LastLoginAttempt;
+                    if (diff.TotalMinutes > 30)
+                        user.LoginAttempts = 0;
+                }
             }
             else if (user.LoginAttempts > 3)
             {
@@ -228,7 +228,7 @@ namespace Wolfpack.Web.Controllers
                 }
                 else
                 {
-                    return View("Recovery", new RecoveryVM { Status = "invalid" });
+                    return View("Recovery", new RecoveryVM { Status = RecoveryStatus.Invalid });
                 }
             }
             return View();
@@ -254,11 +254,11 @@ namespace Wolfpack.Web.Controllers
                         user.Password = Hashing.Hash(vm.Password);
                         Context.Recoveries.Remove(recovery);
                         Context.SaveChanges();
-                        return View("Recovery", new RecoveryVM { Status = "changed" });
+                        return View("Recovery", new RecoveryVM { Status = RecoveryStatus.Changed });
                     }
                 }
             }
-            return View("Recovery", new RecoveryVM { Status = "failed" });
+            return View("Recovery", new RecoveryVM { Status = RecoveryStatus.Failed });
         }
 
         /// <summary>
@@ -269,12 +269,12 @@ namespace Wolfpack.Web.Controllers
         [HttpPost]
         public ActionResult RecoveryNew(RecoveryVM vm)
         {
-            if (vm.Email != null)
+            if (!string.IsNullOrWhiteSpace(vm.Email))
             {
                 User user = Context.Users.FirstOrDefault(u => u.Mail == vm.Email);
                 if (user != null) _resetPassword(vm.Email);
             }
-            return View("Recovery", new RecoveryVM { Status = "sent"});
+            return View("Recovery", new RecoveryVM { Status = RecoveryStatus.Sent });
         }
 
         public ActionResult Unlock(UnlockVM vm)
