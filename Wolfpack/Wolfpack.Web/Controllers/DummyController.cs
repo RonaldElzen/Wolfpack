@@ -7,6 +7,7 @@ using Wolfpack.BusinessLayer;
 using Wolfpack.Data;
 using Wolfpack.Data.Models;
 using Wolfpack.Web.Helpers;
+using Wolfpack.Web.Helpers.Interfaces;
 using Wolfpack.Web.Models.Dummy;
 
 namespace Wolfpack.Web.Controllers
@@ -15,9 +16,8 @@ namespace Wolfpack.Web.Controllers
     {
         public User currentUser;
 
-        public DummyController(Context context) : base(context) {
-            currentUser = UserHelper.GetCurrentDbUser(context);
-        }
+        public DummyController(Context context, IUserHelper userHelper = null, ISessionHelper sessionHelper = null)
+            : base(context, userHelper, sessionHelper) { }
 
         /// <summary>
         /// Get Dummy Page

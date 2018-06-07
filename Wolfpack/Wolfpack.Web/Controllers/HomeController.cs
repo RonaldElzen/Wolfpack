@@ -12,7 +12,8 @@ namespace Wolfpack.Web.Controllers
 {
     public class HomeController : BaseController
     {
-        public HomeController(Context context, IUserHelper userHelper = null) : base(context, userHelper) { }
+        public HomeController(Context context, IUserHelper userHelper = null, ISessionHelper sessionHelper = null)
+            : base(context, userHelper, sessionHelper) { }
 
         public ActionResult Index()
         {

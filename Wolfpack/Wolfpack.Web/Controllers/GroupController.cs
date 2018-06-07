@@ -8,6 +8,7 @@ using Wolfpack.BusinessLayer;
 using Wolfpack.Data;
 using Wolfpack.Data.Models;
 using Wolfpack.Web.Helpers;
+using Wolfpack.Web.Helpers.Interfaces;
 using Wolfpack.Web.Models.Event;
 using Wolfpack.Web.Models.Group;
 
@@ -19,7 +20,8 @@ namespace Wolfpack.Web.Controllers
         /// Standard view for creating a new group
         /// </summary>
         /// <returns></returns>
-        public GroupController(Context context) : base(context) { }
+        public GroupController(Context context, IUserHelper userHelper = null, ISessionHelper sessionHelper = null)
+            : base(context, userHelper, sessionHelper) { }
 
         /// <summary>
         /// View all groups

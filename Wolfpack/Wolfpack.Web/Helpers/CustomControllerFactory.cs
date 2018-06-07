@@ -14,7 +14,7 @@ namespace Wolfpack.Web.Helpers
             if (controllerType != null)
             {
                 var context = new Context();
-                var controller = Activator.CreateInstance(controllerType, new[] { context, null }) as Controller;
+                var controller = Activator.CreateInstance(controllerType, new[] { context, null, null }) as Controller;
                 return controller;
             }
             else
