@@ -198,25 +198,25 @@ namespace Wolfpack.Web.Tests.Controllers
         #endregion
 
         #region RegisterPost
-        //TODO RegisterPost Test
-        [TestMethod, Ignore]
-        public void RegisterPost_InValidEmail_ViewResult()
-        {
-            // Arrange
-            var mockContext = new Mock<Context>();
-            var mockUserHelper = new Mock<IUserHelper>();
-            var controller = new AccountController(mockContext.Object, mockUserHelper.Object);
+        //TODO RegisterPost Test (ReCaptcha causing issues)
+        //[TestMethod, Ignore]
+        //public void RegisterPost_InValidEmail_ViewResult()
+        //{
+        //    // Arrange
+        //    var mockContext = new Mock<Context>();
+        //    var mockUserHelper = new Mock<IUserHelper>();
+        //    var controller = new AccountController(mockContext.Object, mockUserHelper.Object);
 
-            var vm = new RegisterVM { MailAdress = "test" };
+        //    var vm = new RegisterVM { MailAdress = "test" };
 
-            // Act
+        //    // Act
 
-            var result = controller.RegisterPost(vm) as ViewResult;
+        //    var result = controller.RegisterPost(vm) as ViewResult;
 
-            // Assert
+        //    // Assert
 
-            Assert.IsNotNull(result);
-        }
+        //    Assert.IsNotNull(result);
+        //}
 
         #endregion
 
@@ -443,7 +443,7 @@ namespace Wolfpack.Web.Tests.Controllers
             var mockContext = new Mock<Context>();
             mockContext.SetupGet(c => c.Recoveries).Returns(mockSet.Object);
 
-            var vm = new RecoveryVM { Password = "Test", PasswordCheck = "Test" };
+            var vm = new RecoveryVM { Password = "Test", PasswordCheck = "Test", Key = "TestKey" };
 
             var mockSession = new Mock<ISessionHelper>();
             mockSession.Setup(s => s.GetSessionItem("recoveryKey")).Returns("TestKey");
