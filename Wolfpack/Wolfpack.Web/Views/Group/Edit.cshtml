@@ -54,10 +54,3 @@
         </tr>
     }
 </table>
-
-<script>
-    let input = document.querySelector("#NewSkillName")
-    input.onkeyup = function (e) {
-        getSkillSuggestions('@Url.Action("GetSkills")', e.target.value)
-    }
-</script>

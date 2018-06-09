@@ -45,6 +45,12 @@ for (let i = 0; i < suggestions.length; i++) {
     });
 }
 
+//Key up function to check if changes are made in input
+let input = document.querySelector("#NewSkillName")
+input.onkeyup = function (e) {
+    getSkillSuggestions("/Skill/GetSkills", e.target.value)
+}
+
 /**
  * Function to autocomplete skills
  * @param {any} url
