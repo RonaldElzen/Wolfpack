@@ -158,6 +158,7 @@
     <Compile Include="Controllers\GroupController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
+    <Compile Include="Controllers\SkillController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -257,6 +258,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="Models\Home\" />
     <Folder Include="Views\Base\" />
+    <Folder Include="Views\Skill\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

@@ -11,12 +11,13 @@
         @Model.Message
         @Html.ValidationSummary()
         <div class="form-item">
-            @Html.EditorFor(m => m.NewSkillName, new { htmlAttributes = new { required = "required" } })
+            @Html.EditorFor(m => m.NewSkillName, new { required = "required" })
             @Html.LabelFor(m => m.NewSkillName, new { htmlAttributes = new { required = "required" } })
+            <ul id="autocomplete"></ul>
         </div>
-        <div class="form-item">
-            @Html.EditorFor(m => m.NewSkillName, new { htmlAttributes = new { required = "required" } })
-            @Html.LabelFor(m => m.NewSkillName, new { htmlAttributes = new { required = "required" } })
+        <div class="form-item" id="skillDescriptionItem">
+            @Html.EditorFor(m => m.NewSkillDescription, new { htmlAttributes = new { required = "required" } })
+            @Html.LabelFor(m => m.NewSkillDescription, new { htmlAttributes = new { required = "required" } })
         </div>
         @Html.HiddenFor(m => m.Id)
         <input type="submit" class="submit-button" value="Submit" />

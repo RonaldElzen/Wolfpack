@@ -233,6 +233,25 @@ div, ul, li, a {
     background:#ff6600;
 }
 
+#autocomplete {
+    list-style-type: none;
+    margin: 0;
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+
+    li {
+        padding: 10px;
+        cursor: pointer;
+        transition: all .1s ease;
+
+        &:hover {
+            background: #81939D;
+            color:#fff;
+        }
+    }
+}
+
+
+
 input[type="text"],
 input[type="password"],
 textarea {

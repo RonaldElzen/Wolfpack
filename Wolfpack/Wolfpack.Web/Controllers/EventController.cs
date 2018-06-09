@@ -117,17 +117,19 @@ namespace Wolfpack.Web.Controllers
         public ActionResult AddSkill(EditVM vm)
         {
             var currentEvent = Context.Events.FirstOrDefault(g => g.Id == vm.Id);
-            var group = Context.Groups.SingleOrDefault(g => g.Id == vm.Id);
             var userId = UserHelper.GetCurrentUser().Id;
 
-            Skill NewSkill = new Skill
+            Skill skill = Context.Skills.FirstOrDefault(g => g.Name == vm.NewSkillName);
+            if (skill == null)
             {
-                Name = vm.NewSkillName,
-                Description = vm.NewSkillDescription,
-                CreatedBy = Context.Users.SingleOrDefault(g => g.Id == userId),
+                skill = new Skill
+                {
+                    Name = vm.NewSkillName,
+                    Description = vm.NewSkillDescription,
+                    CreatedBy = Context.Users.FirstOrDefault(g => g.Id == userId),
+                };
             };
-            group.Skills.Add(NewSkill);
-
+            currentEvent.Skills.Add(skill);
             Context.SaveChanges();
             return View("Edit", new EditVM { Message = "Skill added" });
         }
