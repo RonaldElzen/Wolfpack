@@ -14,8 +14,6 @@ namespace Wolfpack.Web.Controllers
 {
     public class DummyController : BaseController
     {
-        public User currentUser;
-
         public DummyController(Context context, IUserHelper userHelper = null, ISessionHelper sessionHelper = null)
             : base(context, userHelper, sessionHelper) { }
 
@@ -46,6 +44,10 @@ namespace Wolfpack.Web.Controllers
         [HttpPost]
         public ActionResult CreateUsersWithSkills()
         {
+            var currentUser = UserHelper.GetCurrentDbUser(Context);
+            if (currentUser == null)
+                return View("Dummy", new DummyVM { Message = "No currently logged in user." });
+
             string[] names = { "Roxy", "Brenton", "Carmina", "Ricarda", "Cesar", "Aundrea", "Randi", "Errol", "Clarinda", "Phyliss", "Julianne", "Dagmar", "Mervin", "Erminia", "Lovetta", "Tamisha", "Henk", "Cherryl" };
             string[] skills = { "Advising", "Coaching", "Conflict resolution", "Decision making", "Delegating", "Diplomacy", "Interviewing", "Motivation", "People management", "Problem solving", "Strategic thinking" };
 
@@ -73,23 +75,19 @@ namespace Wolfpack.Web.Controllers
             //Create skills
             foreach (string skillName in skills)
             {
-                if(currentUser != null)
-                {
-                    Skill s;
+                Skill s;
 
-                    if (Context.Skills.Any(x => x.Name == skillName)) s = Context.Skills.FirstOrDefault(x => x.Name == skillName);
-                    else
+                if (Context.Skills.Any(x => x.Name == skillName)) s = Context.Skills.FirstOrDefault(x => x.Name == skillName);
+                else
+                {
+                    s = new Skill
                     {
-                        s = new Skill
-                        {
-                            Name = skillName,
-                            Description = "A skill description",
-                            CreatedBy = currentUser
-                        };
-                        Context.Skills.Add(s);
-                    }
-                }
-                else return View("Dummy", new DummyVM { Message = "No currently logged in user." });              
+                        Name = skillName,
+                        Description = "A skill description",
+                        CreatedBy = currentUser
+                    };
+                    Context.Skills.Add(s);
+                }            
             }
             Context.SaveChanges();
 
