@@ -4,10 +4,11 @@ using System.Linq;
 using System.Web;
 using Wolfpack.Data;
 using Wolfpack.Data.Models;
+using Wolfpack.Web.Helpers.Interfaces;
 
 namespace Wolfpack.Web.Helpers
 {
-    public class UserHelper
+    public class UserHelper : IUserHelper
     {
         public int Id { get; set; }
 
@@ -19,7 +20,7 @@ namespace Wolfpack.Web.Helpers
         /// Sets the current user. This is used during the login.
         /// </summary>
         /// <param name="user">User to set</param>
-        public static void SetCurrentUser(User user)
+        public void SetCurrentUser(User user)
         {
             HttpContext.Current.Session[CURRENTUSER] = new UserHelper
             {
@@ -32,7 +33,7 @@ namespace Wolfpack.Web.Helpers
         /// Gets the current logged in user
         /// </summary>
         /// <returns>The current logged in user</returns>
-        public static UserHelper GetCurrentUser()
+        public IUserHelper GetCurrentUser()
         {
             return (UserHelper)HttpContext.Current.Session[CURRENTUSER];
         }
@@ -42,7 +43,7 @@ namespace Wolfpack.Web.Helpers
         /// </summary>
         /// <param name="context">Database connection</param>
         /// <returns>user object from database</returns>
-        public static User GetCurrentDbUser(Context context)
+        public User GetCurrentDbUser(Context context)
         {
             var user = (UserHelper)HttpContext.Current.Session[CURRENTUSER];
 
@@ -52,7 +53,7 @@ namespace Wolfpack.Web.Helpers
         /// <summary>
         /// Clears the current user from the session. Used to log out.
         /// </summary>
-        public static void ClearCurrentUser()
+        public void ClearCurrentUser()
         {
             HttpContext.Current.Session[CURRENTUSER] = null;
         }

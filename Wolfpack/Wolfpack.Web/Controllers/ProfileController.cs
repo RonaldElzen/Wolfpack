@@ -4,15 +4,17 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Wolfpack.Data;
-using Wolfpack.Web.Helpers;
-using Wolfpack.Web.Models.Profile;
 using Wolfpack.Data.Models;
+using Wolfpack.Web.Helpers;
+using Wolfpack.Web.Helpers.Interfaces;
+using Wolfpack.Web.Models.Profile;
 
 namespace Wolfpack.Web.Controllers
 {
     public class ProfileController : BaseController
     {
-        public ProfileController(Context context) : base(context) { }
+        public ProfileController(Context context, IUserHelper userHelper = null, ISessionHelper sessionHelper = null)
+            : base(context, userHelper, sessionHelper) { }
 
         public ActionResult Index(int? id )
         {

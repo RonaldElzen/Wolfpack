@@ -7,13 +7,15 @@ using Wolfpack.BusinessLayer;
 using Wolfpack.Data;
 using Wolfpack.Data.Models;
 using Wolfpack.Web.Helpers;
+using Wolfpack.Web.Helpers.Interfaces;
 using Wolfpack.Web.Models.Event;
 
 namespace Wolfpack.Web.Controllers
 {
     public class EventController : BaseController
     {
-        public EventController(Context context) : base(context) { }
+        public EventController(Context context, IUserHelper userHelper = null, ISessionHelper sessionHelper = null)
+            : base(context, userHelper, sessionHelper) { }
 
         /// <summary>
         /// Show all events of logged-in user
@@ -127,17 +129,19 @@ namespace Wolfpack.Web.Controllers
         public ActionResult AddSkill(EditVM vm)
         {
             var currentEvent = Context.Events.FirstOrDefault(g => g.Id == vm.Id);
-            var group = Context.Groups.SingleOrDefault(g => g.Id == vm.Id);
             var userId = UserHelper.GetCurrentUser().Id;
 
-            Skill NewSkill = new Skill
+            Skill skill = Context.Skills.FirstOrDefault(g => g.Name == vm.NewSkillName);
+            if (skill == null)
             {
-                Name = vm.NewSkillName,
-                Description = vm.NewSkillDescription,
-                CreatedBy = Context.Users.SingleOrDefault(g => g.Id == userId),
+                skill = new Skill
+                {
+                    Name = vm.NewSkillName,
+                    Description = vm.NewSkillDescription,
+                    CreatedBy = Context.Users.FirstOrDefault(g => g.Id == userId),
+                };
             };
-            group.Skills.Add(NewSkill);
-
+            currentEvent.Skills.Add(skill);
             Context.SaveChanges();
             return View("Edit", new EditVM { Message = "Skill added" });
         }

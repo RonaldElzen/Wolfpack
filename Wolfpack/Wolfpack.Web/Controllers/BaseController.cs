@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Wolfpack.Data;
 using Wolfpack.Data.Models;
 using Wolfpack.Web.Helpers;
+using Wolfpack.Web.Helpers.Interfaces;
 
 namespace Wolfpack.Web.Controllers
 {
@@ -13,9 +14,15 @@ namespace Wolfpack.Web.Controllers
     {
         protected Context Context { get; set; }
 
-        public BaseController(Context context)
+        protected IUserHelper UserHelper { get; set; }
+
+        protected ISessionHelper SessionHelper { get; set; }
+
+        public BaseController(Context context, IUserHelper userHelper = null, ISessionHelper sessionHelper = null)
         {
             Context = context;
+            UserHelper = userHelper ?? new UserHelper();
+            SessionHelper = sessionHelper ?? new SessionHelper();
         }
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
