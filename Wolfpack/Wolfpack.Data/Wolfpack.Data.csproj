@@ -100,6 +100,14 @@
     <Compile Include="Migrations\201805311129118_SkillRatingsRework.Designer.cs">
       <DependentUpon>201805311129118_SkillRatingsRework.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201806070700237_Notification.cs" />
+    <Compile Include="Migrations\201806070700237_Notification.Designer.cs">
+      <DependentUpon>201806070700237_Notification.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806070742050_ArchiveGroups.cs" />
+    <Compile Include="Migrations\201806070742050_ArchiveGroups.Designer.cs">
+      <DependentUpon>201806070742050_ArchiveGroups.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -152,6 +160,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201805311129118_SkillRatingsRework.resx">
       <DependentUpon>201805311129118_SkillRatingsRework.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806070700237_Notification.resx">
+      <DependentUpon>201806070700237_Notification.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806070742050_ArchiveGroups.resx">
+      <DependentUpon>201806070742050_ArchiveGroups.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
