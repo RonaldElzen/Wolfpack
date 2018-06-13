@@ -158,10 +158,9 @@ namespace Wolfpack.Web.Controllers
             }
             return RedirectToAction("Index");
         }
-
-
+        
         /// <summary>
-        /// Form for deleting group
+        /// Action for setting groupstatus to Archived
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -178,6 +177,12 @@ namespace Wolfpack.Web.Controllers
 
             return RedirectToAction("Index");
         }
+
+        /// <summary>
+        /// Action for setting groupstatus to not Archived
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
 
         public ActionResult UndoArchive(int id)
         {
