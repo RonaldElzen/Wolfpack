@@ -34,6 +34,8 @@ namespace Wolfpack.Web.Controllers
                 Category = g.Category,
                 CreatedOn = g.CreatedOn,
                 GroupName = g.GroupName,
+                Archived = g.Archived
+
             });
             return View(groups);
         }
@@ -114,7 +116,9 @@ namespace Wolfpack.Web.Controllers
                     GroupName = singleGroup.GroupName,
                     Id = singleGroup.Id,
                     Skills = skills,
-                    GroupUsers = groupUsers
+                    GroupUsers = groupUsers,
+                    Archived = singleGroup.Archived
+                  
                 });
             }
             return RedirectToAction("Index", "GroupController");
@@ -143,6 +147,38 @@ namespace Wolfpack.Web.Controllers
         }
 
         /// <summary>
+        /// Form for deleting group
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult Archive(int id)
+        {
+            //TODO: Add actual deletion after post [HttpDelete]? Dont forget to remove all items that depend on a group
+            int loggedInUserId = UserHelper.GetCurrentUser().Id;
+            var singleGroup = Context.Groups.FirstOrDefault(x => x.Id == id && x.GroupCreator == loggedInUserId);
+            if (singleGroup != null)
+            {
+                singleGroup.Archived = true;
+                Context.SaveChanges();             
+                }
+
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult UndoArchive(int id)
+        {
+            //TODO: Add actual deletion after post [HttpDelete]? Dont forget to remove all items that depend on a group
+            int loggedInUserId = UserHelper.GetCurrentUser().Id;
+            var singleGroup = Context.Groups.FirstOrDefault(x => x.Id == id && x.GroupCreator == loggedInUserId);
+            if (singleGroup != null)
+            {
+                singleGroup.Archived = false;
+                Context.SaveChanges();
+            }
+            return RedirectToAction("Index");
+        }
+
+        /// <summary>
         /// Create a new group
         /// </summary>
         /// <param name="message"></param>
@@ -150,6 +186,7 @@ namespace Wolfpack.Web.Controllers
         public ActionResult NewGroup(string message = "")
         {
             return View(new GroupVM() { Message = message });
+
         }
 
         /// <summary>

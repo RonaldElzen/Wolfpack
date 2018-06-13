@@ -100,6 +100,10 @@
     <Compile Include="Migrations\201805311129118_SkillRatingsRework.Designer.cs">
       <DependentUpon>201805311129118_SkillRatingsRework.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201806131214407_GroupArchive.cs" />
+    <Compile Include="Migrations\201806131214407_GroupArchive.Designer.cs">
+      <DependentUpon>201806131214407_GroupArchive.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -152,6 +156,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201805311129118_SkillRatingsRework.resx">
       <DependentUpon>201805311129118_SkillRatingsRework.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806131214407_GroupArchive.resx">
+      <DependentUpon>201806131214407_GroupArchive.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

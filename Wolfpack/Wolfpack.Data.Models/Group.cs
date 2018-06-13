@@ -24,6 +24,8 @@ namespace Wolfpack.Data.Models
 
         public DateTime CreatedOn { get; set; }
 
+        public bool Archived { get; set; }
+
         public virtual ICollection<User> Users { get; set; }
    
         public virtual ICollection<Skill> Skills { get; set; }
