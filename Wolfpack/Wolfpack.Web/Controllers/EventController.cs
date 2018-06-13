@@ -73,7 +73,8 @@ namespace Wolfpack.Web.Controllers
                         UserName = u.UserName
                     }),
                     Name = t.Name,
-                    Id = t.Id
+                    Id = t.Id,
+                    Avg = t.Users.Average(u => u.UserSkills.Average(s => s.Ratings.Average(r => r.Mark)))
                 });
 
                 return View(new EventVM
@@ -186,6 +187,57 @@ namespace Wolfpack.Web.Controllers
             return View("Edit", new EditVM { Message = "Skill added" });
         }
 
+        [HttpPost]
+        public ActionResult GenerateTeams(GenerateTeamsVM vm)
+        {
+            var currentEvent = Context.Events.SingleOrDefault(e => e.Id == vm.EventId);
+
+            currentEvent.Teams.Clear();
+            
+            if(currentEvent != null)
+            {
+                var groupUsers = currentEvent.Group.Users;
+                var teamSize = 7; // TODO
+                var amountOfTeams = groupUsers.Count / teamSize; // TODO
+
+                var orderedGroupUsers = groupUsers
+                    .OrderByDescending(u => u.UserSkills
+                        .Average(s => s.Ratings
+                            .Average(r => r.Mark)));
+
+                for(int i = 0; i < amountOfTeams; i++)
+                {
+                    var team = orderedGroupUsers
+                        .Skip(i * teamSize)
+                        .Take(teamSize);
+
+                    currentEvent.Teams.Add(new EventTeam
+                    {
+                        Name = $"Team {i + 1}",
+                        Users = team.ToList()
+                    });
+                }
+
+                Context.SaveChanges();
+
+                var model = currentEvent.Teams.Select(t => new TeamVM
+                {
+                    Users = t.Users.Select(u => new UserVM
+                    {
+                        UserName = u != null ? u.FirstName : "null",
+                        SkillRatings = u.GetSkillRatings().Select(x => new SkillRatingVM
+                        {
+                            Mark = x
+                        })
+                    })
+                });
+
+                return View("GenerateTeams", model);
+            }
+
+            return HttpNotFound();
+        }
+
         /// <summary>
         /// Generate teams for the event based on the teamsize and amount of teams to be made. 
         /// This method tries to put together the most efficient teams.
@@ -193,7 +245,7 @@ namespace Wolfpack.Web.Controllers
         /// <param name="id">Event id for which to generate teams</param>
         /// <returns>Overview of the new team</returns>
         [HttpPost]
-        public ActionResult GenerateTeams(GenerateTeamsVM vm)
+        public ActionResult GenerateHigestAverageTeams(GenerateTeamsVM vm)
         {
             var currentEvent = Context.Events.SingleOrDefault(e => e.Id == vm.EventId);
 

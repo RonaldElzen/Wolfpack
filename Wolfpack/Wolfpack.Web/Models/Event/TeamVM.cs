@@ -12,6 +12,8 @@ namespace Wolfpack.Web.Models.Event
         public IEnumerable<UserVM> Users { get; set; }
 
         public List<double> AverageSkills { get; set; }
+
+        public double Avg { get; set; }
         
         public decimal AveragePersons { get; set; }
         public IEnumerable<string> SkillNames { get; set; } 

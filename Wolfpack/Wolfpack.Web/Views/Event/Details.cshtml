@@ -27,7 +27,7 @@
         @foreach (var Team in Model.Teams)
         {
             <h4>
-                @Team.Name
+                @Team.Name @Team.Avg
             </h4>
             foreach (var User in Team.Users)
             {
