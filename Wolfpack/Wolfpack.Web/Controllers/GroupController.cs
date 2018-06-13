@@ -145,6 +145,20 @@ namespace Wolfpack.Web.Controllers
             }
             return RedirectToAction("Index");
         }
+        [HttpPost]
+        public ActionResult Delete(int id, string Message = "Deleted ")
+        {
+            //TODO: Add actual deletion after post [HttpDelete]? Dont forget to remove all items that depend on a group
+            int loggedInUserId = UserHelper.GetCurrentUser().Id;
+            var singleGroup = Context.Groups.FirstOrDefault(x => x.Id == id && x.GroupCreator == loggedInUserId);
+            if (singleGroup != null)
+            {
+                Context.Groups.Remove(singleGroup);
+                Context.SaveChanges();
+            }
+            return RedirectToAction("Index");
+        }
+
 
         /// <summary>
         /// Form for deleting group
