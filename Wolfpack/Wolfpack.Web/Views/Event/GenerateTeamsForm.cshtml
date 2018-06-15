@@ -5,7 +5,7 @@
 
 <h2>Generate teams</h2>
 <div class="form-box">
-    @using (Html.BeginForm("GenerateHigestAverageTeams"))
+    @using (Html.BeginForm("GenerateHigestAverageTeams", "Event"))
     {
         <div class="form-item">
             @Html.Label("Max amount of teams", new { htmlAttributes = new { required = "required" } })

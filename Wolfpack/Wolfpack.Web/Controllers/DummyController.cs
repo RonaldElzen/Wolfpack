@@ -217,6 +217,7 @@ namespace Wolfpack.Web.Controllers
                 Context.Users.Add(newUser);
             }
 
+            Context.Events.Add(newEvent);
             Context.Groups.Add(group);
 
             Context.SaveChanges();
