@@ -47,7 +47,8 @@ namespace Wolfpack.Web.Controllers
         /// <returns></returns>
         public ActionResult Edit(int id, string message = "")
         {
-            var users = Context.Groups.SingleOrDefault(x => x.Id == id).Users.Select(u => new EditVMUser {
+            var users = Context.Groups.SingleOrDefault(x => x.Id == id).Users.Select(u => new EditVMUser
+            {
                 Id = u.Id,
                 FirstName = u.FirstName,
                 LastName = u.LastName
@@ -71,7 +72,7 @@ namespace Wolfpack.Web.Controllers
         {
             int loggedInUserId = UserHelper.GetCurrentUser().Id;
             var singleGroup = Context.Groups.SingleOrDefault(x => x.Id == groupId && x.GroupCreator == loggedInUserId);
-            if(singleGroup != null)
+            if (singleGroup != null)
             {
                 var user = Context.Users.FirstOrDefault(x => x.Id == userId);
                 singleGroup.Users.Remove(user);
@@ -118,7 +119,6 @@ namespace Wolfpack.Web.Controllers
                     Skills = skills,
                     GroupUsers = groupUsers,
                     Archived = singleGroup.Archived
-                  
                 });
             }
             return RedirectToAction("Index", "GroupController");
@@ -145,10 +145,16 @@ namespace Wolfpack.Web.Controllers
             }
             return RedirectToAction("Index");
         }
+
+        /// <summary>
+        /// Action for deleting group
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult Delete(int id, string Message = "Deleted ")
         {
-            //TODO: Add actual deletion after post [HttpDelete]? Dont forget to remove all items that depend on a group
+            //TODO: Dont forget to remove all items that depend on a group
             int loggedInUserId = UserHelper.GetCurrentUser().Id;
             var singleGroup = Context.Groups.FirstOrDefault(x => x.Id == id && x.GroupCreator == loggedInUserId);
             if (singleGroup != null)
@@ -158,23 +164,21 @@ namespace Wolfpack.Web.Controllers
             }
             return RedirectToAction("Index");
         }
-        
+
         /// <summary>
         /// Action for setting groupstatus to Archived
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         public ActionResult Archive(int id)
-        {
-            //TODO: Add actual deletion after post [HttpDelete]? Dont forget to remove all items that depend on a group
+        {            
             int loggedInUserId = UserHelper.GetCurrentUser().Id;
             var singleGroup = Context.Groups.FirstOrDefault(x => x.Id == id && x.GroupCreator == loggedInUserId);
             if (singleGroup != null)
             {
                 singleGroup.Archived = true;
-                Context.SaveChanges();             
-                }
-
+                Context.SaveChanges();
+            }
             return RedirectToAction("Index");
         }
 
@@ -186,7 +190,6 @@ namespace Wolfpack.Web.Controllers
 
         public ActionResult UndoArchive(int id)
         {
-            //TODO: Add actual deletion after post [HttpDelete]? Dont forget to remove all items that depend on a group
             int loggedInUserId = UserHelper.GetCurrentUser().Id;
             var singleGroup = Context.Groups.FirstOrDefault(x => x.Id == id && x.GroupCreator == loggedInUserId);
             if (singleGroup != null)
@@ -205,7 +208,6 @@ namespace Wolfpack.Web.Controllers
         public ActionResult NewGroup(string message = "")
         {
             return View(new GroupVM() { Message = message });
-
         }
 
         /// <summary>
@@ -238,7 +240,7 @@ namespace Wolfpack.Web.Controllers
             group.Skills.Add(NewSkill);
 
             Context.SaveChanges();
-            return View("Edit" , new Models.Group.EditVM { Message = "Skill added" });
+            return View("Edit", new Models.Group.EditVM { Message = "Skill added" });
         }
 
         /// <summary>
