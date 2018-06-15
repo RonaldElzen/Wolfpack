@@ -32,6 +32,12 @@ namespace Wolfpack.Web.Controllers
                 if(newRegister != null)
                     vm.MailAdress = newRegister.Email;
             }
+            ModelState.Remove("UserName");
+            ModelState.Remove("FirstName");
+            ModelState.Remove("LastName");
+            ModelState.Remove("Password");
+            ModelState.Remove("PasswordCheck");
+            ModelState.Remove("MailAdress");
             return View(vm);
         }
 
@@ -179,14 +185,33 @@ namespace Wolfpack.Web.Controllers
                 if (ModelState.IsValid && (vm.Password == vm.PasswordCheck))
                 {
                     Context.SaveChanges();
+
+                    //Add the user to the specified group if the person was invited while a groupadmin was inviting people
                     var newRegister = Context.NewRegisters.SingleOrDefault(x => x.Key == vm.Key);
                     if (newRegister != null)
                     {
                         var user = Context.Users.FirstOrDefault(u => u.Mail == vm.MailAdress);
                         if (user != null)
+                        {
                             Context.Groups.FirstOrDefault(g => g.Id == newRegister.GroupId).Users.Add(user);
+                            Context.SaveChanges();
+                        }
                     }
-                    Context.SaveChanges();
+
+                    //Send register mail that explains wolfpack a bit
+                    var ms = new MailService();
+                    var message = "<h2>Welcome to Wolfpack!</h2>" +
+                        "<p>Hello " + vm.FirstName + ",<br>" +
+                        "First of all welcome to Wolfpack!<br><br>" +
+                        "Wolfpack is a platform for people that want to create the most efficient teams possible based on an individual's skills. " +
+                        "In wolfpack most users will join groups where they are then added to events that will make the best possible teams. " +
+                        "To take part in a group you will first have to give yourself ratings about a few skills. With these rating we can properly create teams. " +
+                        "You can also start a group yourself, add people to this group and start events.<br><br>" +
+                        "With Wolfpack you can see a history of groups, events and teams you have partaken in. " +
+                        "You can see how others rated you about your skills and other useful information.<br><br>" +
+                        "We hope you'll enjoy using Wolfpack.<br>" +
+                        " - Wolfpack Team</p>";
+                    ms.SendMailCustom(vm.MailAdress, "Wolfpack - Welcome to the pack", message, true);
                 }
                 else
                 {
@@ -198,7 +223,7 @@ namespace Wolfpack.Web.Controllers
             else
             {
                 ModelState.AddModelError("MailAdress", "This email is not valid please try again.");
-                return View("Register");
+                return View("Register", vm);
             }
         }
 

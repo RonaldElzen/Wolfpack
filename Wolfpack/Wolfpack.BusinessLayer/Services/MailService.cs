@@ -67,9 +67,9 @@ namespace BusinessLayer.Services
         /// <param name="emails"></param>
         /// <param name="subject"></param>
         /// <param name="message"></param>
-        public void SendMailCustom(string[] emails, string subject, string message)
+        public void SendMailCustom(string[] emails, string subject, string message, bool isHtml)
         {
-            SendMail(emails, subject, message);
+            SendMail(emails, subject, message, isHtml);
         }
 
         /// <summary>
@@ -78,13 +78,13 @@ namespace BusinessLayer.Services
         /// <param name="email"></param>
         /// <param name="subject"></param>
         /// <param name="message"></param>
-        public void SendMailCustom(string email, string subject, string message)
+        public void SendMailCustom(string email, string subject, string message, bool isHtml)
         {
             string[] emails = new string[]
             {
                 email
             };
-            SendMail(emails, subject, message);
+            SendMail(emails, subject, message, isHtml);
         }
 
         /// <summary>

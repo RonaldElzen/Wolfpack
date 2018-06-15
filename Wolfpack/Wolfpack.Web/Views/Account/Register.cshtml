@@ -9,7 +9,7 @@
 
 <h2>Welcome to WolfPack, please fill in your account information</h2>
 
-@if (Model.Key != null)
+@if (!string.IsNullOrWhiteSpace(Model.Key))
 {
     <p>
         You have been asked to join a group. Please register and you will be added to this group automatically
