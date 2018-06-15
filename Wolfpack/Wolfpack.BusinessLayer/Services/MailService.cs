@@ -29,6 +29,22 @@ namespace BusinessLayer.Services
         }
 
         /// <summary>
+        /// Send register email for when a groupadmin added a non-existing user by email
+        /// </summary>
+        /// <param name="email"></param>
+        public void SendRegisterMail(string email, string registerLink)
+        {
+            string[] emails = new string[]
+            {
+                email
+            };
+            string subject = "Wolfpack - Group invitation";
+            string message = "You have been invited to join a WolfPack group.<br>"
+                + "Please go to this link: <a href='" + registerLink + "'>Wolfpack Register</a>, to register on our website and automatically get added to the group this invitation is from.";
+            SendMail(emails, subject, message, true);
+        }
+
+        /// <summary>
         /// Send login attempt email to let a user know that someone is trying to login and failed multiple times
         /// </summary>
         /// <param name="email"></param>

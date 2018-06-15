@@ -24,9 +24,15 @@ namespace Wolfpack.Web.Controllers
         /// Standard View
         /// </summary>
         /// <returns></returns>
-        public ActionResult Register()
+        public ActionResult Register(RegisterVM vm)
         {
-            return View();
+            if(vm.Key != null)
+            {
+                var newRegister = Context.NewRegisters.SingleOrDefault(x => x.Key == vm.Key);
+                if(newRegister != null)
+                    vm.MailAdress = newRegister.Email;
+            }
+            return View(vm);
         }
 
         /// <summary>
@@ -172,6 +178,14 @@ namespace Wolfpack.Web.Controllers
 
                 if (ModelState.IsValid && (vm.Password == vm.PasswordCheck))
                 {
+                    Context.SaveChanges();
+                    var newRegister = Context.NewRegisters.SingleOrDefault(x => x.Key == vm.Key);
+                    if (newRegister != null)
+                    {
+                        var user = Context.Users.FirstOrDefault(u => u.Mail == vm.MailAdress);
+                        if (user != null)
+                            Context.Groups.FirstOrDefault(g => g.Id == newRegister.GroupId).Users.Add(user);
+                    }
                     Context.SaveChanges();
                 }
                 else

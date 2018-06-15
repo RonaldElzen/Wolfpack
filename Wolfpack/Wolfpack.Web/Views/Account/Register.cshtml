@@ -7,9 +7,17 @@
 
 }
 
-        <h2>Welcome to WolfPack, please fill in your account information</h2>
-        <div class="form-box pre-form">
-            @using (Html.BeginForm("RegisterPost", "Account"))
+<h2>Welcome to WolfPack, please fill in your account information</h2>
+
+@if (Model.Key != null)
+{
+    <p>
+        You have been asked to join a group. Please register and you will be added to this group automatically
+    </p>
+}
+
+<div class="form-box pre-form">
+    @using (Html.BeginForm("RegisterPost", "Account"))
     {
         <div class="input-box">
             <!-- UserName -->
@@ -55,10 +63,11 @@
 
                 @Html.ValidationMessageFor(m => m.CaptchaResponse)
             </div>
-            </div>
-            <input type="submit" value="Subscribe" class="submit-button" value="Submit" />
-            }
         </div>
+        @Html.HiddenFor(m => m.Key)
+        <input type="submit" value="Subscribe" class="submit-button" value="Submit" />
+    }
+</div>
 
 
 

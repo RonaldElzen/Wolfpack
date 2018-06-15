@@ -13,7 +13,8 @@
             @Html.EditorFor(m => m.UserName)
         </div>
         <input type="submit" class="submit-button" value="Submit" />
-        if (!string.IsNullOrWhiteSpace(Model.Message)) {
+        if (!string.IsNullOrWhiteSpace(Model.Message))
+        {
             <h3>
                 @Model.Message
             </h3>
@@ -28,5 +29,9 @@
                 }
             </ul>
         }
+        @Html.HiddenFor(m => m.GroupId)
     }
 </div>
+<p>
+    @Html.ActionLink("Back", "Edit", new { id = Model.GroupId })
+</p>
