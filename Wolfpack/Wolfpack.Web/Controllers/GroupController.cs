@@ -157,11 +157,17 @@ namespace Wolfpack.Web.Controllers
             //TODO: Dont forget to remove all items that depend on a group
             int loggedInUserId = UserHelper.GetCurrentUser().Id;
             var singleGroup = Context.Groups.FirstOrDefault(x => x.Id == id && x.GroupCreator == loggedInUserId);
-            if (singleGroup != null)
+            if (singleGroup != null && singleGroup.Archived == true)
             {
                 Context.Groups.Remove(singleGroup);
                 Context.SaveChanges();
             }
+
+            else
+            {
+                Message = "Only archived groups can be deleted.";
+            }
+
             return RedirectToAction("Index");
         }
 
@@ -231,16 +237,24 @@ namespace Wolfpack.Web.Controllers
             Group group = Context.Groups.FirstOrDefault(g => g.Id == vm.Id);
             var userId = UserHelper.GetCurrentUser().Id;
 
-            Skill NewSkill = new Skill
+            if (!group.Archived)
             {
-                Name = vm.NewSkillName,
-                Description = vm.NewSkillDescription,
-                CreatedBy = Context.Users.FirstOrDefault(g => g.Id == userId),
-            };
-            group.Skills.Add(NewSkill);
+                Skill NewSkill = new Skill
+                {
+                    Name = vm.NewSkillName,
+                    Description = vm.NewSkillDescription,
+                    CreatedBy = Context.Users.FirstOrDefault(g => g.Id == userId),
+                };
+                group.Skills.Add(NewSkill);
 
-            Context.SaveChanges();
-            return View("Edit", new Models.Group.EditVM { Message = "Skill added" });
+                Context.SaveChanges();
+                return View("Edit", new Models.Group.EditVM { Message = "Skill added" });
+            }
+            else
+            {
+                return View("Edit", new Models.Group.EditVM { Message = "Group has been archived and cannot be edited" });
+            }
+           
         }
 
         /// <summary>

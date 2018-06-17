@@ -143,7 +143,7 @@ namespace Wolfpack.Web.Controllers
 
             currentEvent.Teams.Clear();
 
-            if(currentEvent != null)
+            if(currentEvent != null && !currentEvent.Group.Archived)
             {
                 var groupUsers = currentEvent.Group.Users;
                 var teamSize = 7; // TODO implement dynamic groupsize
@@ -214,6 +214,7 @@ namespace Wolfpack.Web.Controllers
 
                 return View(model);
             }
+
 
             return HttpNotFound();
         }
