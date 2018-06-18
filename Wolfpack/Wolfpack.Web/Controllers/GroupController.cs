@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
+using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using Wolfpack.BusinessLayer;
 using Wolfpack.Data;
@@ -264,6 +265,16 @@ namespace Wolfpack.Web.Controllers
         }
 
         /// <summary>
+        /// Open AddUser Page
+        /// </summary>
+        /// <param name="vm"></param>
+        /// <returns></returns>
+        public ActionResult AddUser(int id)
+        {
+            return View(new AddUserVM { GroupId = id });
+        }
+
+        /// <summary>
         /// Submit action for adding user to a group
         /// </summary>
         /// <param name="vm"></param>
@@ -271,10 +282,30 @@ namespace Wolfpack.Web.Controllers
         [HttpPost]
         public ActionResult AddUser(AddUserVM vm)
         {
-            var user = Context.Users.FirstOrDefault(g => g.UserName == vm.UserName);
+            string input = vm.UserName;
+            
+            var user = Context.Users.FirstOrDefault(g => g.UserName == vm.UserName || g.Mail == vm.UserName);
             //Return a list with possible users if the username is not found.
             if (user == null)
             {
+                if (MailHelpers.CheckIfValidEmail(vm.UserName))
+                {
+                    string key = Guid.NewGuid().ToString();
+                    string baseUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath.TrimEnd('/') + "/";
+                    string link = baseUrl + "Account/Register?key=" + key;
+                    Context.NewRegisters.Add(new NewRegister
+                    {
+                        Key = key,
+                        Email = vm.UserName,
+                        GroupId = vm.GroupId
+                    });
+                    Context.SaveChanges();
+                    MailService ms = new MailService();
+                    ms.SendRegisterMail(vm.UserName, link);
+
+                    return View(new AddUserVM { GroupId = vm.GroupId, Message = "An email has been sent to the given email." });
+                }
+
                 var possibleUsers = Context.Users.Select(g => new Web.Models.Group.UserVM
                 {
                     Id = g.Id,
@@ -284,21 +315,21 @@ namespace Wolfpack.Web.Controllers
                 }).Where(g => g.UserName.Contains(vm.UserName)).ToList();
 
                 if(possibleUsers != null && possibleUsers.Count > 0)
-                    return View(new AddUserVM { PossibleUsers = possibleUsers });
+                    return View(new AddUserVM { GroupId = vm.GroupId, PossibleUsers = possibleUsers });
                 else
-                    return View(new AddUserVM { Message = "No user found" });
-
+                    return View(new AddUserVM { GroupId = vm.GroupId, Message = "No user found" });
             }
             else
             {
-                Group group = Context.Groups.FirstOrDefault(g => g.Id == 1);
+                var group = Context.Groups.FirstOrDefault(g => g.Id == vm.GroupId);
                 if (group.Users == null)
                 {
                     group.Users = new List<User>();
                 }
                 group.Users.Add(user);
                 Context.SaveChanges();
-                return View("Edit", new Models.Group.EditVM { Message = "User added" });
+
+                return View(new AddUserVM { GroupId = vm.GroupId, Message = "User added" });
             }
         }
 
@@ -314,7 +345,7 @@ namespace Wolfpack.Web.Controllers
             if ((!string.IsNullOrWhiteSpace(vm.GroupName) && (!string.IsNullOrWhiteSpace(vm.GroupName))))
             {
                 var userId = UserHelper.GetCurrentUser().Id;
-                Context.Groups.Add(new Group
+                Context.Groups.Add(new Data.Models.Group
                 {
                     GroupName = vm.GroupName,
                     Category = vm.Category,
