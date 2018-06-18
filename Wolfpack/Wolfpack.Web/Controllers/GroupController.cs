@@ -284,12 +284,11 @@ namespace Wolfpack.Web.Controllers
         {
             string input = vm.UserName;
             
-
             var user = Context.Users.FirstOrDefault(g => g.UserName == vm.UserName || g.Mail == vm.UserName);
             //Return a list with possible users if the username is not found.
             if (user == null)
             {
-                if (ProcessHelpers.CheckIfValidEmail(vm.UserName))
+                if (MailHelpers.CheckIfValidEmail(vm.UserName))
                 {
                     string key = Guid.NewGuid().ToString();
                     string baseUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath.TrimEnd('/') + "/";

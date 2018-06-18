@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Wolfpack.BusinessLayer
 {
     //Global helpers class for methods that are needed if multiple places.
-    public static class WolfHelpers
+    public static class MailHelpers
     {
         /// <summary>
         /// Checks if the email provided is a valid email and returns a boolean
