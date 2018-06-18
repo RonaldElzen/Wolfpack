@@ -124,10 +124,17 @@ namespace Wolfpack.Web.Controllers
                 Description = vm.NewSkillDescription,
                 CreatedBy = Context.Users.SingleOrDefault(g => g.Id == userId),
             };
-            group.Skills.Add(NewSkill);
+            if (!group.Archived)
+            {
+                group.Skills.Add(NewSkill);
 
-            Context.SaveChanges();
-            return View("Edit", new EditVM { Message = "Skill added" });
+                Context.SaveChanges();
+                return View("Edit", new EditVM { Message = "Skill added" });
+            }
+            else
+            {
+                return View("Edit", new EditVM { Message = "Group is archived and cannot be edited" });
+            }
         }
 
         /// <summary>
@@ -213,9 +220,7 @@ namespace Wolfpack.Web.Controllers
                 });
 
                 return View(model);
-            }
-
-
+            }   
             return HttpNotFound();
         }
     }

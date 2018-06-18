@@ -5,8 +5,8 @@
 }
 
 <h2>Index</h2>
-<p>
-    @Html.ActionLink("Create New", "NewGroup")
+
+@Html.ActionLink("Create New", "NewGroup")
 </p>
 <table class="table">
     <tr>
@@ -23,7 +23,7 @@
             @Html.DisplayNameFor(model => model.CreatedOn)
         </th>
         <th></th>
-    </tr>    
+    </tr>
     <h2>Active Groups</h2>
     @foreach (var item in Model.Where(x => x.Archived == false))
     {
@@ -43,11 +43,11 @@
             <td>
                 @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
                 @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                @Html.ActionLink("Archive", "Archive", new { id = item.Id }) 
+                @Html.ActionLink("Archive", "Archive", new { id = item.Id })
             </td>
         </tr>
     }
-    </table>
+</table>
 <table class="table">
     <tr>
         <th>

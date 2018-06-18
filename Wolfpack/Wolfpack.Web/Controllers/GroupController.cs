@@ -25,7 +25,7 @@ namespace Wolfpack.Web.Controllers
         /// View all groups
         /// </summary>
         /// <returns></returns>
-        public ActionResult Index()
+        public ActionResult Index(string message)
         {
             int id = UserHelper.GetCurrentUser().Id;
             var groups = Context.Groups.Where(x => x.GroupCreator == id).Select(g => new GroupVM
@@ -35,7 +35,6 @@ namespace Wolfpack.Web.Controllers
                 CreatedOn = g.CreatedOn,
                 GroupName = g.GroupName,
                 Archived = g.Archived
-
             });
             return View(groups);
         }
@@ -143,6 +142,7 @@ namespace Wolfpack.Web.Controllers
                     CreatedOn = singleGroup.CreatedOn
                 });
             }
+
             return RedirectToAction("Index");
         }
 
@@ -157,7 +157,7 @@ namespace Wolfpack.Web.Controllers
             //TODO: Dont forget to remove all items that depend on a group
             int loggedInUserId = UserHelper.GetCurrentUser().Id;
             var singleGroup = Context.Groups.FirstOrDefault(x => x.Id == id && x.GroupCreator == loggedInUserId);
-            if (singleGroup != null && singleGroup.Archived == true)
+            if (singleGroup != null && singleGroup.Archived)
             {
                 Context.Groups.Remove(singleGroup);
                 Context.SaveChanges();
@@ -222,8 +222,8 @@ namespace Wolfpack.Web.Controllers
         /// <returns></returns>
         public ActionResult AddUser()
         {
-            //Static ID, needs to be added dynamic
-            return View(new AddUserVM() { Id = 1 });
+            //TODO Static ID, needs to be added dynamic
+            return View(new AddUserVM() { Id = 1 }); 
         }
 
         /// <summary>
@@ -254,7 +254,6 @@ namespace Wolfpack.Web.Controllers
             {
                 return View("Edit", new Models.Group.EditVM { Message = "Group has been archived and cannot be edited" });
             }
-           
         }
 
         /// <summary>
@@ -274,14 +273,22 @@ namespace Wolfpack.Web.Controllers
             }
             else
             {
-                Group group = Context.Groups.FirstOrDefault(g => g.Id == 1);
-                if (group.Users == null)
+                Group group = Context.Groups.FirstOrDefault(g => g.Id == vm.Id);
+                if (!group.Archived)
                 {
-                    group.Users = new List<User>();
+                    if (group.Users == null)
+                    {
+                        group.Users = new List<User>();
+                    }
+                    group.Users.Add(user);
+                    Context.SaveChanges();
+                    return View(new AddUserVM { });
                 }
-                group.Users.Add(user);
-                Context.SaveChanges();
-                return View(new AddUserVM { });
+                else
+                {
+                    var message = "Target group is archived";
+                    return RedirectToAction("Index", message);
+                }            
             }
         }
 
@@ -322,8 +329,15 @@ namespace Wolfpack.Web.Controllers
         /// <returns></returns>
         public ActionResult NewEvent(int Id, string message = "")
         {
-            Session["selectedGroupId"] = Id;
-            return View(new EventVM() { GroupId = Id, Message = message });
+            var singleGroup = Context.Groups.FirstOrDefault(x => x.Id == Id);
+
+            if (!singleGroup.Archived)
+            {
+                Session["selectedGroupId"] = Id;
+                return View(new EventVM() { GroupId = Id, Message = message });
+            }
+            message = "Group has been archived and cannot be used";
+            return RedirectToAction("Index", message);
         }
 
         /// <summary>
@@ -338,7 +352,8 @@ namespace Wolfpack.Web.Controllers
             if (!string.IsNullOrWhiteSpace(vm.EventName))
             {
                 var group = Context.Groups.SingleOrDefault(e => e.Id == vm.GroupId);
-                if (group != null)
+
+                if (group != null && group.Archived)
                 {
                     Context.Events.Add(new Event
                     {
