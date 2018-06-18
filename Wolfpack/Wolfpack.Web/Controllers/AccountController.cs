@@ -156,7 +156,7 @@ namespace Wolfpack.Web.Controllers
                 ModelState.AddModelError("Password", "Passwords do not match ");
             }
 
-            if (_isEmailValid(vm.MailAdress))
+            if (ProcessHelpers.CheckIfValidEmail(vm.MailAdress))
             {
                 var userExists = Context.Users.Any(x => x.UserName == vm.UserName);
                 var mailExists = Context.Users.Any(x => x.Mail == vm.MailAdress);
@@ -225,24 +225,6 @@ namespace Wolfpack.Web.Controllers
                 ModelState.AddModelError("MailAdress", "This email is not valid please try again.");
                 return View("Register", vm);
             }
-        }
-
-        /// <summary>
-        /// Validation check for emailadress
-        /// </summary>
-        /// <param name="emailAddress"></param>
-        /// <returns></returns>
-        private bool _isEmailValid(string emailAddress)
-        {
-            try
-            {
-                MailAddress mailAddress = new MailAddress(emailAddress);
-            }
-            catch (FormatException)
-            {
-                return false;
-            }
-            return true;
         }
 
         /// <summary>

@@ -289,10 +289,7 @@ namespace Wolfpack.Web.Controllers
             //Return a list with possible users if the username is not found.
             if (user == null)
             {
-                //check if correct email and send invite if it is.
-                string pattern = @"^[a-z][a-z|0-9|]*([_][a-z|0-9]+)*([.][a-z|0-9]+([_][a-z|0-9]+)*)?@[a-z][a-z|0-9|]*\.([a-z][a-z|0-9]*(\.[a-z][a-z|0-9]*)?)$";
-                Match match = Regex.Match(vm.UserName.Trim(), pattern, RegexOptions.IgnoreCase);
-                if (match.Success)
+                if (ProcessHelpers.CheckIfValidEmail(vm.UserName))
                 {
                     string key = Guid.NewGuid().ToString();
                     string baseUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath.TrimEnd('/') + "/";
