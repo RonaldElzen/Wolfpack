@@ -5,7 +5,7 @@
 
 <h2>Generate teams</h2>
 <div class="form-box">
-    @using (Html.BeginForm("GenerateHigestAverageTeams", "Event"))
+    @using (Html.BeginForm("GenerateTeams", "Event"))
     {
         <div class="form-item">
             @Html.Label("Max amount of teams", new { htmlAttributes = new { required = "required" } })
@@ -18,6 +18,10 @@
         <div class="form-item">
             @Html.Label("Maximum persons per team", new { htmlAttributes = new { required = "required" } })
             @Html.EditorFor(m => m.MaxTeamSize, new { htmlAttributes = new { required = "required" } })
+        </div>
+        <div class="form-item">
+            @Html.Label("Algorithm type")
+            @Html.DropDownListFor(m => m.AlgorithmType, Model.AlgorithmTypes)
         </div>
 
         @Html.HiddenFor(m => m.EventId)

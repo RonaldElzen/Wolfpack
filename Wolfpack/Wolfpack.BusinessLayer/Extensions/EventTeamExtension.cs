@@ -22,6 +22,8 @@ namespace Wolfpack.BusinessLayer
                 {
                     total += user.UserSkills.Where(s => s.Skill == skill).FirstOrDefault().Ratings.Average(r => r.Mark);
                 }
+
+                result.Add(skill, total);
             }
 
             return result;

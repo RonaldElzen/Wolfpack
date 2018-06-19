@@ -7,6 +7,7 @@ using Wolfpack.BusinessLayer;
 using Wolfpack.Data;
 using Wolfpack.Data.Models;
 using Wolfpack.Web.Helpers;
+using Wolfpack.Web.Helpers.Enums;
 using Wolfpack.Web.Helpers.Interfaces;
 using Wolfpack.Web.Models.Event;
 
@@ -74,7 +75,13 @@ namespace Wolfpack.Web.Controllers
                     }),
                     Name = t.Name,
                     Id = t.Id,
-                    Avg = t.Users.Average(u => u.UserSkills.Average(s => s.Ratings.Average(r => r.Mark)))
+                    Avg = t.Users.Average(u => u.UserSkills.Average(s => s.Ratings.Average(r => r.Mark))),
+                    Total = t.Users.Sum(u => u.UserSkills.Average(s => s.Ratings.Average(r => r.Mark))),
+                    SkillShit = t.Users.SelectMany(u => u.UserSkills.Select(x => new
+                    {
+                        Skill = x.Skill,
+                        Rating = x.Ratings.Average(r => r.Mark)
+                    })).GroupBy(s => s.Skill).Select(y => new { Rating = y.Sum(h => h.Rating), Skill = y.Key }).ToDictionary(x => x.Skill.Name, y => y.Rating)
                 });
 
                 return View(new EventVM
@@ -158,7 +165,88 @@ namespace Wolfpack.Web.Controllers
         /// <returns></returns>
         public ActionResult GenerateTeams(int Id)
         {
-            return View("GenerateTeamsForm", new GenerateTeamsVM { EventId = Id });
+            var selectListItems = new List<SelectListItem>();
+
+            foreach(var item in Enum.GetValues(typeof(AlgorithmType)))
+            {
+                selectListItems.Add(new SelectListItem { Value = item.ToString(), Text = item.ToString() });
+            }
+
+            return View("GenerateTeamsForm", new GenerateTeamsVM
+            {
+                EventId = Id,
+                AlgorithmTypes = selectListItems,
+                AlgorithmType = AlgorithmType.AverageTeams
+            });
+        }
+
+        [HttpPost]
+        public ActionResult GenerateTeams(GenerateTeamsVM vm)
+        {
+            var currentEvent = Context.Events.SingleOrDefault(e => e.Id == vm.EventId);
+
+            switch (vm.AlgorithmType)
+            {
+                case AlgorithmType.AverageTeams:
+                    _generateAverageTeams();
+                    break;
+                case AlgorithmType.BestTeam:
+                    _generateBestTeams(currentEvent);
+                    break;
+                default:
+                    return HttpNotFound();
+            }
+
+            return RedirectToAction("Details", new { id = vm.EventId });
+        }
+
+        private void _generateAverageTeams()
+        {
+
+        }
+
+        private void _generateBestTeams(Event currentEvent)
+        {
+            currentEvent.Teams.Clear();
+
+            if (currentEvent != null)
+            {
+                var groupUsers = currentEvent.Group.Users;
+                var teamSize = 7; // TODO
+                var amountOfTeams = groupUsers.Count / teamSize; // TODO
+
+                var orderedGroupUsers = groupUsers
+                    .OrderByDescending(u => u.UserSkills
+                        .Average(s => s.Ratings
+                            .Average(r => r.Mark)));
+
+                for (int i = 0; i < amountOfTeams; i++)
+                {
+                    var team = orderedGroupUsers
+                        .Skip(i * teamSize)
+                        .Take(teamSize);
+
+                    currentEvent.Teams.Add(new EventTeam
+                    {
+                        Name = $"Team {i + 1}",
+                        Users = team.ToList()
+                    });
+                }
+
+                Context.SaveChanges();
+
+                var model = currentEvent.Teams.Select(t => new TeamVM
+                {
+                    Users = t.Users.Select(u => new UserVM
+                    {
+                        UserName = u != null ? u.FirstName : "null",
+                        SkillRatings = u.GetSkillRatings().Select(x => new SkillRatingVM
+                        {
+                            Mark = x
+                        })
+                    })
+                });
+            }
         }
 
         /// <summary>
@@ -239,7 +327,7 @@ namespace Wolfpack.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult GenerateTeams(GenerateTeamsVM vm)
+        public ActionResult GenerateTeamsYo(GenerateTeamsVM vm)
         {
             var currentEvent = Context.Events.SingleOrDefault(e => e.Id == vm.EventId);
 
@@ -313,6 +401,36 @@ namespace Wolfpack.Web.Controllers
                         Skill = t.GetTotalsPerSkill().OrderByDescending(x => x.Value).FirstOrDefault().Key
                     });
 
+                    var orderedTeams = teamsToChange
+                        .OrderByDescending(t => t.Users
+                            .Sum(u => u.UserSkills
+                                .Average(s => s.Ratings
+                                    .Average(r => r.Mark))));
+
+                    var bestTeam = orderedTeams.First();
+                    var worstTeam = orderedTeams.Last();
+
+                    var skillToChange = worstTeam.GetTotalsPerSkill().OrderBy(s => s.Value).FirstOrDefault().Key;
+
+                    var worstTeamUserToChange = worstTeam.Users
+                        .OrderBy(u => u.UserSkills
+                            .FirstOrDefault(s => s.Skill == skillToChange)
+                            .Ratings
+                            .Average(r => r.Mark))
+                        .FirstOrDefault();
+
+                    var bestTeamUserToChange = bestTeam.Users
+                        .OrderByDescending(u => u.UserSkills
+                            .FirstOrDefault(s => s.Skill == skillToChange)
+                            .Ratings
+                            .Average(r => r.Mark))
+                        .FirstOrDefault();
+
+                    worstTeam.Users.Remove(worstTeamUserToChange);
+                    worstTeam.Users.Add(bestTeamUserToChange);
+                    bestTeam.Users.Remove(bestTeamUserToChange);
+                    bestTeam.Users.Add(worstTeamUserToChange);
+
                     teamsToChange = GetTeamsToChange(currentEvent);
                 }
 
@@ -326,7 +444,7 @@ namespace Wolfpack.Web.Controllers
                         SkillRatings = u.GetSkillRatings().Select(x => new SkillRatingVM
                         {
                             Mark = x
-                        })
+                        }),
                     })
                 });
 
@@ -341,7 +459,7 @@ namespace Wolfpack.Web.Controllers
                     });
 
                     var averageScore = totalScorePerTeam.Average(t => t.Total);
-                    var allowedDifference = 10;
+                    var allowedDifference = 25;
                     return totalScorePerTeam.Where(t => t.Total > averageScore + allowedDifference || t.Total < averageScore - allowedDifference).Select(x => x.Team);
                 }
             }

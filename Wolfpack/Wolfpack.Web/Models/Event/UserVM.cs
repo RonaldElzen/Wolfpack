@@ -15,5 +15,6 @@ namespace Wolfpack.Web.Models.Event
 
         public string LastName { get; set; }
         public IEnumerable<SkillRatingVM> SkillRatings { get; set; }
+        public IEnumerable<SkillRatingVM> TotalRatings { get; set; }
     }
 }

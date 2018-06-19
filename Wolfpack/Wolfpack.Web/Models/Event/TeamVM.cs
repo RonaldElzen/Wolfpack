@@ -14,7 +14,9 @@ namespace Wolfpack.Web.Models.Event
         public List<double> AverageSkills { get; set; }
 
         public double Avg { get; set; }
-        
+        public double Total { get; set; }
+        public IDictionary<string, double> SkillShit { get; set; }
+
         public decimal AveragePersons { get; set; }
         public IEnumerable<string> SkillNames { get; set; } 
     }
