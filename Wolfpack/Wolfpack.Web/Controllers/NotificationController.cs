@@ -104,5 +104,15 @@ namespace Wolfpack.Web.Controllers
 
             return View("Notifications", model);
         }
+
+        public ActionResult GetNotificationCount()
+        {
+            var minDate = DateTime.Now.AddDays(-2);
+            var notifications = UserHelper.GetCurrentDbUser(Context).Notifications
+                .Where(n => !n.IsRead || n.Date > minDate)
+                .ToList();
+
+            return Json(notifications.Count(), JsonRequestBehavior.AllowGet);
+        }
     }
 }
