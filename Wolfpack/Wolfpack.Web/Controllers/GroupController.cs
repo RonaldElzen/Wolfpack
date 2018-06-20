@@ -30,9 +30,8 @@ namespace Wolfpack.Web.Controllers
         /// <returns></returns>
         public ActionResult Index()
         {
-            var user = UserHelper.GetCurrentDbUser(Context);
-            //Get the groups created by user
-            var createdGroups = Context.Groups.Where(x => x.GroupCreator == user.Id).Select(g => new GroupVM
+            int id = UserHelper.GetCurrentUser().Id;
+            var groups = Context.Groups.Where(x => x.GroupCreator == id && !x.Archived).Select(g => new GroupVM
             {
                 Id = g.Id,
                 Category = g.Category,
@@ -213,6 +212,32 @@ namespace Wolfpack.Web.Controllers
                     CreatedOn = singleGroup.CreatedOn
                 });
             }
+            return RedirectToAction("Index");
+        }
+
+        /// <summary>
+        /// Archive the selected group.
+        /// </summary>
+        /// <param name="vm"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult Archive(GroupVM vm)
+        {
+            var group = Context.Groups.SingleOrDefault(g => g.Id == vm.Id);
+
+            foreach(var user in group.Users)
+            {
+                user.Notifications.Add(new Notification
+                {
+                    Title = $"{group.GroupName} has been deleted.",
+                    Content = $"The group \"{group.GroupName}\" you participate in has been deleted.",
+                    Date = DateTime.Now,
+                });
+            }
+
+            group.Archived = true;
+            Context.SaveChanges();
+
             return RedirectToAction("Index");
         }
 

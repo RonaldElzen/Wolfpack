@@ -157,6 +157,7 @@
     <Compile Include="Controllers\EventController.cs" />
     <Compile Include="Controllers\GroupController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\NotificationController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
     <Compile Include="Controllers\SkillController.cs" />
     <Compile Include="Global.asax.cs">
@@ -187,6 +188,8 @@
     <Compile Include="Models\Group\UserVM.cs" />
     <Compile Include="Models\Group\GroupVM.cs" />
     <Compile Include="Models\Group\SkillVM.cs" />
+    <Compile Include="Models\Notification\NotificationsVM.cs" />
+    <Compile Include="Models\Notification\NotificationVM.cs" />
     <Compile Include="Models\Profile\ProfileVM.cs" />
     <Compile Include="Models\Profile\SearchVM.cs" />
     <Compile Include="Models\Profile\SkillVM.cs" />
@@ -264,6 +267,8 @@
     <Content Include="Views\Group\RateUser.cshtml" />
     <Content Include="Views\Profile\SearchProfile.cshtml" />
     <Content Include="Views\Event\Team.cshtml" />
+    <Content Include="Views\Notification\Notification.cshtml" />
+    <Content Include="Views\Notification\Notifications.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

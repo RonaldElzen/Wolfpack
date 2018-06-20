@@ -26,5 +26,6 @@ namespace Wolfpack.Data
         public virtual DbSet<UserSkill> UserSkills { get; set; }
         public virtual DbSet<Rating> Ratings { get; set; }
         public virtual DbSet<Models.NewRegister> NewRegisters { get; set; }
+        public virtual DbSet<Models.Notification> Notifications { get; set; }
     }
 }

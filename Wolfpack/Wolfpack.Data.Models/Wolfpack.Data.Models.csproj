@@ -51,6 +51,7 @@
     <Compile Include="LockedAccount.cs" />
     <Compile Include="Event.cs" />
     <Compile Include="Group.cs" />
+    <Compile Include="Notification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rating.cs" />
     <Compile Include="NewRegister.cs" />

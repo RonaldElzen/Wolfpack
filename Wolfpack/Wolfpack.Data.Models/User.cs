@@ -13,6 +13,7 @@ namespace Wolfpack.Data.Models
             Groups = new List<Group>();
             EventTeams = new List<EventTeam>();
             UserSkills = new List<UserSkill>();
+            Notifications = new List<Notification>();
         }
 
         public int Id { get; set; }
@@ -38,5 +39,7 @@ namespace Wolfpack.Data.Models
         public virtual ICollection<EventTeam> EventTeams { get; set; }
 
         public virtual ICollection<UserSkill> UserSkills { get; set; }
+
+        public virtual ICollection<Notification> Notifications { get; set; }
     }
 }
