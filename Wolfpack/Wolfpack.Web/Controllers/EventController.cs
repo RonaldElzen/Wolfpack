@@ -182,8 +182,16 @@ namespace Wolfpack.Web.Controllers
                 };
             };
             currentEvent.Skills.Add(skill);
-            Context.SaveChanges();
-            return View("Edit", new EditVM { Message = "Skill added" });
+            if (!group.Archived)
+            {
+                group.Skills.Add(NewSkill);
+                Context.SaveChanges();
+                return View("Edit", new EditVM { Message = "Skill added" });
+            }
+            else
+            {
+                return View("Edit", new EditVM { Message = "Group is archived and cannot be edited" });
+            }
         }
 
         /// <summary>
@@ -199,7 +207,7 @@ namespace Wolfpack.Web.Controllers
 
             currentEvent.Teams.Clear();
 
-            if (currentEvent != null)
+            if(currentEvent != null && !currentEvent.Group.Archived)
             {
                 var groupUsers = currentEvent.Group.Users;
                 var teamSize = 7; // TODO implement dynamic groupsize
@@ -272,8 +280,7 @@ namespace Wolfpack.Web.Controllers
                 });
 
                 return View(model);
-            }
-
+            }   
             return HttpNotFound();
         }
     }

@@ -28,7 +28,7 @@ namespace Wolfpack.Web.Controllers
         /// View all groups
         /// </summary>
         /// <returns></returns>
-        public ActionResult Index()
+        public ActionResult Index(string message)
         {
             int id = UserHelper.GetCurrentUser().Id;
             var groups = Context.Groups.Where(x => x.GroupCreator == id && !x.Archived).Select(g => new GroupVM
@@ -46,6 +46,7 @@ namespace Wolfpack.Web.Controllers
                 Category = g.Category,
                 CreatedOn = g.CreatedOn,
                 GroupName = g.GroupName,
+                Archived = g.Archived
             });
 
             return View(new UserGroupsVM{CreatedGroups = createdGroups, ParticipatingGroups = participatingGroups });
@@ -187,7 +188,8 @@ namespace Wolfpack.Web.Controllers
                     GroupName = singleGroup.GroupName,
                     Id = singleGroup.Id,
                     Skills = skills,
-                    GroupUsers = groupUsers
+                    GroupUsers = groupUsers,
+                    Archived = singleGroup.Archived
                 });
             }
             return RedirectToAction("Index");
@@ -212,11 +214,72 @@ namespace Wolfpack.Web.Controllers
                     CreatedOn = singleGroup.CreatedOn
                 });
             }
+
             return RedirectToAction("Index");
         }
 
         /// <summary>
-        /// Archive the selected group.
+        /// Action for deleting group
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult Delete(int id, string Message = "Deleted ")
+        {
+            //TODO: Dont forget to remove all items that depend on a group
+            int loggedInUserId = UserHelper.GetCurrentUser().Id;
+            var singleGroup = Context.Groups.FirstOrDefault(x => x.Id == id && x.GroupCreator == loggedInUserId);
+            if (singleGroup != null && singleGroup.Archived)
+            {
+                Context.Groups.Remove(singleGroup);
+                Context.SaveChanges();
+            }
+
+            else
+            {
+                Message = "Only archived groups can be deleted.";
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        /// <summary>
+        /// Action for setting groupstatus to Archived
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult Archive(int id)
+        {            
+            int loggedInUserId = UserHelper.GetCurrentUser().Id;
+            var singleGroup = Context.Groups.FirstOrDefault(x => x.Id == id && x.GroupCreator == loggedInUserId);
+            if (singleGroup != null)
+            {
+                singleGroup.Archived = true;
+                Context.SaveChanges();
+            }
+            return RedirectToAction("Index");
+        }
+
+        /// <summary>
+        /// Action for setting groupstatus to not Archived
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+
+        public ActionResult UndoArchive(int id)
+        {
+            int loggedInUserId = UserHelper.GetCurrentUser().Id;
+            var singleGroup = Context.Groups.FirstOrDefault(x => x.Id == id && x.GroupCreator == loggedInUserId);
+            if (singleGroup != null)
+            {
+                singleGroup.Archived = false;
+                Context.SaveChanges();
+            }
+            return RedirectToAction("Index");
+        }
+
+        /// <summary>
+        /// Create a new group
         /// </summary>
         /// <param name="vm"></param>
         /// <returns></returns>
@@ -262,41 +325,22 @@ namespace Wolfpack.Web.Controllers
             var group = Context.Groups.SingleOrDefault(g => g.Id == vm.Id);
             var userId = UserHelper.GetCurrentUser().Id;
 
-            Skill skill = Context.Skills.FirstOrDefault(g => g.Name == vm.NewSkillName);
-
-            if (skill == null)
+            if (!group.Archived)
             {
-                skill = new Skill
+                Skill NewSkill = new Skill
                 {
                     Name = vm.NewSkillName,
                     Description = vm.NewSkillDescription,
                     CreatedBy = Context.Users.SingleOrDefault(g => g.Id == userId),
                 };
+                group.Skills.Add(NewSkill);
+                Context.SaveChanges();
+                return View("Edit", new Models.Group.EditVM { Message = "Skill added" });
             }
-            group.Skills.Add(skill);
-            Context.SaveChanges();
-            var users = Context.Groups.SingleOrDefault(x => x.Id == vm.Id).Users.Select(u => new EditVMUser
+            else
             {
-                Id = u.Id,
-                FirstName = u.FirstName,
-                LastName = u.LastName
-            });
-            
-            return View("Edit" , new Models.Group.EditVM {
-                Id = group.Id,
-                GroupUsers = users,
-                Message = "Skill added"
-            });
-        }
-
-        /// <summary>
-        /// Open AddUser Page
-        /// </summary>
-        /// <param name="vm"></param>
-        /// <returns></returns>
-        public ActionResult AddUser(int id)
-        {
-            return View(new AddUserVM { GroupId = id });
+                return View("Edit", new Models.Group.EditVM { Message = "Group has been archived and cannot be edited" });
+            }
         }
 
         /// <summary>
@@ -346,15 +390,23 @@ namespace Wolfpack.Web.Controllers
             }
             else
             {
-                var group = Context.Groups.FirstOrDefault(g => g.Id == vm.GroupId);
-                if (group.Users == null)
+                Group group = Context.Groups.FirstOrDefault(g => g.Id == vm.Id);
+                if (!group.Archived)
                 {
-                    group.Users = new List<User>();
-                }
-                group.Users.Add(user);
-                Context.SaveChanges();
+                    if (group.Users == null)
+                    {
+                        group.Users = new List<User>();
+                    }
+                    group.Users.Add(user);
+                    Context.SaveChanges();
                 
-                return RedirectToAction("Details", new { id = vm.Id, state = "success" });
+                    return View(new AddUserVM { });
+                }
+                else
+                {
+                    var message = "Target group is archived";
+                    return RedirectToAction("Index", message);
+                }            
             }
         }
 
@@ -403,6 +455,24 @@ namespace Wolfpack.Web.Controllers
         {
             return PartialView("_addSkillPartial", new Models.Group.EditVM {Id = id });
         }
+
+        /// <summary>
+        /// Standard view for creating a new event
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public ActionResult NewEvent(int Id, string message = "")
+        {
+            var singleGroup = Context.Groups.FirstOrDefault(x => x.Id == Id);
+
+            if (!singleGroup.Archived)
+            {
+                Session["selectedGroupId"] = Id;
+                return View(new EventVM() { GroupId = Id, Message = message });
+            }
+            message = "Group has been archived and cannot be used";
+            return RedirectToAction("Index", message);
+        }
         /// <summary>
         /// Submit action for creating a new event, takes an eventname from inputfield
         /// </summary>
@@ -416,7 +486,8 @@ namespace Wolfpack.Web.Controllers
             if (!string.IsNullOrWhiteSpace(vm.NewEventName))
             {
                 var group = Context.Groups.SingleOrDefault(e => e.Id == vm.Id);
-                if (group != null)
+
+                if (group != null && group.Archived)
                 {
                     Context.Events.Add(new Event
                     {
