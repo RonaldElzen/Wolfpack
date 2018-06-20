@@ -3,28 +3,71 @@
 @{
     ViewBag.Title = "Details";
 }
-<div class="info-box">
-    <h2>Details for @Html.DisplayFor(model => model.GroupName)</h2>
-    <p>
-        @Html.ActionLink("Create Event", "NewEvent", new { Id = Model.Id })
-    </p>
 
-    <h3>Basic info</h3>
-    <h4>@Html.DisplayNameFor(model => model.Category)</h4>
-    <p>@Html.DisplayFor(model => model.Category)</p>
-    <h4>@Html.DisplayNameFor(model => model.CreatedOn)</h4>
-    <p>@Html.DisplayFor(model => model.CreatedOn)</p>
+@if (Request.Params["state"] == "success")
+{
+    <div class="alert">Succes!</div>
+}
 
-    <h3>Skills in this group</h3>
-    <ul>
-        @foreach (var Skill in Model.Skills)
+@if (Request.Params["state"] == "No user")
+{
+    <div class="alert error">No user found!</div>
+}
+
+    <div class="info-box" id="info-box">
+        <h2>@Html.DisplayFor(model => model.GroupName)</h2>
+        <p>@Html.DisplayFor(model => model.Category)</p>
+        <a class="action-button" href="@Url.Action("Index")"><i class="fas fa-arrow-circle-left fa-lg icon-left"></i><span>Back</span></a>
+        <button id="createEvent" class="action-button" )"><span>Create event</span><i class="fas fa-plus fa-lg"></i></button>
+
+
+        <h3>Skills in this group <button class="action-button" id="addSkill"><span>Add new</span><i class="fas fa-plus fa-lg"></i> </button></h3>
+        <ul>
+            @foreach (var Skill in Model.Skills)
         {
             <li>@Skill.Name</li>
-        }
-    </ul>
-    <p>
-        @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-        @Html.ActionLink("Back to List", "Index")
-    </p>
-</div>
+    }
+        </ul>
+        @if (Model.GroupUsers != null && Model.GroupUsers.Count() > 0)
+    {
+        <h3>
+            Group users <button class="action-button" id="addUser"><span>Add new</span><i class="fas fa-plus fa-lg"></i> </button>
+        </h3>
+        <div class="user-row">
+            @foreach (var item in Model.GroupUsers)
+        {
+            <div class="user-box">
+                @Html.DisplayFor(modelItem => item.FirstName)
+                @Html.DisplayFor(modelItem => item.LastName)
+                <button class="delete-button" data-url="@Url.Action("RemoveUserFromGroup", new { userId = item.Id, groupId = Model.Id })"><i class="fas fa-trash-alt fa-lg icon-only"></i></button>
+            </div>
+    }
+        </div>
+}
+    </div>
 
+<script>
+
+    function removeAlert() {
+        document.querySelector(".alert").remove();
+    }
+
+    window.setTimeout(removeAlert, 8000);
+    document.querySelector("#createEvent").addEventListener("click", function () {
+        getPartial('@Url.Action("GetNewEventModal")', JSON.stringify({ id: @Model.Id}));
+    });
+
+    document.querySelector("#addUser").addEventListener("click", function () {
+        getPartial('@Url.Action("AddUserModal")', JSON.stringify({ id: @Model.Id}));
+    });
+
+        document.querySelector("#addSkill").addEventListener("click", function () {
+        getPartial('@Url.Action("AddSkillModal")', JSON.stringify({ id: @Model.Id}));
+    });
+
+    document.querySelector(".delete-button").addEventListener("click", function () {
+        let actionLink = this.dataset.url;
+        createConfirmModal(actionLink);
+    });
+
+</script>

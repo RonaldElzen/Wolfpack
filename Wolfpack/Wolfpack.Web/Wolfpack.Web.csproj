@@ -254,16 +254,18 @@
     <Content Include="Views\Event\GenerateTeams.cshtml" />
     <Content Include="Views\Group\Index.cshtml" />
     <Content Include="Views\Event\Index.cshtml" />
-    <Content Include="Views\Group\Details.cshtml" />
     <Content Include="Views\Event\Details.cshtml" />
     <Content Include="Views\Event\GenerateTeamsForm.cshtml" />
-    <Content Include="Views\Group\Edit.cshtml" />
     <Content Include="Views\Event\Edit.cshtml" />
     <Content Include="Views\Group\Delete.cshtml" />
     <Content Include="Views\Event\Delete.cshtml" />
     <Content Include="Views\Group\RateUser.cshtml" />
     <Content Include="Views\Profile\SearchProfile.cshtml" />
     <Content Include="Views\Event\Team.cshtml" />
+    <Content Include="Views\Group\_createEventPartial.cshtml" />
+    <Content Include="Views\Group\_addUserPartial.cshtml" />
+    <Content Include="Views\Group\_addSkillPartial.cshtml" />
+    <Content Include="Views\Group\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
