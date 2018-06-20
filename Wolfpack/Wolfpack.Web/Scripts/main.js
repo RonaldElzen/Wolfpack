@@ -65,6 +65,27 @@ function getPartial(url,data) {
     }
 }
 
+function getNotificationCount(url) {
+    //Ajax request
+    let httpRequest = new XMLHttpRequest();
+    httpRequest.open('POST', url);
+    httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    httpRequest.send();
+
+    //Handle result
+    httpRequest.onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+
+            if (httpRequest.response > 0) {
+                let notificationcount = document.createElement("p");
+                notificationcount.setAttribute("class", "notification-count");
+                notificationcount.appendChild(document.createTextNode(httpRequest.response));
+                document.querySelector("#notification-box").append(notificationcount);
+            }
+            document.querySelector
+        }
+    }
+}
 
 /**
  * Function to open/close a info modal
@@ -212,6 +233,9 @@ function getSkillSuggestions(url, prefix) {
         }
     };
 }
+
+
+
 
 document.querySelector(".modal-close").addEventListener("click", function () {
     document.querySelector(".modal-background").remove();

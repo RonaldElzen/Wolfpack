@@ -2,15 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Mail;
-using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using Wolfpack.BusinessLayer;
 using Wolfpack.Data;
 using Wolfpack.Data.Models;
-using Wolfpack.Web.Helpers;
 using Wolfpack.Web.Helpers.Interfaces;
-using Wolfpack.Web.Models.Event;
 using Wolfpack.Web.Models.Group;
 
 namespace Wolfpack.Web.Controllers
@@ -30,8 +26,8 @@ namespace Wolfpack.Web.Controllers
         /// <returns></returns>
         public ActionResult Index()
         {
-            int id = UserHelper.GetCurrentUser().Id;
-            var groups = Context.Groups.Where(x => x.GroupCreator == id && !x.Archived).Select(g => new GroupVM
+            var user = UserHelper.GetCurrentDbUser(Context);
+            var createdGroups = Context.Groups.Where(x => x.GroupCreator == user.Id).Select(g => new GroupVM
             {
                 Id = g.Id,
                 Category = g.Category,
@@ -49,28 +45,6 @@ namespace Wolfpack.Web.Controllers
             });
 
             return View(new UserGroupsVM{CreatedGroups = createdGroups, ParticipatingGroups = participatingGroups });
-        }
-
-        /// <summary>
-        /// View for edit
-        /// </summary>
-        /// <param name="Id"></param>
-        /// <returns></returns>
-        public ActionResult Edit(int id, string message = "")
-        {
-            var users = Context.Groups.SingleOrDefault(x => x.Id == id).Users.Select(u => new EditVMUser
-            {
-                Id = u.Id,
-                FirstName = u.FirstName,
-                LastName = u.LastName
-            });
-
-            return View(new Models.Group.EditVM
-            {
-                Id = id,
-                GroupUsers = users,
-                Message = message
-            });
         }
 
         /// <summary>
@@ -281,12 +255,8 @@ namespace Wolfpack.Web.Controllers
                 FirstName = u.FirstName,
                 LastName = u.LastName
             });
-            
-            return View("Edit" , new Models.Group.EditVM {
-                Id = group.Id,
-                GroupUsers = users,
-                Message = "Skill added"
-            });
+
+            return RedirectToAction("Details", new { id = vm.Id, state = "success" });
         }
 
         /// <summary>

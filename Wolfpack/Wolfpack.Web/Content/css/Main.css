@@ -95,6 +95,33 @@ div, ul, li, a {
         float: right;
         margin-right: 15px;
         cursor: pointer; }
+      .sidebar .nav li .notification-box {
+        line-height: initial;
+        float: right;
+        cursor: pointer;
+        position: relative;
+        margin-right: 15px;
+        text-align: center;
+        display: flex;
+        justify-content: center; }
+        .sidebar .nav li .notification-box i {
+          line-height: initial;
+          float: right;
+          cursor: pointer;
+          margin: 0; }
+        .sidebar .nav li .notification-box .notification-count {
+          font-weight: 900;
+          font-size: 10pt;
+          margin: 0;
+          background: #81939d;
+          color: #ffffff;
+          position: absolute;
+          border-radius: 999px;
+          padding: 4px;
+          width: 20px;
+          height: 20px;
+          top: -9px;
+          right: -16px; }
       .sidebar .nav li:hover {
         background: #81939D; }
       .sidebar .nav li a, .sidebar .nav li #toggle-collapse {
@@ -298,6 +325,19 @@ th {
   cursor: pointer;
   color: #fff;
   background: #81939D; }
+
+.notification-item {
+  max-width: 250px;
+  background: #455b65;
+  padding: 10px;
+  color: #fff;
+  text-align: center;
+  transition: all .2s ease;
+  cursor: pointer;
+  font-size: 15pt;
+  text-decoration: none; }
+  .notification-item:hover {
+    transform: scale(1.1); }
 
 .overview {
   width: 100%;

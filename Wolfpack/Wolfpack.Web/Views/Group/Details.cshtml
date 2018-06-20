@@ -65,9 +65,11 @@
         getPartial('@Url.Action("AddSkillModal")', JSON.stringify({ id: @Model.Id}));
     });
 
-    document.querySelector(".delete-button").addEventListener("click", function () {
-        let actionLink = this.dataset.url;
-        createConfirmModal(actionLink);
-    });
-
+    let deleteButtons = document.querySelectorAll(".delete-button");
+    for (let i = 0; i < deleteButtons.length; i++) {
+        deleteButtons[i].addEventListener('click', function () {
+            let actionLink = this.dataset.url;
+            createConfirmModal(actionLink);
+        });
+    };
 </script>

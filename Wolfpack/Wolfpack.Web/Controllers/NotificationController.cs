@@ -109,7 +109,7 @@ namespace Wolfpack.Web.Controllers
         {
             var minDate = DateTime.Now.AddDays(-2);
             var notifications = UserHelper.GetCurrentDbUser(Context).Notifications
-                .Where(n => !n.IsRead || n.Date > minDate)
+                .Where(n => n.IsRead == false|| n.Date > minDate)
                 .ToList();
 
             return Json(notifications.Count(), JsonRequestBehavior.AllowGet);
