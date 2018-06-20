@@ -14,5 +14,6 @@ namespace Wolfpack.Web.Models.Group
         public DateTime CreatedOn { get; set; }
         public IEnumerable<SkillVM> Skills { get; set; }
         public IEnumerable<UserVM> GroupUsers { get; set; }
+        public String NewEventName { get; set; }
     }
 }

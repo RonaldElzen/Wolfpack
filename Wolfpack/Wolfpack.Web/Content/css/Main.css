@@ -61,8 +61,7 @@ div, ul, li, a {
 
 .main {
   flex: 1;
-  padding: 5px;
-  padding-left: 20px; }
+  padding: 20px; }
 
 .sidebar {
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
@@ -166,10 +165,7 @@ div, ul, li, a {
     margin-left: 25px; }
 
 .form-box {
-  max-width: 500px;
-  padding: 20px;
-  margin: 10px;
-  margin-left: 50px; }
+  max-width: 500px; }
   .form-box ul {
     padding: 0; }
 
@@ -180,7 +176,9 @@ div, ul, li, a {
 #autocomplete {
   list-style-type: none;
   margin: 0;
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22); }
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+  max-height: 150px;
+  overflow-y: scroll; }
   #autocomplete li {
     padding: 10px;
     cursor: pointer;
@@ -262,8 +260,16 @@ label {
   padding: 20px; }
 
 .info-box {
-  margin: 10px;
-  max-width: 350px; }
+  margin: 10px; }
+  .info-box h2 {
+    margin-bottom: 5px; }
+  .info-box h4 {
+    padding: 0;
+    margin: 0; }
+  .info-box p {
+    margin: 0;
+    margin-bottom: 10px;
+    color: #444a53; }
   .info-box ul {
     margin: 0;
     padding: 0; }
@@ -273,11 +279,12 @@ label {
       padding: 10px;
       list-style-type: none;
       color: #fff;
-      background: #455B65; }
+      background: #455B65;
+      max-width: 350px; }
 
 h3 {
   font-size: 25px;
-  color: #82949e; }
+  color: #455b65; }
 
 th {
   text-align: left; }
@@ -287,6 +294,7 @@ th {
   padding: 10px;
   margin: 0;
   margin-bottom: 10px;
+  max-width: 200px;
   cursor: pointer;
   color: #fff;
   background: #81939D; }
@@ -331,6 +339,42 @@ th {
   .item-large .overview-header .overview-text {
     padding: 25px !important; }
 
+.user-row {
+  display: flex;
+  flex-wrap: wrap; }
+
+.user-box {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  margin: 5px;
+  padding: 10px;
+  list-style-type: none;
+  color: #fff;
+  display: inline;
+  background: #455B65;
+  position: relative;
+  flex-basis: 220px; }
+  .user-box .delete-button {
+    position: absolute;
+    right: 0;
+    height: 100%;
+    top: 0;
+    margin: 0;
+    width: 50px;
+    border-radius: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 0;
+    background: #81939d;
+    color: #fff;
+    padding: 5px;
+    transition: all .2s ease;
+    text-decoration: none; }
+    .user-box .delete-button:hover {
+      transform: scale(1.1); }
+
 .register-form {
   width: 750px;
   margin: auto;
@@ -341,7 +385,7 @@ th {
     margin: auto; }
 
 h2 {
-  color: #82949E;
+  color: #455b65;
   font-size: 25pt; }
 
 .registration-box {
@@ -376,6 +420,13 @@ h2 {
   text-decoration: none; }
   .action-button:hover {
     transform: scale(1.1); }
+  .action-button i {
+    margin-left: 10px; }
+  .action-button .icon-left {
+    margin-left: 0;
+    margin-right: 10px; }
+  .action-button .icon-only {
+    margin: 0; }
 
 .form-wrapper {
   max-width: 650px;
@@ -459,4 +510,91 @@ h2 {
     display: block;
     position: fixed;
     background: rgba(0, 0, 0, 0.5); } }
+
+.modal-background {
+  position: fixed;
+  align-items: center;
+  justify-content: center;
+  background: rgba(146, 146, 146, 0.33);
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  z-index: 3; }
+
+/*Modals*/
+.modal {
+  width: 350px;
+  text-align: center;
+  box-sizing: border-box;
+  background: #fff;
+  border-radius: 4px;
+  overflow: hidden;
+  vertical-align: middle;
+  justify-content: center;
+  position: relative; }
+
+.hidden {
+  display: none; }
+
+.modal-text {
+  padding: 20px; }
+
+.modal-form {
+  padding: 20px; }
+
+.modal-heading {
+  width: 350px;
+  background: #263238;
+  margin-top: 0;
+  font-size: 20pt;
+  color: #fff;
+  padding: 10px; }
+  .modal-heading h2 {
+    padding: 0;
+    margin: 0;
+    color: #fff; }
+
+.modal-close {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  vertical-align: middle;
+  background: #455b65;
+  transition: all .2s ease;
+  cursor: pointer;
+  color: #FFF;
+  border: 0;
+  border-radius: 4px; }
+  .modal-close:hover {
+    transform: scale(1.1);
+    -webkit-transform: scale(1.1); }
+  .modal-close svg {
+    vertical-align: top; }
+
+@keyframes hideAlert {
+  0% {
+    margin-top: 0; }
+  25% {
+    margin-top: 0; }
+  50% {
+    margin-top: 0; }
+  100% {
+    margin-top: -250px; } }
+
+.alert {
+  width: 100%;
+  top: 0;
+  position: fixed;
+  background: #00C851;
+  padding: 20px;
+  margin-left: -20px;
+  color: #fff;
+  transition: all .2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  animation: hideAlert 8s linear; }
+
+.error {
+  background: #ff4444; }
 

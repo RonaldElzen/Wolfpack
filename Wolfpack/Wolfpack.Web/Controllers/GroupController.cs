@@ -150,7 +150,7 @@ namespace Wolfpack.Web.Controllers
 
                 //TODO Send notification to removed user (waiting for notification system)
             }
-            return RedirectToAction("Edit", new { Id = groupId });
+            return RedirectToAction("Details", new { Id = groupId,state = "success" });
         }
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace Wolfpack.Web.Controllers
         public ActionResult Details(int id)
         {
             int loggedInUserId = UserHelper.GetCurrentUser().Id;
-            var singleGroup = Context.Groups.SingleOrDefault(x => x.Id == id && x.GroupCreator == loggedInUserId);
+            var singleGroup = Context.Groups.SingleOrDefault(x => x.Id == id);
             if (singleGroup != null)
             {
                 var skills = singleGroup.Skills.Select(s => new Models.Group.SkillVM
@@ -342,7 +342,7 @@ namespace Wolfpack.Web.Controllers
                 if(possibleUsers != null && possibleUsers.Count > 0)
                     return View(new AddUserVM { GroupId = vm.GroupId, PossibleUsers = possibleUsers });
                 else
-                    return View(new AddUserVM { GroupId = vm.GroupId, Message = "No user found" });
+                    return RedirectToAction("Details", new { id = vm.Id, state = "No user" });
             }
             else
             {
@@ -353,8 +353,8 @@ namespace Wolfpack.Web.Controllers
                 }
                 group.Users.Add(user);
                 Context.SaveChanges();
-
-                return View(new AddUserVM { GroupId = vm.GroupId, Message = "User added" });
+                
+                return RedirectToAction("Details", new { id = vm.Id, state = "success" });
             }
         }
 
@@ -388,34 +388,39 @@ namespace Wolfpack.Web.Controllers
             return View(new GroupVM() { Message = message });
         }
 
-        /// <summary>
-        /// Standard view for creating a new event
-        /// </summary>
-        /// <param name="message"></param>
-        /// <returns></returns>
-        public ActionResult NewEvent(int Id, string message = "")
+
+        public ActionResult GetNewEventModal(int id)
         {
-            Session["selectedGroupId"] = Id;
-            return View(new EventVM() { GroupId = Id, Message = message });
+            return PartialView("_createEventPartial", new GroupVM {Id = id});
         }
 
+        public ActionResult AddUserModal(int id)
+        {
+            return PartialView("_addUserPartial", new AddUserVM { Id = id });
+        }
+
+        public ActionResult AddSkillModal(int id)
+        {
+            return PartialView("_addSkillPartial", new Models.Group.EditVM {Id = id });
+        }
         /// <summary>
         /// Submit action for creating a new event, takes an eventname from inputfield
         /// </summary>
         /// <param name="vm"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult NewEvent(EventVM vm)
+        public ActionResult NewEvent(GroupVM vm)
         {
             var message = "";
-            if (!string.IsNullOrWhiteSpace(vm.EventName))
+            var state = "";
+            if (!string.IsNullOrWhiteSpace(vm.NewEventName))
             {
-                var group = Context.Groups.SingleOrDefault(e => e.Id == vm.GroupId);
+                var group = Context.Groups.SingleOrDefault(e => e.Id == vm.Id);
                 if (group != null)
                 {
                     Context.Events.Add(new Event
                     {
-                        EventName = vm.EventName,
+                        EventName = vm.NewEventName,
                         EventCreator = UserHelper.GetCurrentDbUser(Context),
                         CreatedOn = DateTime.Now,
                         Group = group
@@ -423,17 +428,19 @@ namespace Wolfpack.Web.Controllers
 
                     Context.SaveChanges();
                     message = "Event created!";
+                    state = "success";
                 }
                 else
                 {
                     message = "No group users found!";
+                    state = "error";
                 }
             }
             else
             {
                 message = "Something went wrong, please fill in all the fields";
             }
-            return View(new EventVM() { Message = message });
+            return RedirectToAction("Details", new { id = vm.Id,state});
         }
     }
 }
