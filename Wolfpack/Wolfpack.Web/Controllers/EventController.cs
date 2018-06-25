@@ -176,7 +176,6 @@ namespace Wolfpack.Web.Controllers
         [HttpPost]
         public ActionResult GenerateTeams(GenerateTeamsVM vm)
         {
-
             if (vm.TeamSize < 1)
             {
                 vm.Message = "Please make sure you have filled in a max team size";
@@ -195,6 +194,19 @@ namespace Wolfpack.Web.Controllers
                     break;
                 default:
                     return HttpNotFound();
+            }
+
+            foreach(var user in currentEvent.Group.Users)
+            {
+                user.Notifications.Add(new Notification
+                {
+                    Title = "Added to eventTeam for event: " + currentEvent.EventName,
+                    Content = $"An event has started and you've been added to a team. " +
+                            $"You can now rate your team members through the following link: " +
+                            Url.Action("RateUser", "Group", new { id = currentEvent.Group.Id }, this.Request.Url.Scheme),
+                    Date = DateTime.Now,
+                    IsRead = false
+                });
             }
 
             return RedirectToAction("Details", new { id = vm.EventId });
