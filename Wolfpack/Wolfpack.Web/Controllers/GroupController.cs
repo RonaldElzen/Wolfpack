@@ -59,7 +59,12 @@ namespace Wolfpack.Web.Controllers
         /// <returns></returns>
         public ActionResult Edit(int id, string message = "")
         {
-            var users = Context.Groups.SingleOrDefault(x => x.Id == id).Users.Select(u => new EditVMUser
+            var group = Context.Groups.SingleOrDefault(x => x.Id == id);
+
+            if (group.Id != UserHelper.GetCurrentUser().Id)
+                return HttpNotFound();
+
+            var users = group.Users.Select(u => new EditVMUser
             {
                 Id = u.Id,
                 FirstName = u.FirstName,
@@ -398,6 +403,17 @@ namespace Wolfpack.Web.Controllers
                         group.Users = new List<User>();
                     }
                     group.Users.Add(user);
+
+                    user.Notifications.Add(new Notification
+                    {
+                        Title = "Added to group: " + group.GroupName,
+                        Content = $"You've been added to the group '{group.GroupName}' " +
+                            $"and can now rate yourself for the associated skills through the following link: " +
+                            Url.Action("RateUser", "Group", new { id = group.Id }, this.Request.Url.Scheme),
+                        Date = DateTime.Now,
+                        IsRead = false
+                    });
+
                     Context.SaveChanges();
                 
                     return View(new AddUserVM { });
