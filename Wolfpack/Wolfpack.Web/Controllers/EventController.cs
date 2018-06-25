@@ -198,11 +198,6 @@ namespace Wolfpack.Web.Controllers
             }
 
             return RedirectToAction("Details", new { id = vm.EventId });
-            }
-            else
-            {
-                return View("Edit", new EditVM { Message = "Group is archived and cannot be edited" });
-            }
         }
 
         private void _generateAverageTeams(Event currentEvent, int teamSize)

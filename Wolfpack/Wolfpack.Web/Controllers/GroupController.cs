@@ -30,8 +30,8 @@ namespace Wolfpack.Web.Controllers
         /// <returns></returns>
         public ActionResult Index(string message)
         {
-            int id = UserHelper.GetCurrentUser().Id;
-            var groups = Context.Groups.Where(x => x.GroupCreator == id && !x.Archived).Select(g => new GroupVM
+            var user = UserHelper.GetCurrentDbUser(Context);
+            var groups = Context.Groups.Where(x => x.GroupCreator == user.Id && !x.Archived).Select(g => new GroupVM
             {
                 Id = g.Id,
                 Category = g.Category,
@@ -49,7 +49,7 @@ namespace Wolfpack.Web.Controllers
                 Archived = g.Archived
             });
 
-            return View(new UserGroupsVM{CreatedGroups = createdGroups, ParticipatingGroups = participatingGroups });
+            return View(new UserGroupsVM{CreatedGroups = groups, ParticipatingGroups = participatingGroups });
         }
 
         /// <summary>
@@ -390,7 +390,7 @@ namespace Wolfpack.Web.Controllers
             }
             else
             {
-                Group group = Context.Groups.FirstOrDefault(g => g.Id == vm.Id);
+                var group = Context.Groups.FirstOrDefault(g => g.Id == vm.Id);
                 if (!group.Archived)
                 {
                     if (group.Users == null)
