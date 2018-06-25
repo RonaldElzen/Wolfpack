@@ -1,0 +1,21 @@
+﻿@model Wolfpack.Web.Models.Group.AddUserVM
+
+<div id="newEventModal" class="modal-background">
+    <div class="modal">
+        <div class="modal-heading">
+            <h2>Add user</h2>
+            <button class="modal-close"><i class="fas fa-times fa-3x icon-only"></i> </button> 
+        </div>
+
+        <div class="form-box modal-form">
+            @using (Html.BeginForm("AddUser", "Group"))
+    {
+        <div class="form-item">
+            @Html.EditorFor(m => m.UserName)
+        </div>
+        @Html.HiddenFor(m => m.Id)
+        <input type="submit" class="submit-button" value="AddUser" />
+}
+        </div>
+    </div>
+</div>

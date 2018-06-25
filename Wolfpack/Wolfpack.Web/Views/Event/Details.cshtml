@@ -21,6 +21,24 @@
             <li>@Skill.Name</li>
         }
     </ul>
+
+    <h3>Teams in event</h3>
+    <ul>
+        @foreach (var Team in Model.Teams)
+        {
+            <h4>
+                @Team.Name
+            </h4>
+
+            foreach (var User in Team.Users)
+            {
+                <li>@User.FirstName @User.LastName</li>
+            }
+            <p>
+                @Html.ActionLink("View team", "Team", new { id = Team.Id })
+            </p>
+        }
+    </ul>
     <p>
         @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
         @Html.ActionLink("Back to List", "Index")

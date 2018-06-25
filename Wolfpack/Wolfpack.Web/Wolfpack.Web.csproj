@@ -157,12 +157,14 @@
     <Compile Include="Controllers\EventController.cs" />
     <Compile Include="Controllers\GroupController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\NotificationController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
     <Compile Include="Controllers\SkillController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\CustomControllerFactory.cs" />
+    <Compile Include="Helpers\Enums\AlgorithmType.cs" />
     <Compile Include="Helpers\Enums\RecoveryStatus.cs" />
     <Compile Include="Helpers\Interfaces\ISessionHelper.cs" />
     <Compile Include="Helpers\Interfaces\IUserHelper.cs" />
@@ -176,8 +178,10 @@
     <Compile Include="Models\Event\EditVM.cs" />
     <Compile Include="Models\Event\EventVM.cs" />
     <Compile Include="Models\Event\GenerateTeamsVM.cs" />
+    <Compile Include="Models\Event\SkillRatingVM.cs" />
     <Compile Include="Models\Event\SkillVM.cs" />
     <Compile Include="Models\Event\TeamVM.cs" />
+    <Compile Include="Models\Event\UserVM.cs" />
     <Compile Include="Models\Group\AddUserVM.cs" />
     <Compile Include="Models\Group\EditVM.cs" />
     <Compile Include="Models\Group\RateVM.cs" />
@@ -185,6 +189,8 @@
     <Compile Include="Models\Group\UserVM.cs" />
     <Compile Include="Models\Group\GroupVM.cs" />
     <Compile Include="Models\Group\SkillVM.cs" />
+    <Compile Include="Models\Notification\NotificationsVM.cs" />
+    <Compile Include="Models\Notification\NotificationVM.cs" />
     <Compile Include="Models\Profile\ProfileVM.cs" />
     <Compile Include="Models\Profile\SearchVM.cs" />
     <Compile Include="Models\Profile\SkillVM.cs" />
@@ -252,15 +258,20 @@
     <Content Include="Views\Event\GenerateTeams.cshtml" />
     <Content Include="Views\Group\Index.cshtml" />
     <Content Include="Views\Event\Index.cshtml" />
-    <Content Include="Views\Group\Details.cshtml" />
     <Content Include="Views\Event\Details.cshtml" />
     <Content Include="Views\Event\GenerateTeamsForm.cshtml" />
-    <Content Include="Views\Group\Edit.cshtml" />
     <Content Include="Views\Event\Edit.cshtml" />
     <Content Include="Views\Group\Delete.cshtml" />
     <Content Include="Views\Event\Delete.cshtml" />
     <Content Include="Views\Group\RateUser.cshtml" />
     <Content Include="Views\Profile\SearchProfile.cshtml" />
+    <Content Include="Views\Event\Team.cshtml" />
+    <Content Include="Views\Notification\Notification.cshtml" />
+    <Content Include="Views\Notification\Notifications.cshtml" />
+    <Content Include="Views\Group\_createEventPartial.cshtml" />
+    <Content Include="Views\Group\_addUserPartial.cshtml" />
+    <Content Include="Views\Group\_addSkillPartial.cshtml" />
+    <Content Include="Views\Group\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

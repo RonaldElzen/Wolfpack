@@ -50,5 +50,15 @@ namespace Wolfpack.BusinessLayer
                     .ToList();
             }
         }
+
+        public static double AverageSkillScore(this User user)
+        {
+            return user.UserSkills.Average(s => s.Ratings.Average(r => r.Mark));
+        }
+
+        public static double TotalSkillScore(this User user)
+        {
+            return user.UserSkills.Sum(s => s.Ratings.Average(r => r.Mark));
+        }
     }
 }

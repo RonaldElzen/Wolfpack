@@ -14,8 +14,6 @@ namespace Wolfpack.Web.Controllers
 {
     public class DummyController : BaseController
     {
-        public User currentUser;
-
         public DummyController(Context context, IUserHelper userHelper = null, ISessionHelper sessionHelper = null)
             : base(context, userHelper, sessionHelper) { }
 
@@ -46,6 +44,10 @@ namespace Wolfpack.Web.Controllers
         [HttpPost]
         public ActionResult CreateUsersWithSkills()
         {
+            var currentUser = UserHelper.GetCurrentDbUser(Context);
+            if (currentUser == null)
+                return View("Dummy", new DummyVM { Message = "No currently logged in user." });
+
             string[] names = { "Roxy", "Brenton", "Carmina", "Ricarda", "Cesar", "Aundrea", "Randi", "Errol", "Clarinda", "Phyliss", "Julianne", "Dagmar", "Mervin", "Erminia", "Lovetta", "Tamisha", "Henk", "Cherryl" };
             string[] skills = { "Advising", "Coaching", "Conflict resolution", "Decision making", "Delegating", "Diplomacy", "Interviewing", "Motivation", "People management", "Problem solving", "Strategic thinking" };
 
@@ -73,23 +75,19 @@ namespace Wolfpack.Web.Controllers
             //Create skills
             foreach (string skillName in skills)
             {
-                if(currentUser != null)
-                {
-                    Skill s;
+                Skill s;
 
-                    if (Context.Skills.Any(x => x.Name == skillName)) s = Context.Skills.FirstOrDefault(x => x.Name == skillName);
-                    else
+                if (Context.Skills.Any(x => x.Name == skillName)) s = Context.Skills.FirstOrDefault(x => x.Name == skillName);
+                else
+                {
+                    s = new Skill
                     {
-                        s = new Skill
-                        {
-                            Name = skillName,
-                            Description = "A skill description",
-                            CreatedBy = currentUser
-                        };
-                        Context.Skills.Add(s);
-                    }
-                }
-                else return View("Dummy", new DummyVM { Message = "No currently logged in user." });              
+                        Name = skillName,
+                        Description = "A skill description",
+                        CreatedBy = currentUser
+                    };
+                    Context.Skills.Add(s);
+                }            
             }
             Context.SaveChanges();
 
@@ -152,6 +150,79 @@ namespace Wolfpack.Web.Controllers
             Context.SaveChanges();
 
             return View("Dummy", new DummyVM { Message = "Users have been added" });
+        }
+
+        public ActionResult AlgorithmDummy(int amountOfPeople = 100)
+        {
+            var rand = new Random();
+            var skills = new List<Skill>();
+            var group = new Group
+            {
+                GroupName = "AlgoTest",
+                CreatedOn = DateTime.Now,
+                GroupCreator = UserHelper.GetCurrentDbUser(Context).Id
+            };
+            var newEvent = new Event
+            {
+                Group = group,
+                EventName = "AlgoTest",
+                EventCreator = UserHelper.GetCurrentDbUser(Context),
+                CreatedOn = DateTime.Now
+            };
+
+            for (int i = 0; i < 10; i++)
+            {
+                var skill = new Skill
+                {
+                    Name = $"Skill {i}",
+                    Description = $"Skill {i}",
+                };
+
+                group.Skills.Add(skill);
+                Context.Skills.Add(skill);
+                skills.Add(skill);
+            }
+
+            for (int i = 0; i < amountOfPeople; i++)
+            {
+                var newUser = new User
+                {
+                    FirstName = $"Algorithm{i}/{amountOfPeople}",
+                    LastName = "Algo",
+                    Mail = "Algo@algo.algo",
+                    Password = Hashing.Hash("test"),
+                    RegisterDate = DateTime.Now,
+                    UserName = $"Algo{i}/{amountOfPeople}",
+                    LastLoginAttempt = DateTime.Now
+                };
+
+                foreach(var skill in skills)
+                {
+                    var userSkill = new UserSkill
+                    {
+                        Skill = skill,
+                    };
+
+                    userSkill.Ratings.Add(new Rating
+                    {
+                        Mark = rand.Next(1, 11),
+                        RatedBy = UserHelper.GetCurrentDbUser(Context),
+                        RatedAt = DateTime.Now,
+                    });
+
+                    newUser.UserSkills.Add(userSkill);
+                }
+
+                group.Users.Add(newUser);
+                Context.Users.Add(newUser);
+            }
+
+            Context.Events.Add(newEvent);
+            Context.Groups.Add(group);
+
+            Context.SaveChanges();
+
+            return RedirectToAction("Index", "Home");
         }
     }
 }

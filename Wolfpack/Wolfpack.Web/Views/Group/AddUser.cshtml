@@ -1,26 +1,24 @@
-﻿﻿@using System.Web.Mvc.Html
+﻿@using System.Web.Mvc.Html
 @model Wolfpack.Web.Models.Group.AddUserVM
 @{
     ViewBag.Title = "AddUsers";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Add users to group</h2>
+
+<h2>User Not found?</h2>
+
 <div class="form-box">
     @using (Html.BeginForm("AddUser"))
     {
         <div class="form-item">
             @Html.EditorFor(m => m.UserName)
         </div>
+        @Html.HiddenFor(m => m.Id)
         <input type="submit" class="submit-button" value="Submit" />
-        if (!string.IsNullOrWhiteSpace(Model.Message)) {
-            <h3>
-                @Model.Message
-            </h3>
-        }
         if (Model.PossibleUsers != null && Model.PossibleUsers.Count() > 0)
         {
-            <h3>User not found, did you mean:</h3>
+            <h3>Did you mean:</h3>
             <ul>
                 @foreach (var User in Model.PossibleUsers)
                 {
@@ -28,5 +26,9 @@
                 }
             </ul>
         }
+        @Html.HiddenFor(m => m.GroupId)
     }
 </div>
+<p>
+    @Html.ActionLink("Back", "Edit", new { id = Model.GroupId })
+</p>

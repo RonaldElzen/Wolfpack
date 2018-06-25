@@ -104,6 +104,22 @@
     <Compile Include="Migrations\201806040907356_RatingComment.Designer.cs">
       <DependentUpon>201806040907356_RatingComment.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201806171006510_RegisterInvite.cs" />
+    <Compile Include="Migrations\201806171006510_RegisterInvite.Designer.cs">
+      <DependentUpon>201806171006510_RegisterInvite.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806070700237_Notification.cs" />
+    <Compile Include="Migrations\201806070700237_Notification.Designer.cs">
+      <DependentUpon>201806070700237_Notification.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806070742050_ArchiveGroups.cs" />
+    <Compile Include="Migrations\201806070742050_ArchiveGroups.Designer.cs">
+      <DependentUpon>201806070742050_ArchiveGroups.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806131214407_GroupArchive.cs" />
+    <Compile Include="Migrations\201806131214407_GroupArchive.Designer.cs">
+      <DependentUpon>201806131214407_GroupArchive.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -159,6 +175,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201806040907356_RatingComment.resx">
       <DependentUpon>201806040907356_RatingComment.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806171006510_RegisterInvite.resx">
+      <DependentUpon>201806171006510_RegisterInvite.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806070700237_Notification.resx">
+      <DependentUpon>201806070700237_Notification.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806070742050_ArchiveGroups.resx">
+      <DependentUpon>201806070742050_ArchiveGroups.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806131214407_GroupArchive.resx">
+      <DependentUpon>201806131214407_GroupArchive.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

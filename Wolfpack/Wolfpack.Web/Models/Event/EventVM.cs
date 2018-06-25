@@ -20,5 +20,6 @@ namespace Wolfpack.Web.Models.Event
 
         public int GroupId { get; set; }
         public IEnumerable<SkillVM> Skills { get; set; }
+        public IEnumerable<TeamVM> Teams { get; set; }
     }
 }

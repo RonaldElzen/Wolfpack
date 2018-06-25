@@ -31,7 +31,7 @@ namespace Wolfpack.Web.Tests.Controllers
             var controller = new AccountController(mockContext.Object, mockUserHelper.Object);
 
             // Act
-            var result = controller.Register() as ViewResult;
+            var result = controller.Register(new RegisterVM()) as ViewResult;
 
             // Assert
             Assert.IsNotNull(result);

@@ -29,6 +29,22 @@ namespace BusinessLayer.Services
         }
 
         /// <summary>
+        /// Send register email for when a groupadmin added a non-existing user by email
+        /// </summary>
+        /// <param name="email"></param>
+        public void SendRegisterMail(string email, string registerLink)
+        {
+            string[] emails = new string[]
+            {
+                email
+            };
+            string subject = "Wolfpack - Group invitation";
+            string message = "You have been invited to join a WolfPack group.<br>"
+                + "Please go to this link: <a href='" + registerLink + "'>Wolfpack Register</a>, to register on our website and automatically get added to the group this invitation is from.";
+            SendMail(emails, subject, message, true);
+        }
+
+        /// <summary>
         /// Send login attempt email to let a user know that someone is trying to login and failed multiple times
         /// </summary>
         /// <param name="email"></param>
@@ -51,9 +67,9 @@ namespace BusinessLayer.Services
         /// <param name="emails"></param>
         /// <param name="subject"></param>
         /// <param name="message"></param>
-        public void SendMailCustom(string[] emails, string subject, string message)
+        public void SendMailCustom(string[] emails, string subject, string message, bool isHtml)
         {
-            SendMail(emails, subject, message);
+            SendMail(emails, subject, message, isHtml);
         }
 
         /// <summary>
@@ -62,13 +78,13 @@ namespace BusinessLayer.Services
         /// <param name="email"></param>
         /// <param name="subject"></param>
         /// <param name="message"></param>
-        public void SendMailCustom(string email, string subject, string message)
+        public void SendMailCustom(string email, string subject, string message, bool isHtml)
         {
             string[] emails = new string[]
             {
                 email
             };
-            SendMail(emails, subject, message);
+            SendMail(emails, subject, message, isHtml);
         }
 
         /// <summary>

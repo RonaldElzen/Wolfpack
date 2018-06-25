@@ -11,8 +11,10 @@ namespace Wolfpack.Web.Models.Group
         public string Category { get; set; }
         public string Message { get; set; }
         public int GroupCreator { get; set; }
+        public bool Archived { get; set; }
         public DateTime CreatedOn { get; set; }
         public IEnumerable<SkillVM> Skills { get; set; }
         public IEnumerable<UserVM> GroupUsers { get; set; }
+        public String NewEventName { get; set; }
     }
 }

@@ -4,10 +4,12 @@
     ViewBag.Title = "Index";
 }
 
+@if (Request.Params["state"] == "success")
+{
+    <div class="alert">Succes!</div>
+}
 <h2>Index</h2>
-
-
-@Html.ActionLink("Create new group", "NewGroup", null, new { @class = "action-button" })
+<a class="action-button" href="@Url.Action("NewGroup")"><span>Create new group</span><i class="fas fa-plus fa-lg"></i></a>
 <h3>Groups created by you</h3>
 <div class="overview">
     @foreach (var item in Model.CreatedGroups)
@@ -24,9 +26,8 @@
                 <h4>Date created</h4>
                 <p>@Html.DisplayFor(modelItem => item.CreatedOn)</p>
                 <h4>Actions</h4>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "action-button" })
                 @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "action-button" })
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "action-button" })
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "action-button", id = "delete" })
                 @Html.ActionLink("RateUser", "RateUser", new { id = item.Id }, new { @class = "action-button" })
             </div>
         </div>
@@ -53,5 +54,12 @@
             </div>
         </div>
     }
-
 </div>
+
+<script>
+document.querySelector("#delete").addEventListener('click', function (e) {
+    e.preventDefault();
+    actionLink = this.href;
+    createConfirmModal(actionLink);
+});
+</script>

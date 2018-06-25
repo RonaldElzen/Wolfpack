@@ -12,18 +12,18 @@
         <table>
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Advising</th>
-                    <th>Coaching</th>
-                    <th>Conflict resolution</th>
-                    <th>Decision making</th>
-                    <th>Delegating</th>
-                    <th>Diplomacy</th>
-                    <th>Interviewing</th>
-                    <th>Motivation</th>
-                    <th>People management</th>
-                    <th>Problem solving</th>
-                    <th>Strategic thinking</th>
+                    <th>@team.Name</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -33,7 +33,7 @@
                         <td>@user.UserName</td>
                         @foreach(var skill in user.SkillRatings)
                         {
-                            <td>@skill</td>
+                            <td>@skill.Mark</td>
                         }
                     </tr>
                 }

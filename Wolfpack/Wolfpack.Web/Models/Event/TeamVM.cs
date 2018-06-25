@@ -7,16 +7,12 @@ namespace Wolfpack.Web.Models.Event
 {
     public class TeamVM
     {
+        public int Id { get; set; }
+
+        public string Name { get; set; }
+
         public IEnumerable<UserVM> Users { get; set; }
 
-        public List<double> AverageSkills { get; set; }
-        
-        public decimal AveragePersons { get; set; }
-    }
-
-    public class UserVM
-    {
-        public string UserName { get; set; }
-        public IEnumerable<double> SkillRatings { get; set; }
+        public IEnumerable<string> SkillNames { get; set; } 
     }
 }

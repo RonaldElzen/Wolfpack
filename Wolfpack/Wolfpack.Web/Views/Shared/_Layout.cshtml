@@ -8,6 +8,7 @@
     @Styles.Render("~/Content/css")
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
+    <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
 </head>
 <body>
     <div class="wrapper">
@@ -33,7 +34,7 @@
 
                 <div class="sidebar-bottom">
                     <ul class="nav-bottom">
-                        <li><a href="@Url.Action("Index","Home")"><span>Settings</span><i class="fas fa-cog fa-lg"></i></a></li>
+                        @*<li><a href="@Url.Action("Index","Home")"><span>Settings</span><i class="fas fa-cog fa-lg"></i></a></li>*@
                         <li><a href="@Url.Action("Logout","Account")"><span>Log out</span><i class="fas fa-sign-out-alt fa-lg"></i></a></li>
                         </ul>
                 </div>
