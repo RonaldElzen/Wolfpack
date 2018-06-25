@@ -22,26 +22,6 @@ namespace Wolfpack.Web.Controllers
         }
 
         /// <summary>
-        /// Adds a test notification
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult AddTestNotification()
-        {
-            var guid = Guid.NewGuid().ToString();
-            UserHelper.GetCurrentDbUser(Context).Notifications.Add(new Notification
-            {
-                Title = $"Test notification ({guid})",
-                Content = $"This notification is a test. Just to see whether the system works. {guid}",
-                IsRead = false,
-                Date = DateTime.Now
-            });
-
-            Context.SaveChanges();
-
-            return RedirectToAction("Index", "Home");
-        }
-
-        /// <summary>
         /// Gets the view for a single notification
         /// </summary>
         /// <param name="id">Id of the notification</param>
@@ -75,7 +55,7 @@ namespace Wolfpack.Web.Controllers
         {
             var minDate = DateTime.Now.AddDays(-2);
             var notifications = UserHelper.GetCurrentDbUser(Context).Notifications
-                .Where(n => !n.IsRead || n.Date > minDate)
+                .Where(n => !n.IsRead)
                 .Select(n => new NotificationVM
                 {
                     Id = n.Id,
@@ -86,7 +66,7 @@ namespace Wolfpack.Web.Controllers
                 }).ToList();
 
             var notificationHistory = UserHelper.GetCurrentDbUser(Context).Notifications
-                .Where(n => n.IsRead && n.Date <= minDate)
+                .Where(n => n.IsRead)
                 .Select(n => new NotificationVM
                 {
                     Id = n.Id,
@@ -109,7 +89,7 @@ namespace Wolfpack.Web.Controllers
         {
             var minDate = DateTime.Now.AddDays(-2);
             var notifications = UserHelper.GetCurrentDbUser(Context).Notifications
-                .Where(n => !n.IsRead || n.Date > minDate)
+                .Where(n => n.IsRead == false)
                 .ToList();
 
             return Json(notifications.Count(), JsonRequestBehavior.AllowGet);

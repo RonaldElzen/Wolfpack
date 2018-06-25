@@ -11,9 +11,9 @@
         <div class="form-item form-normal">
             @Html.LabelFor(m => m.UserToRateId)
             @Html.DropDownListFor(m => Model.UserToRateId,
-                                             Model.UsersList,
-                                             "Select user to rate",
-                                             new { @class = "form-control" })
+                Model.UsersList,
+                "Select user to rate",
+                new { @class = "form-control" })
         </div>
         <div class="form-item form-normal">
             @Html.LabelFor(m => m.SkillToRateId)

@@ -7,6 +7,7 @@
     <meta name="theme-color" content="#455B65" />
     @Styles.Render("~/Content/css")
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
     <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
 </head>
@@ -23,7 +24,8 @@
                 </div>
                 <ul class="nav">
                     <li><div id="toggle-collapse"><span>Hide</span><i class="fas fa-bars fa-lg"></i></div></li>
-                    <li><a href="@Url.Action("Index","Home")"><span>Home</span><i class="fas fa-home fa-lg"></i></a></li>
+                    <li><a href="@Url.Action("GetNotifications","Notification")"><span>Messages</span><div class="notification-box" id="notification-box"><i class="fas fa-bell fa-lg"></i></div></a></li>
+                    @*<li><a href="@Url.Action("Index","Home")"><span>Home</span><i class="fas fa-home fa-lg"></i></a></li>*@
                     <li><a href="@Url.Action("Index","Profile")"><span>Profile</span><i class="fas fa-user-circle fa-lg"></i></a></li>
                     <li><a href="@Url.Action("SearchProfile","Profile")"><span>Users</span><i class="fas fa-user fa-lg"></i></a></li>
                     <li><a href="@Url.Action("Index","Group")"><span>Groups</span><i class="fas fa-users fa-lg"></i></i></a></li>
@@ -44,10 +46,8 @@
                 @RenderBody()
             </div>
         </div>
-
-    @*@Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/jqueryval")*@
     @RenderSection("scripts", required: false)
     <script src="@Url.Content("~/Scripts/main.js")"></script>
+    <script>getNotificationCount('@Url.Action("GetNotificationCount", "Notification")')</script>
 </body>
 </html>
