@@ -9,30 +9,13 @@
 
 @foreach (var notification in Model.Notifications)
 {
-<div class="notification-item">
 
-    @Html.ActionLink(@notification.Title, "GetNotification", new { id = notification.Id }, new { @class = "notification-item" })
-</div>
+    @Html.ActionLink(@notification.Title, "GetNotification", new { id = notification.Id }, new { @class = "notification-item"})
 }
 
-<h2>History</h2>
+<h3>History</h3>
 
-<table>
-    <thead>
-        <tr>
-            <th>Title</th>
-            <th>Date</th>
-            <th>IsRead</th>
-        </tr>
-    </thead>
-    <tbody>
         @foreach (var notification in Model.NotificationHistory)
-        {
-            <tr>
-                <td>@Html.ActionLink(notification.Title, "GetNotification", new { id = notification.Id })</td>
-                <td>@notification.Date</td>
-                <td>@notification.IsRead</td>
-            </tr>
-        }
-    </tbody>
-</table>
+    {
+        @Html.ActionLink(@notification.Title, "GetNotification", new { id = notification.Id }, new { @class = "notification-item" })
+}

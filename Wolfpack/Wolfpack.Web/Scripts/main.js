@@ -71,7 +71,9 @@ function getNotificationCount(url) {
     httpRequest.open('POST', url);
     httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     httpRequest.send();
-
+    if (document.querySelector(".notification-count") != null) {
+        document.query(".notification-count").remove();
+    }
     //Handle result
     httpRequest.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
