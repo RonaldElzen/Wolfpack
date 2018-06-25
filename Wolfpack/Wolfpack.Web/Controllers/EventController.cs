@@ -49,12 +49,12 @@ namespace Wolfpack.Web.Controllers
         /// <summary>
         /// View single event
         /// </summary>
-        /// <param name="Id"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        public ActionResult Details(int Id)
+        public ActionResult Details(int id)
         {
-            int id = UserHelper.GetCurrentUser().Id;
-            var singleEvent = Context.Events.SingleOrDefault(x => x.Id == Id && x.EventCreator.Id == id);
+            var userId = UserHelper.GetCurrentUser().Id;
+            var singleEvent = Context.Events.SingleOrDefault(x => x.Id == id && x.EventCreator.Id == userId);
             if (singleEvent != null)
             {
                 var skills = singleEvent.Skills.Select(s => new SkillVM
@@ -75,13 +75,6 @@ namespace Wolfpack.Web.Controllers
                     }),
                     Name = t.Name,
                     Id = t.Id,
-                    Avg = t.Users.Average(u => u.UserSkills.Average(s => s.Ratings.Average(r => r.Mark))),
-                    Total = t.Users.Sum(u => u.UserSkills.Average(s => s.Ratings.Average(r => r.Mark))),
-                    SkillShit = t.Users.SelectMany(u => u.UserSkills.Select(x => new
-                    {
-                        Skill = x.Skill,
-                        Rating = x.Ratings.Average(r => r.Mark)
-                    })).GroupBy(s => s.Skill).Select(y => new { Rating = y.Sum(h => h.Rating), Skill = y.Key }).ToDictionary(x => x.Skill.Name, y => y.Rating)
                 });
 
                 return View(new EventVM
@@ -183,15 +176,22 @@ namespace Wolfpack.Web.Controllers
         [HttpPost]
         public ActionResult GenerateTeams(GenerateTeamsVM vm)
         {
+
+            if (vm.TeamSize < 1)
+            {
+                vm.Message = "Please make sure you have filled in a max team size";
+                return View("GenerateTeamsForm", vm);
+            }
+
             var currentEvent = Context.Events.SingleOrDefault(e => e.Id == vm.EventId);
 
             switch (vm.AlgorithmType)
             {
                 case AlgorithmType.AverageTeams:
-                    _generateAverageTeams();
+                    _generateAverageTeams(currentEvent, vm.TeamSize);
                     break;
                 case AlgorithmType.BestTeam:
-                    _generateBestTeams(currentEvent);
+                    _generateBestTeams(currentEvent, vm.TeamSize);
                     break;
                 default:
                     return HttpNotFound();
@@ -200,20 +200,115 @@ namespace Wolfpack.Web.Controllers
             return RedirectToAction("Details", new { id = vm.EventId });
         }
 
-        private void _generateAverageTeams()
-        {
-
-        }
-
-        private void _generateBestTeams(Event currentEvent)
+        private void _generateAverageTeams(Event currentEvent, int teamSize)
         {
             currentEvent.Teams.Clear();
 
             if (currentEvent != null)
             {
                 var groupUsers = currentEvent.Group.Users;
-                var teamSize = 7; // TODO
-                var amountOfTeams = groupUsers.Count / teamSize; // TODO
+
+                var amountOfTeams = groupUsers.Count / teamSize; // TODO implement ability to choose amount of teams
+
+                for (int i = 0; i < amountOfTeams; i++)
+                {
+                    var team = new EventTeam { Name = $"{currentEvent.EventName}-Team {i + 1}" };
+
+                    for (int j = 0; j < teamSize; j++)
+                    {
+                        if (team.Users.Count > 0)
+                        {
+                            var usersWithoutOpposite = team.Users.Where(u => !team.Users.Any(x => x != null && u != null && x != u && u.GetBestSkill() == x.GetWorstSkill()));
+
+                            if (usersWithoutOpposite != null && usersWithoutOpposite.Count() > 0)
+                            {
+                                var user = usersWithoutOpposite.Last();
+                                var oppositeUser = groupUsers.Where(u => u != null && user != null && !currentEvent.Teams.Any(t => t.Users.Contains(u))
+                                    && !team.Users.Contains(u) && u.GetWorstSkill().Id == user.GetBestSkill().Id).FirstOrDefault();
+
+                                if (oppositeUser != null)
+                                {
+                                    team.Users.Add(oppositeUser);
+                                    continue;
+                                }
+                            }
+                        }
+
+                        team.Users.Add(groupUsers.FirstOrDefault(u => !currentEvent.Teams.Any(t => t.Users.Contains(u)) && !team.Users.Contains(u)));
+                        continue;
+                    }
+
+                    currentEvent.Teams.Add(team);
+                }
+
+                var teamsToChange = GetTeamsToChange(currentEvent);
+
+                while (teamsToChange != null && teamsToChange.Count() > 1)
+                {
+                    var skillToSwitch = teamsToChange.Select(t => new
+                    {
+                        Team = t,
+                        Skill = t.GetTotalsPerSkill().OrderByDescending(x => x.Value).FirstOrDefault().Key
+                    });
+
+                    var orderedTeams = teamsToChange
+                        .OrderByDescending(t => t.Users
+                            .Sum(u => u.UserSkills
+                                .Average(s => s.Ratings
+                                    .Average(r => r.Mark))));
+
+                    var bestTeam = orderedTeams.First();
+                    var worstTeam = orderedTeams.Last();
+
+                    var skillToChange = worstTeam.GetTotalsPerSkill().OrderBy(s => s.Value).FirstOrDefault().Key;
+
+                    var worstTeamUserToChange = worstTeam.Users
+                        .OrderBy(u => u.UserSkills
+                            .FirstOrDefault(s => s.Skill == skillToChange)
+                            .Ratings
+                            .Average(r => r.Mark))
+                        .FirstOrDefault();
+
+                    var bestTeamUserToChange = bestTeam.Users
+                        .OrderByDescending(u => u.UserSkills
+                            .FirstOrDefault(s => s.Skill == skillToChange)
+                            .Ratings
+                            .Average(r => r.Mark))
+                        .FirstOrDefault();
+
+                    worstTeam.Users.Remove(worstTeamUserToChange);
+                    worstTeam.Users.Add(bestTeamUserToChange);
+                    bestTeam.Users.Remove(bestTeamUserToChange);
+                    bestTeam.Users.Add(worstTeamUserToChange);
+
+                    teamsToChange = GetTeamsToChange(currentEvent);
+                }
+
+                Context.SaveChanges();
+
+                IEnumerable<EventTeam> GetTeamsToChange(Event e)
+                {
+                    var totalScorePerTeam = e.Teams.Select(t => new
+                    {
+                        Team = t,
+                        Total = t.Users.Sum(u => u.TotalSkillScore())
+                    });
+
+                    var averageScore = totalScorePerTeam.Average(t => t.Total);
+                    var allowedDifference = 25;
+                    return totalScorePerTeam.Where(t => t.Total > averageScore + allowedDifference || t.Total < averageScore - allowedDifference).Select(x => x.Team);
+                }
+            }
+        }
+
+        private void _generateBestTeams(Event currentEvent, int teamSize)
+        {
+            currentEvent.Teams.Clear();
+
+            if (currentEvent != null)
+            {
+                var groupUsers = currentEvent.Group.Users;
+                var amountOfTeams = groupUsers.Count / teamSize;
 
                 var orderedGroupUsers = groupUsers
                     .OrderByDescending(u => u.UserSkills
@@ -273,289 +368,6 @@ namespace Wolfpack.Web.Controllers
             currentEvent.Skills.Add(skill);
             Context.SaveChanges();
             return View("Edit", new EditVM { Message = "Skill added" });
-        }
-
-        [HttpPost]
-        public ActionResult GenerateHigestAverageTeams(GenerateTeamsVM vm)
-        {
-            var currentEvent = Context.Events.SingleOrDefault(e => e.Id == vm.EventId);
-
-            currentEvent.Teams.Clear();
-            
-            if(currentEvent != null)
-            {
-                var groupUsers = currentEvent.Group.Users;
-                var teamSize = 7; // TODO
-                var amountOfTeams = groupUsers.Count / teamSize; // TODO
-
-                var orderedGroupUsers = groupUsers
-                    .OrderByDescending(u => u.UserSkills
-                        .Average(s => s.Ratings
-                            .Average(r => r.Mark)));
-
-                for(int i = 0; i < amountOfTeams; i++)
-                {
-                    var team = orderedGroupUsers
-                        .Skip(i * teamSize)
-                        .Take(teamSize);
-
-                    currentEvent.Teams.Add(new EventTeam
-                    {
-                        Name = $"Team {i + 1}",
-                        Users = team.ToList()
-                    });
-                }
-
-                Context.SaveChanges();
-
-                var model = currentEvent.Teams.Select(t => new TeamVM
-                {
-                    Users = t.Users.Select(u => new UserVM
-                    {
-                        UserName = u != null ? u.FirstName : "null",
-                        SkillRatings = u.GetSkillRatings().Select(x => new SkillRatingVM
-                        {
-                            Mark = x
-                        })
-                    })
-                });
-
-                return View("GenerateTeams", model);
-            }
-
-            return HttpNotFound();
-        }
-
-        [HttpPost]
-        public ActionResult GenerateTeamsYo(GenerateTeamsVM vm)
-        {
-            var currentEvent = Context.Events.SingleOrDefault(e => e.Id == vm.EventId);
-
-            currentEvent.Teams.Clear();
-
-            if (currentEvent != null)
-            {
-                var groupUsers = currentEvent.Group.Users;
-                var teamSize = 7; // TODO implement dynamic groupsize
-
-                //TODO Actually implement this
-                var teamSizeMin = 0;
-                var teamSizeMax = 0;
-                var maxTeams = 0;
-                if (vm.MinTeamSize > 0)
-                    teamSizeMin = vm.MinTeamSize;
-                if (vm.MaxTeamSize > 0 && vm.MaxTeamSize >= vm.MinTeamSize)
-                    teamSizeMax = vm.MaxTeamSize;
-                if (vm.MaxTeamsAmount > 0)
-                    maxTeams = vm.MaxTeamsAmount;
-
-                if (teamSizeMin < 1 || teamSizeMax < 1 || maxTeams < 1)
-                {
-                    vm.Message = "Please make sure you have filled in everything and that max team size isnt higher than min team size";
-                    return View("GenerateTeamsForm", vm);
-                }
-
-                //set teamsize to max teamsize for now
-                teamSize = teamSizeMax;
-
-                var amountOfTeams = groupUsers.Count / teamSize; // TODO implement ability to choose amount of teams
-
-                for (int i = 0; i < amountOfTeams; i++)
-                {
-                    var team = new EventTeam { Name = $"{currentEvent.EventName}-Team {i + 1}" };
-
-                    for (int j = 0; j < teamSize; j++)
-                    {
-                        if (team.Users.Count > 0)
-                        {
-                            var usersWithoutOpposite = team.Users.Where(u => !team.Users.Any(x => x != null && u != null && x != u && u.GetBestSkill() == x.GetWorstSkill()));
-
-                            if (usersWithoutOpposite != null && usersWithoutOpposite.Count() > 0)
-                            {
-                                var user = usersWithoutOpposite.Last();
-                                var oppositeUser = groupUsers.Where(u => u != null && user != null && !currentEvent.Teams.Any(t => t.Users.Contains(u))
-                                    && !team.Users.Contains(u) && u.GetWorstSkill().Id == user.GetBestSkill().Id).FirstOrDefault();
-
-                                if (oppositeUser != null)
-                                {
-                                    team.Users.Add(oppositeUser);
-                                    continue;
-                                }
-                            }
-                        }
-
-                        team.Users.Add(groupUsers.FirstOrDefault(u => !currentEvent.Teams.Any(t => t.Users.Contains(u)) && !team.Users.Contains(u)));
-                        continue;
-                    }
-
-                    currentEvent.Teams.Add(team);
-                }
-                
-                var teamsToChange = GetTeamsToChange(currentEvent);
-
-                while(teamsToChange != null && teamsToChange.Count() > 1)
-                {
-                    var skillToSwitch = teamsToChange.Select(t => new
-                    {
-                        Team = t,
-                        Skill = t.GetTotalsPerSkill().OrderByDescending(x => x.Value).FirstOrDefault().Key
-                    });
-
-                    var orderedTeams = teamsToChange
-                        .OrderByDescending(t => t.Users
-                            .Sum(u => u.UserSkills
-                                .Average(s => s.Ratings
-                                    .Average(r => r.Mark))));
-
-                    var bestTeam = orderedTeams.First();
-                    var worstTeam = orderedTeams.Last();
-
-                    var skillToChange = worstTeam.GetTotalsPerSkill().OrderBy(s => s.Value).FirstOrDefault().Key;
-
-                    var worstTeamUserToChange = worstTeam.Users
-                        .OrderBy(u => u.UserSkills
-                            .FirstOrDefault(s => s.Skill == skillToChange)
-                            .Ratings
-                            .Average(r => r.Mark))
-                        .FirstOrDefault();
-
-                    var bestTeamUserToChange = bestTeam.Users
-                        .OrderByDescending(u => u.UserSkills
-                            .FirstOrDefault(s => s.Skill == skillToChange)
-                            .Ratings
-                            .Average(r => r.Mark))
-                        .FirstOrDefault();
-
-                    worstTeam.Users.Remove(worstTeamUserToChange);
-                    worstTeam.Users.Add(bestTeamUserToChange);
-                    bestTeam.Users.Remove(bestTeamUserToChange);
-                    bestTeam.Users.Add(worstTeamUserToChange);
-
-                    teamsToChange = GetTeamsToChange(currentEvent);
-                }
-
-                Context.SaveChanges();
-
-                var model = currentEvent.Teams.Select(t => new TeamVM
-                {
-                    Users = t.Users.Select(u => new UserVM
-                    {
-                        UserName = u != null ? u.FirstName : "null",
-                        SkillRatings = u.GetSkillRatings().Select(x => new SkillRatingVM
-                        {
-                            Mark = x
-                        }),
-                    })
-                });
-
-                return View(model);
-
-                IEnumerable<EventTeam> GetTeamsToChange(Event e)
-                {
-                    var totalScorePerTeam = e.Teams.Select(t => new
-                    {
-                        Team = t,
-                        Total = t.Users.Sum(u => u.TotalSkillScore())
-                    });
-
-                    var averageScore = totalScorePerTeam.Average(t => t.Total);
-                    var allowedDifference = 25;
-                    return totalScorePerTeam.Where(t => t.Total > averageScore + allowedDifference || t.Total < averageScore - allowedDifference).Select(x => x.Team);
-                }
-            }
-
-            return HttpNotFound();
-        }
-
-        /// <summary>
-        /// Generate teams for the event based on the teamsize and amount of teams to be made. 
-        /// This method tries to put together the most efficient teams.
-        /// </summary>
-        /// <param name="id">Event id for which to generate teams</param>
-        /// <returns>Overview of the new team</returns>
-        [HttpPost]
-        public ActionResult GenerateTeamsOld(GenerateTeamsVM vm)
-        {
-            var currentEvent = Context.Events.SingleOrDefault(e => e.Id == vm.EventId);
-
-            currentEvent.Teams.Clear();
-
-            if (currentEvent != null)
-            {
-                var groupUsers = currentEvent.Group.Users;
-                var teamSize = 7; // TODO implement dynamic groupsize
-
-                //TODO Actually implement this
-                var teamSizeMin = 0;
-                var teamSizeMax = 0;
-                var maxTeams = 0;
-                if (vm.MinTeamSize > 0)
-                    teamSizeMin = vm.MinTeamSize;
-                if (vm.MaxTeamSize > 0 && vm.MaxTeamSize >= vm.MinTeamSize)
-                    teamSizeMax = vm.MaxTeamSize;
-                if (vm.MaxTeamsAmount > 0)
-                    maxTeams = vm.MaxTeamsAmount;
-
-                if (teamSizeMin < 1 || teamSizeMax < 1 || maxTeams < 1)
-                {
-                    vm.Message = "Please make sure you have filled in everything and that max team size isnt higher than min team size";
-                    return View("GenerateTeamsForm", vm);
-                }
-
-                //set teamsize to max teamsize for now
-                teamSize = teamSizeMax;
-
-                var amountOfTeams = groupUsers.Count / teamSize; // TODO implement ability to choose amount of teams
-
-                for (int i = 0; i < amountOfTeams; i++)
-                {
-                    var team = new EventTeam { Name = $"{currentEvent.EventName}-Team {i + 1}" };
-
-                    for (int j = 0; j < teamSize; j++)
-                    {
-                        if (team.Users.Count > 0)
-                        {
-                            var usersWithoutOpposite = team.Users.Where(u => !team.Users.Any(x => x != null && u != null && x != u && u.GetBestSkill() == x.GetWorstSkill()));
-
-                            if (usersWithoutOpposite != null && usersWithoutOpposite.Count() > 0)
-                            {
-                                var user = usersWithoutOpposite.Last();
-                                var oppositeUser = groupUsers.Where(u => u != null && user != null && !currentEvent.Teams.Any(t => t.Users.Contains(u))
-                                    && !team.Users.Contains(u) && u.GetWorstSkill().Id == user.GetBestSkill().Id).FirstOrDefault();
-
-                                if (oppositeUser != null)
-                                {
-                                    team.Users.Add(oppositeUser);
-                                    continue;
-                                }
-                            }
-                        }
-
-                        team.Users.Add(groupUsers.FirstOrDefault(u => !currentEvent.Teams.Any(t => t.Users.Contains(u)) && !team.Users.Contains(u)));
-                        continue;
-                    }
-
-                    currentEvent.Teams.Add(team);
-                }
-
-                Context.SaveChanges();
-
-                var model = currentEvent.Teams.Select(t => new TeamVM
-                {
-                    Users = t.Users.Select(u => new UserVM
-                    {
-                        UserName = u != null ? u.FirstName : "null",
-                        SkillRatings = u.GetSkillRatings().Select(x => new SkillRatingVM
-                        {
-                            Mark = x
-                        })
-                    })
-                });
-
-                return View(model);
-            }
-
-            return HttpNotFound();
         }
     }
 }

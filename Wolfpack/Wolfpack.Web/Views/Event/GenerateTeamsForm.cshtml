@@ -8,16 +8,8 @@
     @using (Html.BeginForm("GenerateTeams", "Event"))
     {
         <div class="form-item">
-            @Html.Label("Max amount of teams", new { htmlAttributes = new { required = "required" } })
-            @Html.EditorFor(m => m.MaxTeamsAmount, new { htmlAttributes = new { required = "required" } })
-        </div>
-        <div class="form-item">
-            @Html.Label("Minimum person per team", new { htmlAttributes = new { required = "required" } })
-            @Html.EditorFor(m => m.MinTeamSize, new { htmlAttributes = new { required = "required" } })
-        </div>
-        <div class="form-item">
             @Html.Label("Maximum persons per team", new { htmlAttributes = new { required = "required" } })
-            @Html.EditorFor(m => m.MaxTeamSize, new { htmlAttributes = new { required = "required" } })
+            @Html.EditorFor(m => m.TeamSize, new { htmlAttributes = new { required = "required" } })
         </div>
         <div class="form-item">
             @Html.Label("Algorithm type")

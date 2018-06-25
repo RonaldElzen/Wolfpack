@@ -25,25 +25,19 @@
     <h3>Teams in event</h3>
     <ul>
         @foreach (var Team in Model.Teams)
-    {
-        <h4>
-            @Team.Name @Team.Avg
-        </h4>
-        <h4>
-            @Team.Name @Team.Total
-        </h4>
-            foreach(var stuff in Team.SkillShit)
-            {
-                <li>@stuff.Key: @stuff.Value</li>
-            }
+        {
+            <h4>
+                @Team.Name
+            </h4>
+
             foreach (var User in Team.Users)
             {
-        <li>@User.FirstName @User.LastName</li>
-}
-    <p>
-        @Html.ActionLink("View team", "Team", new { id = Team.Id })
-    </p>
-}
+                <li>@User.FirstName @User.LastName</li>
+            }
+            <p>
+                @Html.ActionLink("View team", "Team", new { id = Team.Id })
+            </p>
+        }
     </ul>
     <p>
         @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
