@@ -29,12 +29,13 @@
             <h4>
                 @Team.Name
             </h4>
+
             foreach (var User in Team.Users)
             {
                 <li>@User.FirstName @User.LastName</li>
             }
             <p>
-                @Html.ActionLink("View team", "Team", new { id = Team.Id})
+                @Html.ActionLink("View team", "Team", new { id = Team.Id })
             </p>
         }
     </ul>

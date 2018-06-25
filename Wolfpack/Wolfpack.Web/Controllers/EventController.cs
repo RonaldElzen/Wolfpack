@@ -7,6 +7,7 @@ using Wolfpack.BusinessLayer;
 using Wolfpack.Data;
 using Wolfpack.Data.Models;
 using Wolfpack.Web.Helpers;
+using Wolfpack.Web.Helpers.Enums;
 using Wolfpack.Web.Helpers.Interfaces;
 using Wolfpack.Web.Models.Event;
 
@@ -48,12 +49,12 @@ namespace Wolfpack.Web.Controllers
         /// <summary>
         /// View single event
         /// </summary>
-        /// <param name="Id"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        public ActionResult Details(int Id)
+        public ActionResult Details(int id)
         {
-            int id = UserHelper.GetCurrentUser().Id;
-            var singleEvent = Context.Events.SingleOrDefault(x => x.Id == Id && x.EventCreator.Id == id);
+            var userId = UserHelper.GetCurrentUser().Id;
+            var singleEvent = Context.Events.SingleOrDefault(x => x.Id == id && x.EventCreator.Id == userId);
             if (singleEvent != null)
             {
                 var skills = singleEvent.Skills.Select(s => new SkillVM
@@ -73,7 +74,7 @@ namespace Wolfpack.Web.Controllers
                         UserName = u.UserName
                     }),
                     Name = t.Name,
-                    Id = t.Id
+                    Id = t.Id,
                 });
 
                 return View(new EventVM
@@ -157,36 +158,46 @@ namespace Wolfpack.Web.Controllers
         /// <returns></returns>
         public ActionResult GenerateTeams(int Id)
         {
-            return View("GenerateTeamsForm", new GenerateTeamsVM { EventId = Id });
+            var selectListItems = new List<SelectListItem>();
+
+            foreach(var item in Enum.GetValues(typeof(AlgorithmType)))
+            {
+                selectListItems.Add(new SelectListItem { Value = item.ToString(), Text = item.ToString() });
+            }
+
+            return View("GenerateTeamsForm", new GenerateTeamsVM
+            {
+                EventId = Id,
+                AlgorithmTypes = selectListItems,
+                AlgorithmType = AlgorithmType.AverageTeams
+            });
         }
 
-        /// <summary>
-        /// Form handling for adding skill to Event
-        /// </summary>
-        /// <param name="vm"></param>
-        /// <returns></returns>
         [HttpPost]
-        public ActionResult AddSkill(EditVM vm)
+        public ActionResult GenerateTeams(GenerateTeamsVM vm)
         {
-            var currentEvent = Context.Events.FirstOrDefault(g => g.Id == vm.Id);
-            var userId = UserHelper.GetCurrentUser().Id;
 
-            Skill skill = Context.Skills.FirstOrDefault(g => g.Name == vm.NewSkillName);
-            if (skill == null)
+            if (vm.TeamSize < 1)
             {
-                skill = new Skill
-                {
-                    Name = vm.NewSkillName,
-                    Description = vm.NewSkillDescription,
-                    CreatedBy = Context.Users.FirstOrDefault(g => g.Id == userId),
-                };
-            };
-            currentEvent.Skills.Add(skill);
-            if (!group.Archived)
+                vm.Message = "Please make sure you have filled in a max team size";
+                return View("GenerateTeamsForm", vm);
+            }
+
+            var currentEvent = Context.Events.SingleOrDefault(e => e.Id == vm.EventId);
+
+            switch (vm.AlgorithmType)
             {
-                group.Skills.Add(NewSkill);
-                Context.SaveChanges();
-                return View("Edit", new EditVM { Message = "Skill added" });
+                case AlgorithmType.AverageTeams:
+                    _generateAverageTeams(currentEvent, vm.TeamSize);
+                    break;
+                case AlgorithmType.BestTeam:
+                    _generateBestTeams(currentEvent, vm.TeamSize);
+                    break;
+                default:
+                    return HttpNotFound();
+            }
+
+            return RedirectToAction("Details", new { id = vm.EventId });
             }
             else
             {
@@ -194,43 +205,13 @@ namespace Wolfpack.Web.Controllers
             }
         }
 
-        /// <summary>
-        /// Generate teams for the event based on the teamsize and amount of teams to be made. 
-        /// This method tries to put together the most efficient teams.
-        /// </summary>
-        /// <param name="id">Event id for which to generate teams</param>
-        /// <returns>Overview of the new team</returns>
-        [HttpPost]
-        public ActionResult GenerateTeams(GenerateTeamsVM vm)
+        private void _generateAverageTeams(Event currentEvent, int teamSize)
         {
-            var currentEvent = Context.Events.SingleOrDefault(e => e.Id == vm.EventId);
-
             currentEvent.Teams.Clear();
 
             if(currentEvent != null && !currentEvent.Group.Archived)
             {
                 var groupUsers = currentEvent.Group.Users;
-                var teamSize = 7; // TODO implement dynamic groupsize
-
-                //TODO Actually implement this
-                var teamSizeMin = 0;
-                var teamSizeMax = 0;
-                var maxTeams = 0;
-                if (vm.MinTeamSize > 0)
-                    teamSizeMin = vm.MinTeamSize;
-                if (vm.MaxTeamSize > 0 && vm.MaxTeamSize >= vm.MinTeamSize)
-                    teamSizeMax = vm.MaxTeamSize;
-                if (vm.MaxTeamsAmount > 0)
-                    maxTeams = vm.MaxTeamsAmount;
-
-                if (teamSizeMin < 1 || teamSizeMax < 1 || maxTeams < 1)
-                {
-                    vm.Message = "Please make sure you have filled in everything and that max team size isnt higher than min team size";
-                    return View("GenerateTeamsForm", vm);
-                }
-
-                //set teamsize to max teamsize for now
-                teamSize = teamSizeMax;
 
                 var amountOfTeams = groupUsers.Count / teamSize; // TODO implement ability to choose amount of teams
 
@@ -265,6 +246,93 @@ namespace Wolfpack.Web.Controllers
                     currentEvent.Teams.Add(team);
                 }
 
+                var teamsToChange = GetTeamsToChange(currentEvent);
+
+                while (teamsToChange != null && teamsToChange.Count() > 1)
+                {
+                    var skillToSwitch = teamsToChange.Select(t => new
+                    {
+                        Team = t,
+                        Skill = t.GetTotalsPerSkill().OrderByDescending(x => x.Value).FirstOrDefault().Key
+                    });
+
+                    var orderedTeams = teamsToChange
+                        .OrderByDescending(t => t.Users
+                            .Sum(u => u.UserSkills
+                                .Average(s => s.Ratings
+                                    .Average(r => r.Mark))));
+
+                    var bestTeam = orderedTeams.First();
+                    var worstTeam = orderedTeams.Last();
+
+                    var skillToChange = worstTeam.GetTotalsPerSkill().OrderBy(s => s.Value).FirstOrDefault().Key;
+
+                    var worstTeamUserToChange = worstTeam.Users
+                        .OrderBy(u => u.UserSkills
+                            .FirstOrDefault(s => s.Skill == skillToChange)
+                            .Ratings
+                            .Average(r => r.Mark))
+                        .FirstOrDefault();
+
+                    var bestTeamUserToChange = bestTeam.Users
+                        .OrderByDescending(u => u.UserSkills
+                            .FirstOrDefault(s => s.Skill == skillToChange)
+                            .Ratings
+                            .Average(r => r.Mark))
+                        .FirstOrDefault();
+
+                    worstTeam.Users.Remove(worstTeamUserToChange);
+                    worstTeam.Users.Add(bestTeamUserToChange);
+                    bestTeam.Users.Remove(bestTeamUserToChange);
+                    bestTeam.Users.Add(worstTeamUserToChange);
+
+                    teamsToChange = GetTeamsToChange(currentEvent);
+                }
+
+                Context.SaveChanges();
+
+                IEnumerable<EventTeam> GetTeamsToChange(Event e)
+                {
+                    var totalScorePerTeam = e.Teams.Select(t => new
+                    {
+                        Team = t,
+                        Total = t.Users.Sum(u => u.TotalSkillScore())
+                    });
+
+                    var averageScore = totalScorePerTeam.Average(t => t.Total);
+                    var allowedDifference = 25;
+                    return totalScorePerTeam.Where(t => t.Total > averageScore + allowedDifference || t.Total < averageScore - allowedDifference).Select(x => x.Team);
+                }
+            }
+        }
+
+        private void _generateBestTeams(Event currentEvent, int teamSize)
+        {
+            currentEvent.Teams.Clear();
+
+            if (currentEvent != null)
+            {
+                var groupUsers = currentEvent.Group.Users;
+                var amountOfTeams = groupUsers.Count / teamSize;
+
+                var orderedGroupUsers = groupUsers
+                    .OrderByDescending(u => u.UserSkills
+                        .Average(s => s.Ratings
+                            .Average(r => r.Mark)));
+
+                for (int i = 0; i < amountOfTeams; i++)
+                {
+                    var team = orderedGroupUsers
+                        .Skip(i * teamSize)
+                        .Take(teamSize);
+
+                    currentEvent.Teams.Add(new EventTeam
+                    {
+                        Name = $"Team {i + 1}",
+                        Users = team.ToList()
+                    });
+                }
+
                 Context.SaveChanges();
 
                 var model = currentEvent.Teams.Select(t => new TeamVM
@@ -278,10 +346,33 @@ namespace Wolfpack.Web.Controllers
                         })
                     })
                 });
-
-                return View(model);
             }   
-            return HttpNotFound();
+        }
+
+        /// <summary>
+        /// Form handling for adding skill to Event
+        /// </summary>
+        /// <param name="vm"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult AddSkill(EditVM vm)
+        {
+            var currentEvent = Context.Events.FirstOrDefault(g => g.Id == vm.Id);
+            var userId = UserHelper.GetCurrentUser().Id;
+
+            Skill skill = Context.Skills.FirstOrDefault(g => g.Name == vm.NewSkillName);
+            if (skill == null)
+            {
+                skill = new Skill
+                {
+                    Name = vm.NewSkillName,
+                    Description = vm.NewSkillDescription,
+                    CreatedBy = Context.Users.FirstOrDefault(g => g.Id == userId),
+                };
+            };
+            currentEvent.Skills.Add(skill);
+            Context.SaveChanges();
+            return View("Edit", new EditVM { Message = "Skill added" });
         }
     }
 }

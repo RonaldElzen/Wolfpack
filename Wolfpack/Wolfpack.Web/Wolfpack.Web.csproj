@@ -164,6 +164,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\CustomControllerFactory.cs" />
+    <Compile Include="Helpers\Enums\AlgorithmType.cs" />
     <Compile Include="Helpers\Enums\RecoveryStatus.cs" />
     <Compile Include="Helpers\Interfaces\ISessionHelper.cs" />
     <Compile Include="Helpers\Interfaces\IUserHelper.cs" />

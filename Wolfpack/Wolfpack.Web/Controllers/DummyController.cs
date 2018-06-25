@@ -151,5 +151,78 @@ namespace Wolfpack.Web.Controllers
 
             return View("Dummy", new DummyVM { Message = "Users have been added" });
         }
+
+        public ActionResult AlgorithmDummy(int amountOfPeople = 100)
+        {
+            var rand = new Random();
+            var skills = new List<Skill>();
+            var group = new Group
+            {
+                GroupName = "AlgoTest",
+                CreatedOn = DateTime.Now,
+                GroupCreator = UserHelper.GetCurrentDbUser(Context).Id
+            };
+            var newEvent = new Event
+            {
+                Group = group,
+                EventName = "AlgoTest",
+                EventCreator = UserHelper.GetCurrentDbUser(Context),
+                CreatedOn = DateTime.Now
+            };
+
+            for (int i = 0; i < 10; i++)
+            {
+                var skill = new Skill
+                {
+                    Name = $"Skill {i}",
+                    Description = $"Skill {i}",
+                };
+
+                group.Skills.Add(skill);
+                Context.Skills.Add(skill);
+                skills.Add(skill);
+            }
+
+            for (int i = 0; i < amountOfPeople; i++)
+            {
+                var newUser = new User
+                {
+                    FirstName = $"Algorithm{i}/{amountOfPeople}",
+                    LastName = "Algo",
+                    Mail = "Algo@algo.algo",
+                    Password = Hashing.Hash("test"),
+                    RegisterDate = DateTime.Now,
+                    UserName = $"Algo{i}/{amountOfPeople}",
+                    LastLoginAttempt = DateTime.Now
+                };
+
+                foreach(var skill in skills)
+                {
+                    var userSkill = new UserSkill
+                    {
+                        Skill = skill,
+                    };
+
+                    userSkill.Ratings.Add(new Rating
+                    {
+                        Mark = rand.Next(1, 11),
+                        RatedBy = UserHelper.GetCurrentDbUser(Context),
+                        RatedAt = DateTime.Now,
+                    });
+
+                    newUser.UserSkills.Add(userSkill);
+                }
+
+                group.Users.Add(newUser);
+                Context.Users.Add(newUser);
+            }
+
+            Context.Events.Add(newEvent);
+            Context.Groups.Add(group);
+
+            Context.SaveChanges();
+
+            return RedirectToAction("Index", "Home");
+        }
     }
 }
