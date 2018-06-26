@@ -18,32 +18,57 @@
         <h2>@Html.DisplayFor(model => model.GroupName)</h2>
         <p>@Html.DisplayFor(model => model.Category)</p>
         <a class="action-button" href="@Url.Action("Index")"><i class="fas fa-arrow-circle-left fa-lg icon-left"></i><span>Back</span></a>
-        <button id="createEvent" class="action-button" )"><span>Create event</span><i class="fas fa-plus fa-lg"></i></button>
+        @if (Model.IsGroupCreator)
+        {
+            <button id="createEvent" class="action-button" )"><span>Create event</span><i class="fas fa-plus fa-lg"></i></button>
+        }
 
-
-        <h3>Skills in this group <button class="action-button" id="addSkill"><span>Add new</span><i class="fas fa-plus fa-lg"></i> </button></h3>
+        <h3>
+            Skills in this group 
+            @if (Model.IsGroupCreator)
+            {
+                <button class="action-button" id="addSkill">
+                    <span>Add new</span>
+                    <i class="fas fa-plus fa-lg"></i>
+                </button>
+                <button class="action-button" id="ratingProgress">
+                    <span>Rating progress</span>
+                    <i class="fas fa-tasks fa-lg"></i>
+                </button>
+            }
+        </h3>
         <ul>
             @foreach (var Skill in Model.Skills)
-        {
-            <li>@Skill.Name</li>
-    }
+            {
+                <li>@Skill.Name</li>
+            }
         </ul>
-        @if (Model.GroupUsers != null && Model.GroupUsers.Count() > 0)
-    {
         <h3>
-            Group users <button class="action-button" id="addUser"><span>Add new</span><i class="fas fa-plus fa-lg"></i> </button>
+            Group users 
+            @if (Model.IsGroupCreator)
+            {
+                <button class="action-button" id="addUser">
+                    <span>Add new</span>
+                    <i class="fas fa-plus fa-lg"></i> 
+                </button>
+            }
         </h3>
-        <div class="user-row">
-            @foreach (var item in Model.GroupUsers)
+        @if (Model.GroupUsers != null && Model.GroupUsers.Count() > 0)
         {
-            <div class="user-box">
-                @Html.DisplayFor(modelItem => item.FirstName)
-                @Html.DisplayFor(modelItem => item.LastName)
-                <button class="delete-button" data-url="@Url.Action("RemoveUserFromGroup", new { userId = item.Id, groupId = Model.Id })"><i class="fas fa-trash-alt fa-lg icon-only"></i></button>
+            <div class="user-row">
+                @foreach (var item in Model.GroupUsers)
+                {
+                    <div class="user-box">
+                        @Html.DisplayFor(modelItem => item.FirstName)
+                        @Html.DisplayFor(modelItem => item.LastName)
+                        @if (Model.IsGroupCreator)
+                        {
+                            <button class="delete-button" data-url="@Url.Action("RemoveUserFromGroup", new { userId = item.Id, groupId = Model.Id })"><i class="fas fa-trash-alt fa-lg icon-only"></i></button>
+                        }
+                    </div>
+                }
             </div>
-    }
-        </div>
-}
+        }
     </div>
 
 <script>
@@ -61,7 +86,11 @@
         getPartial('@Url.Action("AddUserModal")', JSON.stringify({ id: @Model.Id}));
     });
 
-        document.querySelector("#addSkill").addEventListener("click", function () {
+    document.querySelector("#ratingProgress").addEventListener("click", function () {
+        getPartial('@Url.Action("ratingProgressModal")', JSON.stringify({ id: @Model.Id}));
+    });
+
+    document.querySelector("#addSkill").addEventListener("click", function () {
         getPartial('@Url.Action("AddSkillModal")', JSON.stringify({ id: @Model.Id}));
     });
 

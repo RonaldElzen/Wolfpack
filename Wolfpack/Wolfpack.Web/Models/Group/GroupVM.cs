@@ -16,5 +16,6 @@ namespace Wolfpack.Web.Models.Group
         public IEnumerable<SkillVM> Skills { get; set; }
         public IEnumerable<UserVM> GroupUsers { get; set; }
         public String NewEventName { get; set; }
+        public bool IsGroupCreator { get; set; }
     }
 }

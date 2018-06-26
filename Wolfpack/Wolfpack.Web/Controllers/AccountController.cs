@@ -158,8 +158,8 @@ namespace Wolfpack.Web.Controllers
 
             if (MailHelpers.CheckIfValidEmail(vm.MailAdress))
             {
-                var userExists = Context.Users.Any(x => x.UserName == vm.UserName);
-                var mailExists = Context.Users.Any(x => x.Mail == vm.MailAdress);
+                var mailExists = Context.Users.Any(x => x.UserName == vm.UserName);
+                var userExists = Context.Users.Any(x => x.Mail == vm.MailAdress);
                 if (!userExists && !mailExists)
                 {
                     Context.Users.Add(new User
