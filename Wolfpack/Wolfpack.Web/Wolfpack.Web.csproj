@@ -185,6 +185,7 @@
     <Compile Include="Models\Group\AddUserVM.cs" />
     <Compile Include="Models\Group\EditVM.cs" />
     <Compile Include="Models\Group\RateVM.cs" />
+    <Compile Include="Models\Group\RatingProgressVM.cs" />
     <Compile Include="Models\Group\UserGroupsVM.cs" />
     <Compile Include="Models\Group\UserVM.cs" />
     <Compile Include="Models\Group\GroupVM.cs" />
@@ -272,6 +273,7 @@
     <Content Include="Views\Group\_addUserPartial.cshtml" />
     <Content Include="Views\Group\_addSkillPartial.cshtml" />
     <Content Include="Views\Group\Details.cshtml" />
+    <Content Include="Views\Group\_ratingProgressPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

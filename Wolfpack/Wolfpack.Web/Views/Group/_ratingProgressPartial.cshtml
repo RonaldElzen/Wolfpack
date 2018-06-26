@@ -1,0 +1,8 @@
+﻿@model Wolfpack.Web.Models.Group.RatingProgressVM
+
+@foreach(var data in Model.Progress)
+{
+    <div>
+        <span>@data.Key @data.Value.Key/@data.Value.Value</span>
+    </div>
+}

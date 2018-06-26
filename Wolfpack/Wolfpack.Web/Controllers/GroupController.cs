@@ -54,27 +54,70 @@ namespace Wolfpack.Web.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public ActionResult RateUser(int id)
+        public ActionResult RateUser(int groupId = 0, int userId = 0, int teamId = 0)
         {
-            var currentGroup = Context.Groups.SingleOrDefault(x => x.Id == id);
-            var skills = currentGroup.Skills.Select(s => new Models.Group.SkillVM
-            {
-                Description = s.Description,
-                Id = s.Id,
-                Name = s.Name
-            });
+            var model = new RateVM();
 
-            var groupUsers = currentGroup.Users.Select(u => new Models.Group.UserVM
+            if (groupId > 0)
             {
-                FirstName = u.FirstName,
-                Id = u.Id,
-                LastName = u.LastName,
-                UserName = u.UserName
-            });
+                var currentGroup = Context.Groups.SingleOrDefault(x => x.Id == groupId);
+                var skills = currentGroup.Skills.Select(s => new Models.Group.SkillVM
+                {
+                    Description = s.Description,
+                    Id = s.Id,
+                    Name = s.Name
+                });
 
-            var userList = groupUsers.Select(a => new SelectListItem() { Text = a.FirstName, Value = a.Id.ToString()});
-            var skillsList = skills.Select(a => new SelectListItem() { Text = a.Name, Value = a.Id.ToString()});
-            return View(new Models.Group.RateVM {GroupId = id,SkillsList = skillsList, UsersList = userList});
+                var groupUsers = currentGroup.Users.Select(u => new Models.Group.UserVM
+                {
+                    FirstName = u.FirstName,
+                    Id = u.Id,
+                    LastName = u.LastName,
+                    UserName = u.UserName
+                });
+
+                model.UsersList = groupUsers.Select(a => new SelectListItem() { Text = a.FirstName, Value = a.Id.ToString() });
+                model.SkillsList = skills.Select(a => new SelectListItem() { Text = a.Name, Value = a.Id.ToString() });
+                model.GroupId = groupId;
+            }
+            else if (userId > 0)
+            {
+                var user = Context.Users.SingleOrDefault(u => u.Id == userId);
+                var skills = user.UserSkills.Select(s => new Models.Group.SkillVM
+                {
+                    Description = s.Skill.Description,
+                    Id = s.Skill.Id,
+                    Name = s.Skill.Name
+                });
+
+                model.UsersList = new List<SelectListItem>() { new SelectListItem() { Text = user.FirstName, Value = user.Id.ToString() } };
+                model.SkillsList = skills.Select(a => new SelectListItem() { Text = a.Name, Value = a.Id.ToString() });
+                model.UserToRateId = user.Id;
+            }
+            else if (teamId > 0)
+            {
+                var currentEventTeam = Context.EventTeams.SingleOrDefault(x => x.Id == teamId);
+                var skills = currentEventTeam.Event.Group.Skills.Concat(currentEventTeam.Event.Skills).Select(s => new Models.Group.SkillVM
+                {
+                    Description = s.Description,
+                    Id = s.Id,
+                    Name = s.Name
+                });
+
+                var teamUsers = currentEventTeam.Users.Select(u => new Models.Group.UserVM
+                {
+                    FirstName = u.FirstName,
+                    Id = u.Id,
+                    LastName = u.LastName,
+                    UserName = u.UserName
+                });
+
+                model.UsersList = teamUsers.Select(a => new SelectListItem() { Text = a.FirstName, Value = a.Id.ToString() });
+                model.SkillsList = skills.Select(a => new SelectListItem() { Text = a.Name, Value = a.Id.ToString() });
+                model.GroupId = groupId;
+            }
+
+            return View(model);
         }
 
         [HttpPost]
@@ -164,7 +207,8 @@ namespace Wolfpack.Web.Controllers
                     Id = singleGroup.Id,
                     Skills = skills,
                     GroupUsers = groupUsers,
-                    Archived = singleGroup.Archived
+                    Archived = singleGroup.Archived,
+                    IsGroupCreator = singleGroup.GroupCreator == loggedInUserId,
                 });
             }
             return RedirectToAction("Index");
@@ -380,7 +424,7 @@ namespace Wolfpack.Web.Controllers
                         Title = "Added to group: " + group.GroupName,
                         Content = $"You've been added to the group '{group.GroupName}' " +
                             $"and can now rate yourself for the associated skills through the following link: " +
-                            Url.Action("RateUser", "Group", new { id = group.Id }, this.Request.Url.Scheme),
+                            Url.Action("RateUser", "Group", new { userId = user.Id }, this.Request.Url.Scheme),
                         Date = DateTime.Now,
                         IsRead = false
                     });
@@ -431,6 +475,22 @@ namespace Wolfpack.Web.Controllers
         public ActionResult GetNewEventModal(int id)
         {
             return PartialView("_createEventPartial", new GroupVM {Id = id});
+        }
+
+        public ActionResult RatingProgressModal(int id)
+        {
+            var group = Context.Groups.SingleOrDefault(g => g.Id == id);
+
+            var model = new RatingProgressVM
+            {
+                Progress = group.Users.Select(u => new
+                {
+                    Name = u.FirstName + " " + u.LastName,
+                    UsersRated = group.Users.SelectMany(us => us.UserSkills.SelectMany(s => s.Ratings)).Where(r => r.RatedBy.Id == u.Id).GroupBy(x => x.UserSkill.User.Id).Count()
+                }).ToDictionary(x => x.Name, x => new KeyValuePair<int, int>(x.UsersRated, group.Users.Count))
+            };
+
+            return PartialView("_ratingProgressPartial", model);
         }
 
         public ActionResult AddUserModal(int id)

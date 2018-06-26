@@ -203,7 +203,7 @@ namespace Wolfpack.Web.Controllers
                     Title = "Added to eventTeam for event: " + currentEvent.EventName,
                     Content = $"An event has started and you've been added to a team. " +
                             $"You can now rate your team members through the following link: " +
-                            Url.Action("RateUser", "Group", new { id = currentEvent.Group.Id }, this.Request.Url.Scheme),
+                            Url.Action("RateUser", "Group", new { groupId = currentEvent.Group.Id }, this.Request.Url.Scheme),
                     Date = DateTime.Now,
                     IsRead = false
                 });
