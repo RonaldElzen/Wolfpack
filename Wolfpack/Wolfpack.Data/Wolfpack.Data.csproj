@@ -104,10 +104,6 @@
     <Compile Include="Migrations\201806040907356_RatingComment.Designer.cs">
       <DependentUpon>201806040907356_RatingComment.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201806171006510_RegisterInvite.cs" />
-    <Compile Include="Migrations\201806171006510_RegisterInvite.Designer.cs">
-      <DependentUpon>201806171006510_RegisterInvite.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\201806251226100_MergeChange.cs" />
     <Compile Include="Migrations\201806251226100_MergeChange.Designer.cs">
       <DependentUpon>201806251226100_MergeChange.cs</DependentUpon>
@@ -167,9 +163,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201806040907356_RatingComment.resx">
       <DependentUpon>201806040907356_RatingComment.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201806171006510_RegisterInvite.resx">
-      <DependentUpon>201806171006510_RegisterInvite.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201806251226100_MergeChange.resx">
       <DependentUpon>201806251226100_MergeChange.cs</DependentUpon>
