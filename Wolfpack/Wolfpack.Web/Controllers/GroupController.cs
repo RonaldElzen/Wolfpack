@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Wolfpack.BusinessLayer;
+using Wolfpack.BusinessLayer.Extensions;
 using Wolfpack.Data;
 using Wolfpack.Data.Models;
 using Wolfpack.Web.Helpers.Interfaces;
@@ -60,7 +61,7 @@ namespace Wolfpack.Web.Controllers
 
             if (groupId > 0)
             {
-                var currentGroup = Context.Groups.SingleOrDefault(x => x.Id == groupId);
+                var currentGroup = Context.Groups.GetById(groupId);
                 var skills = currentGroup.Skills.Select(s => new Models.Group.SkillVM
                 {
                     Description = s.Description,
@@ -82,7 +83,7 @@ namespace Wolfpack.Web.Controllers
             }
             else if (userId > 0)
             {
-                var user = Context.Users.SingleOrDefault(u => u.Id == userId);
+                var user = Context.Users.GetById(userId);
                 var skills = user.UserSkills.Select(s => new Models.Group.SkillVM
                 {
                     Description = s.Skill.Description,
@@ -96,7 +97,7 @@ namespace Wolfpack.Web.Controllers
             }
             else if (teamId > 0)
             {
-                var currentEventTeam = Context.EventTeams.SingleOrDefault(x => x.Id == teamId);
+                var currentEventTeam = Context.EventTeams.GetById(teamId);
                 var skills = currentEventTeam.Event.Group.Skills.Concat(currentEventTeam.Event.Skills).Select(s => new Models.Group.SkillVM
                 {
                     Description = s.Description,
@@ -124,7 +125,7 @@ namespace Wolfpack.Web.Controllers
         public ActionResult SubmitRating(RateVM vm)
         {
             //Gets the user and skill that needs to be rated. 
-            var userToRate = Context.Users.FirstOrDefault(x => x.Id == vm.UserToRateId);
+            var userToRate = Context.Users.GetById(vm.UserToRateId);
             var skillToRate = Context.Skills.FirstOrDefault(x => x.Id == vm.SkillToRateId);
             var userSkill = userToRate.UserSkills.Where(s => s.Skill.Id == skillToRate.Id).FirstOrDefault();
             
@@ -163,7 +164,7 @@ namespace Wolfpack.Web.Controllers
             var singleGroup = Context.Groups.SingleOrDefault(x => x.Id == groupId && x.GroupCreator == loggedInUserId);
             if (singleGroup != null)
             {
-                var user = Context.Users.FirstOrDefault(x => x.Id == userId);
+                var user = Context.Users.GetById(userId);
                 singleGroup.Users.Remove(user);
                 Context.SaveChanges();
 
@@ -180,7 +181,7 @@ namespace Wolfpack.Web.Controllers
         public ActionResult Details(int id)
         {
             int loggedInUserId = UserHelper.GetCurrentUser().Id;
-            var singleGroup = Context.Groups.SingleOrDefault(x => x.Id == id);
+            var singleGroup = Context.Groups.GetById(id);
             if (singleGroup != null)
             {
                 var skills = singleGroup.Skills.Select(s => new Models.Group.SkillVM
@@ -305,7 +306,7 @@ namespace Wolfpack.Web.Controllers
         [HttpPost]
         public ActionResult Archive(GroupVM vm)
         {
-            var group = Context.Groups.SingleOrDefault(g => g.Id == vm.Id);
+            var group = Context.Groups.GetById(vm.Id);
 
             foreach(var user in group.Users)
             {
@@ -341,7 +342,7 @@ namespace Wolfpack.Web.Controllers
         [HttpPost]
         public ActionResult AddSkill(Models.Group.EditVM vm)
         {
-            var group = Context.Groups.SingleOrDefault(g => g.Id == vm.Id);
+            var group = Context.Groups.GetById(vm.Id);
             var userId = UserHelper.GetCurrentUser().Id;
 
             if (!group.Archived)
@@ -350,7 +351,7 @@ namespace Wolfpack.Web.Controllers
                 {
                     Name = vm.NewSkillName,
                     Description = vm.NewSkillDescription,
-                    CreatedBy = Context.Users.SingleOrDefault(g => g.Id == userId),
+                    CreatedBy = Context.Users.GetById(userId),
                 };
                 group.Skills.Add(NewSkill);
                 Context.SaveChanges();
@@ -410,7 +411,7 @@ namespace Wolfpack.Web.Controllers
             }
             else
             {
-                var group = Context.Groups.FirstOrDefault(g => g.Id == vm.Id);
+                var group = Context.Groups.GetById(vm.Id);
                 if (!group.Archived)
                 {
                     if (group.Users == null)
@@ -470,8 +471,7 @@ namespace Wolfpack.Web.Controllers
             }
             return View(new GroupVM() { Message = message });
         }
-
-
+        
         public ActionResult GetNewEventModal(int id)
         {
             return PartialView("_createEventPartial", new GroupVM {Id = id});
@@ -479,7 +479,7 @@ namespace Wolfpack.Web.Controllers
 
         public ActionResult RatingProgressModal(int id)
         {
-            var group = Context.Groups.SingleOrDefault(g => g.Id == id);
+            var group = Context.Groups.GetById(id);
 
             var model = new RatingProgressVM
             {
@@ -508,18 +508,19 @@ namespace Wolfpack.Web.Controllers
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        public ActionResult NewEvent(int Id, string message = "")
+        public ActionResult NewEvent(int id, string message = "")
         {
-            var singleGroup = Context.Groups.FirstOrDefault(x => x.Id == Id);
+            var singleGroup = Context.Groups.GetById(id);
 
             if (!singleGroup.Archived)
             {
-                Session["selectedGroupId"] = Id;
-                return View(new EventVM() { GroupId = Id, Message = message });
+                Session["selectedGroupId"] = id;
+                return View(new EventVM() { GroupId = id, Message = message });
             }
             message = "Group has been archived and cannot be used";
             return RedirectToAction("Index", message);
         }
+
         /// <summary>
         /// Submit action for creating a new event, takes an eventname from inputfield
         /// </summary>
@@ -528,11 +529,10 @@ namespace Wolfpack.Web.Controllers
         [HttpPost]
         public ActionResult NewEvent(GroupVM vm)
         {
-            var message = "";
             var state = "";
             if (!string.IsNullOrWhiteSpace(vm.NewEventName))
             {
-                var group = Context.Groups.SingleOrDefault(e => e.Id == vm.Id);
+                var group = Context.Groups.GetById(vm.Id);
 
                 if (group != null && group.Archived)
                 {
@@ -545,19 +545,14 @@ namespace Wolfpack.Web.Controllers
                     });
 
                     Context.SaveChanges();
-                    message = "Event created!";
                     state = "success";
                 }
                 else
                 {
-                    message = "No group users found!";
                     state = "error";
                 }
             }
-            else
-            {
-                message = "Something went wrong, please fill in all the fields";
-            }
+
             return RedirectToAction("Details", new { id = vm.Id,state});
         }
     }

@@ -18,7 +18,7 @@ namespace Wolfpack.Web.Controllers
         /// <returns></returns>
         [HttpPost]
         [ActionName("GetSkills")]
-        public ActionResult GetSkills(String prefix)
+        public ActionResult GetSkills(string prefix)
         {
             var skills = Context.Skills.Where(g => g.Name.StartsWith(prefix)).Select(g => g.Name).ToList();
             return Json(skills);

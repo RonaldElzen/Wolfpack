@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Wolfpack.BusinessLayer.Extensions;
 using Wolfpack.Data;
 using Wolfpack.Data.Models;
 using Wolfpack.Web.Helpers;
@@ -23,7 +24,7 @@ namespace Wolfpack.Web.Controllers
                 id = UserHelper.GetCurrentUser().Id;
             }
             var profileVM = new ProfileVM { };
-            var user = Context.Users.SingleOrDefault(x => x.Id == id);
+            var user = Context.Users.GetById(id.Value);
             profileVM.UserName = user.UserName;
             profileVM.MemberSince = user.RegisterDate;
             profileVM.Skills = user.UserSkills

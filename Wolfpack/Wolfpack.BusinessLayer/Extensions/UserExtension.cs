@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Wolfpack.Data;
 using Wolfpack.Data.Models;
 
-namespace Wolfpack.BusinessLayer
+namespace Wolfpack.BusinessLayer.Extensions
 {
     public static class UserExtension
     {
@@ -59,6 +60,16 @@ namespace Wolfpack.BusinessLayer
         public static double TotalSkillScore(this User user)
         {
             return user.UserSkills.Sum(s => s.Ratings.Average(r => r.Mark));
+        }
+
+        public static User GetByMail(this DbSet<User> set, string mail)
+        {
+            return set.SingleOrDefault(u => u.Mail == mail);
+        }
+
+        public static User GetById(this DbSet<User> set, int id)
+        {
+            return set.SingleOrDefault(u => u.Id == id);
         }
     }
 }

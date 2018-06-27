@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Wolfpack.BusinessLayer.Extensions;
 using Wolfpack.Data;
 using Wolfpack.Data.Models;
 using Wolfpack.Web.Helpers.Interfaces;
@@ -29,7 +30,7 @@ namespace Wolfpack.Web.Controllers
         /// <returns>View for the notification</returns>
         public ActionResult GetNotification(int id)
         {
-            var notification = Context.Notifications.SingleOrDefault(n => n.Id == id);
+            var notification = Context.Notifications.GetById(id);
 
             if (notification == null)
                 return HttpNotFound();

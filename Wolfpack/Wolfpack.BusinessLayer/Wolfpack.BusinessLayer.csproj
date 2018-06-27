@@ -47,7 +47,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\EventExtension.cs" />
     <Compile Include="Extensions\EventTeamExtension.cs" />
+    <Compile Include="Extensions\GroupExtension.cs" />
+    <Compile Include="Extensions\NewRegisterExtension.cs" />
+    <Compile Include="Extensions\NotificationExtension.cs" />
+    <Compile Include="Extensions\RecoveryExtension.cs" />
+    <Compile Include="Extensions\SkillExtension.cs" />
     <Compile Include="Hashing.cs" />
     <Compile Include="MailHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

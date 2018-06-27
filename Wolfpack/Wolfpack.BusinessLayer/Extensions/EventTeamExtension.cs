@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,11 @@ namespace Wolfpack.BusinessLayer
 {
     public static class EventTeamExtension
     {
+        public static EventTeam GetById(this DbSet<EventTeam> set, int id)
+        {
+            return set.SingleOrDefault(t => t.Id == id);
+        }
+
         public static IDictionary<Skill, double> GetTotalsPerSkill(this EventTeam team)
         {
             var result = new Dictionary<Skill, double>();

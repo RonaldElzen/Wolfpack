@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Wolfpack.BusinessLayer;
+using Wolfpack.BusinessLayer.Extensions;
 using Wolfpack.Data;
 using Wolfpack.Data.Models;
 using Wolfpack.Web.Helpers;
@@ -77,7 +78,8 @@ namespace Wolfpack.Web.Controllers
             {
                 Skill s;
 
-                if (Context.Skills.Any(x => x.Name == skillName)) s = Context.Skills.FirstOrDefault(x => x.Name == skillName);
+                if (Context.Skills.Any(x => x.Name == skillName))
+                    s = Context.Skills.GetByName(skillName);
                 else
                 {
                     s = new Skill
@@ -100,7 +102,7 @@ namespace Wolfpack.Web.Controllers
                 {
                     foreach (string skillName in skills)
                     {
-                        Skill s = Context.Skills.FirstOrDefault(x => x.Name == skillName);
+                        Skill s = Context.Skills.GetByName(skillName);
                         if (s != null)
                         {
                             var userSkill = u.UserSkills.FirstOrDefault(x => x.Skill.Id == s.Id);
