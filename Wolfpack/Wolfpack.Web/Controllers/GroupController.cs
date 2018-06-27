@@ -514,7 +514,6 @@ namespace Wolfpack.Web.Controllers
 
             if (!singleGroup.Archived)
             {
-                Session["selectedGroupId"] = Id;
                 return View(new EventVM() { GroupId = Id, Message = message });
             }
             message = "Group has been archived and cannot be used";
