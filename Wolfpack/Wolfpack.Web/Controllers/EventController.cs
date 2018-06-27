@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Wolfpack.BusinessLayer;
+using Wolfpack.BusinessLayer.Extensions;
 using Wolfpack.Data;
 using Wolfpack.Data.Models;
 using Wolfpack.Web.Helpers;
@@ -127,7 +128,7 @@ namespace Wolfpack.Web.Controllers
 
         public ActionResult Team(int id)
         {
-            var team = Context.EventTeams.SingleOrDefault(x => x.Id == id);
+            var team = Context.EventTeams.GetById(id);
             var vm = new TeamVM
             {
                 Name = team.Name,
@@ -182,7 +183,7 @@ namespace Wolfpack.Web.Controllers
                 return View("GenerateTeamsForm", vm);
             }
 
-            var currentEvent = Context.Events.SingleOrDefault(e => e.Id == vm.EventId);
+            var currentEvent = Context.Events.GetById(vm.EventId);
 
             switch (vm.AlgorithmType)
             {
@@ -220,7 +221,7 @@ namespace Wolfpack.Web.Controllers
             {
                 var groupUsers = currentEvent.Group.Users;
 
-                var amountOfTeams = groupUsers.Count / teamSize; // TODO implement ability to choose amount of teams
+                var amountOfTeams = groupUsers.Count / teamSize; 
 
                 for (int i = 0; i < amountOfTeams; i++)
                 {
@@ -364,17 +365,17 @@ namespace Wolfpack.Web.Controllers
         [HttpPost]
         public ActionResult AddSkill(EditVM vm)
         {
-            var currentEvent = Context.Events.FirstOrDefault(g => g.Id == vm.Id);
+            var currentEvent = Context.Events.GetById(vm.Id);
             var userId = UserHelper.GetCurrentUser().Id;
 
-            Skill skill = Context.Skills.FirstOrDefault(g => g.Name == vm.NewSkillName);
+            Skill skill = Context.Skills.GetByName(vm.NewSkillName);
             if (skill == null)
             {
                 skill = new Skill
                 {
                     Name = vm.NewSkillName,
                     Description = vm.NewSkillDescription,
-                    CreatedBy = Context.Users.FirstOrDefault(g => g.Id == userId),
+                    CreatedBy = Context.Users.GetById(userId),
                 };
             };
             currentEvent.Skills.Add(skill);

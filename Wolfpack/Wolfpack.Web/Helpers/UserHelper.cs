@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Wolfpack.BusinessLayer.Extensions;
 using Wolfpack.Data;
 using Wolfpack.Data.Models;
 using Wolfpack.Web.Helpers.Interfaces;
@@ -47,7 +48,7 @@ namespace Wolfpack.Web.Helpers
         {
             var user = (UserHelper)HttpContext.Current.Session[CURRENTUSER];
 
-            return context.Users.SingleOrDefault(u => u.Id == user.Id);
+            return context.Users.GetById(user.Id);
         }
 
         /// <summary>
