@@ -492,8 +492,14 @@ namespace Wolfpack.Web.Controllers
 
             if (currentEventTeam != null)
             {
+                var skillsToRate = currentEventTeam.Event.Skills
+                    .Select(s => s.Id)
+                    .Concat(currentEventTeam.Event.Group.Skills
+                        .Select(s => s.Id))
+                    .Distinct();
+
                 var usersToBeRated = currentEventTeam.Users
-                    .Where(u => !u.UserSkills.All(s => s.Ratings.Any(r => r.RatedBy.Id == user.Id)))
+                    .Where(u => !u.UserSkills.Where(s => skillsToRate.Contains(s.Skill.Id)).All(s => s.Ratings.Any(r => r.RatedBy.Id == user.Id)))
                     .Select(u => new {
                         id = u.Id,
                         userName = u.UserName
