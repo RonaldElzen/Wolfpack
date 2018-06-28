@@ -1,4 +1,6 @@
-﻿@model Wolfpack.Web.Models.Event.TeamVM
+﻿<script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+
+@model Wolfpack.Web.Models.Event.TeamVM
 @{
     ViewBag.Title = "Team";
 }
@@ -22,7 +24,7 @@
 </ul>
 
 @section scripts {
-<script type="text/javascript">
+    <script type="text/javascript">
     var chartConfig = {
         "type": 'radar',
         "title": {
@@ -60,6 +62,6 @@
         height: 800,
         width: '100%'
     });
-</script>    
+    </script>
 }
 

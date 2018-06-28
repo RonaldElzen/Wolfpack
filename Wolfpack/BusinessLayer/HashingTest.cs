@@ -20,7 +20,7 @@ namespace BusinessLayer
         {
             var hashedPassword = Hashing.Hash("testPassword");
 
-            Assert.IsTrue(hashedPassword.StartsWith("$MYHASH$V1$"));
+            Assert.IsTrue(hashedPassword.StartsWith("$Wolfpack$V1$"));
         }
 
         [TestMethod]

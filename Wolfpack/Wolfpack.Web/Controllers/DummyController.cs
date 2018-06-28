@@ -94,39 +94,45 @@ namespace Wolfpack.Web.Controllers
             Context.SaveChanges();
 
             //Create user ratings for each user and skill
-            Random random = new Random();
-            foreach (string name in names)
+            for(int i = 0; i < 3; i++)
             {
-                User u = Context.Users.FirstOrDefault(x => x.FirstName == name);
-                if (u != null)
+                Random random = new Random();
+                foreach (string name in names)
                 {
-                    foreach (string skillName in skills)
+                    User u = Context.Users.FirstOrDefault(x => x.FirstName == name);
+                    if (u != null)
                     {
-                        Skill s = Context.Skills.GetByName(skillName);
-                        if (s != null)
+                        foreach (string skillName in skills)
                         {
-                            var userSkill = u.UserSkills.FirstOrDefault(x => x.Skill.Id == s.Id);
-
-                            if(userSkill == null)
+                            Skill s = Context.Skills.GetByName(skillName);
+                            if (s != null)
                             {
-                                userSkill = new UserSkill
+                                var userSkill = u.UserSkills.FirstOrDefault(x => x.Skill.Id == s.Id);
+
+                                if (userSkill == null)
                                 {
-                                    Skill = s,
-                                };
-                                u.UserSkills.Add(userSkill);
-                            }
+                                    userSkill = new UserSkill
+                                    {
+                                        Skill = s,
+                                    };
+                                    u.UserSkills.Add(userSkill);
+                                }
 
-                            userSkill.Ratings.Add(new Rating
-                            {
-                                RatedBy = u,
-                                RatedAt = DateTime.Now,
-                                Mark = Math.Round((random.NextDouble() * 9 + 1), 1)
-                            });
+                                var date = DateTime.Now;
+                                date.AddDays(i);
+
+                                userSkill.Ratings.Add(new Rating
+                                {
+                                    RatedBy = u,
+                                    RatedAt = DateTime.Now,
+                                    Mark = Math.Round((random.NextDouble() * 9 + 1), 1)
+                                });
+                            }
+                            else return View("Dummy", new DummyVM { Message = "Could not find skill: " + skillName });
                         }
-                        else return View("Dummy", new DummyVM { Message = "Could not find skill: " + skillName });
                     }
+                    else return View("Dummy", new DummyVM { Message = "Could not find user: " + name });
                 }
-                else return View("Dummy", new DummyVM { Message = "Could not find user: " + name });
             }
             Context.SaveChanges();
 

@@ -10,7 +10,7 @@ using Wolfpack.Web;
 using Wolfpack.Web.Controllers;
 using Wolfpack.Web.Helpers.Interfaces;
 
-namespace Wolfpack.Tests.Web.Controllers
+namespace Wolfpack.Web.Tests.Controllers
 {
     [TestClass]
     public class HomeControllerTest
