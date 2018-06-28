@@ -16,14 +16,10 @@ namespace Wolfpack.Web.Controllers
         public ProfileController(Context context, IUserHelper userHelper = null, ISessionHelper sessionHelper = null)
             : base(context, userHelper, sessionHelper) { }
 
-        public ActionResult Index(int? id )
+        public ActionResult Index()
         {
-            if (!id.HasValue)
-            {
-                id = UserHelper.GetCurrentUser().Id;
-            }
             var profileVM = new ProfileVM { };
-            var user = Context.Users.SingleOrDefault(x => x.Id == id);
+            var user = UserHelper.GetCurrentDbUser(Context);
             profileVM.Id = user.Id;
             profileVM.UserName = user.UserName;
             profileVM.MemberSince = user.RegisterDate;
