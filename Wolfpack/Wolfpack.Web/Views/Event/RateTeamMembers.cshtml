@@ -4,7 +4,6 @@
 }
 
 <h2>RateTeamMembers</h2>
-@Url.Action("RatePartial")
 <script>
     let users = [];
     document.onreadystatechange = function () {
@@ -24,7 +23,7 @@
                     users = JSON.parse(httpRequest.response);
             getTeamRating('@Url.Action("RatePartial")', JSON.stringify({
                 userId: users[0].id,
-                eventId: 1
+                eventId: @ViewData.Eval("id") 
                     }));
                 }
             }

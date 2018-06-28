@@ -162,7 +162,7 @@ function sendRatings(url, data) {
     httpRequest.open('POST', url);
     httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     httpRequest.send(JSON.stringify({
-        eventId: 1,
+        eventId: document.querySelector("#rating").dataset.eventid,
         userId: document.querySelector("#rating").dataset.userid,
         skillId: document.querySelector(".rating").dataset.ratingid,
         ratings: data
@@ -170,12 +170,12 @@ function sendRatings(url, data) {
 
     httpRequest.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
-
-            document.querySelector("#rating").remove();
+            let eventId = document.querySelector("#rating").dataset.eventid
+                document.querySelector("#rating").remove();
             users.shift();
             getTeamRating('/Event/RatePartial', JSON.stringify({
                 userId: users[0].id,
-                eventId: 1
+                eventId: eventId
             }));
         }
         hideLoading();

@@ -54,7 +54,7 @@ namespace Wolfpack.Web.Controllers
         public ActionResult Details(int id)
         {
             var userId = UserHelper.GetCurrentUser().Id;
-            var singleEvent = Context.Events.SingleOrDefault(x => x.Id == id && x.EventCreator.Id == userId);
+            var singleEvent = Context.Events.SingleOrDefault(x => x.Id == id);
             if (singleEvent != null)
             {
                 var skills = singleEvent.Skills.Select(s => new SkillVM
@@ -90,7 +90,7 @@ namespace Wolfpack.Web.Controllers
             }
             else
             {
-                return RedirectToAction("Index", "EventController");
+                return RedirectToAction("Index");
             }
         }
 
@@ -173,9 +173,9 @@ namespace Wolfpack.Web.Controllers
             });
         }
 
-        public ActionResult RateTeamMembers()
+        public ActionResult RateTeamMembers(int id )
         {
-            return View();
+            return View( new { Id = id });
         }
 
         [HttpPost]

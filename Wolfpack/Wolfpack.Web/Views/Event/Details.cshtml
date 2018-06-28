@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "Details";
 }
+
 @if (Request.Params["state"] == "success")
 {
     <div class="alert">Succes!</div>
@@ -12,6 +13,7 @@
 {
     <div class="alert error">No user found!</div>
 }
+    <a class="action-button" href="@Url.Action("RateTeamMembers", new { id =  Model.Id })"><i class="fas fa-arrow-circle-left fa-lg icon-left"></i><span>Rate your team</span></a>
 <a class="action-button" href="@Url.Action("Index")"><i class="fas fa-arrow-circle-left fa-lg icon-left"></i><span>Back</span></a>
 <button id="generateTeams" class="action-button"><span>Generate teams</span><i class="fas fa-plus fa-lg"></i></button>
 <div class="info-box" id="info-box">
@@ -29,7 +31,7 @@
     <div class="overview">
         @foreach (var Team in Model.Teams)
         {
-            <div class="overview-item item-large">
+                <div class="overview-item item-large">
                 <div class="overview-header">
                     <h3>@Team.Name</h3>
                 </div>
@@ -41,8 +43,8 @@
                         <ul>
                             <li class="team-members">@User.UserName</li>
                         </ul>
-
-                    }            @Html.ActionLink("View team", "Team", new { id = Team.Id }, new { @class = "action-button" })
+                    }            
+                    @Html.ActionLink("View team", "Team", new { id = Team.Id }, new { @class = "action-button" })
                 </div>
 
             </div>
@@ -54,7 +56,6 @@
     function removeAlert() {
         document.querySelector(".alert").remove();
     }
-
     window.setTimeout(removeAlert, 8000);
     document.querySelector("#generateTeams").addEventListener("click", function () {
         getPartial('@Url.Action("GenerateTeamsModal")', JSON.stringify({ id: @Model.Id}));
