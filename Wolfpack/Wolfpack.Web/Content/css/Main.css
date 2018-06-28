@@ -103,7 +103,8 @@ div, ul, li, a {
     margin: 0 0 0; }
     .sidebar .nav li {
       display: block;
-      transition: all .5s ease; }
+      transition: all .5s ease;
+      background: #5a7683; }
       .sidebar .nav li i, .sidebar .nav li #toggle-collapse > i {
         line-height: initial;
         float: right;
@@ -266,10 +267,11 @@ label {
   color: #666666; }
 
 .pre-form {
-  min-width: 300px;
+  min-width: 250px;
   padding: 20px;
   text-align: left;
-  margin: auto; }
+  margin: auto;
+  max-width: 400px; }
   .pre-form a {
     text-align: center;
     display: block;
@@ -289,8 +291,9 @@ label {
     color: #fff; }
 
 .input-box {
-  background: #49606b;
-  padding: 20px; }
+  background: #4f6974;
+  padding: 20px;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.28); }
 
 .info-box {
   margin: 10px; }
@@ -507,10 +510,27 @@ h2 {
   margin: 10px;
   display: block; }
 
-.validation-summary-errors ul li {
+.validation-summary-errors ul {
+  padding: 0; }
+  .validation-summary-errors ul li {
+    list-style-type: none;
+    margin-bottom: 10px;
+    background: #ff4444;
+    text-align: center;
+    padding: 10px;
+    color: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    border-radius: 4px; }
+
+.form-success {
   list-style-type: none;
   margin-bottom: 10px;
-  color: #fff; }
+  background: #00C851;
+  text-align: center;
+  padding: 10px;
+  color: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  border-radius: 4px; }
 
 .field-validation-error {
   margin-top: 10px;

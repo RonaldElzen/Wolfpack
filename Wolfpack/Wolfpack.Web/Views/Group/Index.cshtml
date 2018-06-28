@@ -10,7 +10,11 @@
 }
 <h2>Index</h2>
 <a class="action-button" href="@Url.Action("NewGroup")"><span>Create new group</span><i class="fas fa-plus fa-lg"></i></a>
-<h3>Groups created by you</h3>
+@if (Model.CreatedGroups.Count() > 0)
+{
+    <h3>Groups created by you</h3>
+}
+
 <div class="overview">
     @foreach (var item in Model.CreatedGroups)
     {
@@ -33,7 +37,11 @@
         </div>
     }
 </div>
-<h3>Groups you participate in</h3>
+@if (Model.ParticipatingGroups.Count() > 0)
+{
+    <h3>Groups you participate in</h3>
+}
+
 <div class="overview">
     @foreach (var item in Model.ParticipatingGroups)
     {

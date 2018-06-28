@@ -148,7 +148,7 @@ div, ul, li, a {
         li {
             display: block;
             transition: all .5s ease;
-
+            background:lighten($darkBlue,10%);
             i, #toggle-collapse > i {
                 line-height: initial;
                 float: right;
@@ -363,11 +363,11 @@ label {
 }
 
 .pre-form {
-    min-width: 300px;
+    min-width: 250px;
     padding: 20px;
     text-align: left;
     margin: auto;
-
+    max-width: 400px;
     a {
         text-align: center;
         display: block;
@@ -395,8 +395,9 @@ label {
 }
 
 .input-box {
-    background: lighten($darkBlue, 2%);
+    background: lighten($darkBlue, 5%);
     padding: 20px;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.28);
 }
 
 .info-box {
@@ -440,9 +441,6 @@ label {
         }
     }
 }
-
-
-
 
 h3 {
     @include font-size(34);
@@ -683,7 +681,6 @@ h2 {
 }
 
 .form-normal {
-
     label {
         position: initial;
         margin: 10px;
@@ -693,12 +690,30 @@ h2 {
 
 .validation-summary-errors {
     ul {
+        padding: 0;
+
         li {
             list-style-type: none;
             margin-bottom: 10px;
+            background: $errorColor;
+            text-align: center;
+            padding: 10px;
             color: #fff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+            border-radius: 4px;
         }
     }
+}
+
+.form-success {
+    list-style-type: none;
+    margin-bottom: 10px;
+    background: $successColor;
+    text-align: center;
+    padding: 10px;
+    color: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    border-radius: 4px;
 }
 
 .field-validation-error {
