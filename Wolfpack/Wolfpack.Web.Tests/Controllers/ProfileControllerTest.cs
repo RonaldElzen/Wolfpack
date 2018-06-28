@@ -9,6 +9,7 @@ using Moq;
 using Wolfpack.Data;
 using Wolfpack.Data.Models;
 using Wolfpack.Web.Controllers;
+using Wolfpack.Web.Helpers;
 using Wolfpack.Web.Helpers.Interfaces;
 using Wolfpack.Web.Models.Profile;
 
@@ -32,15 +33,26 @@ namespace Wolfpack.Web.Tests.Controllers
                 Mail = "unittest@wolfpack.com"
             };
 
+            var users = new List<User>()
+            {
+                mainUser
+            }.AsQueryable();
+
+            var mockUser = new UserHelper { Id = 1 };
+
             var mockContext = new Mock<Context>();
-            
+
+            var mockUsers = MockHelper.MockDbSet(users);
+            mockContext.SetupGet(c => c.Users).Returns(mockUsers.Object);
+
             var mockUserHelper = new Mock<IUserHelper>();
             mockUserHelper.Setup(x => x.GetCurrentDbUser(mockContext.Object)).Returns(mainUser);
+            mockUserHelper.Setup(x => x.GetCurrentUser()).Returns(mockUser);
 
             var controller = new ProfileController(mockContext.Object, mockUserHelper.Object);
 
             // Act
-            ViewResult result = controller.Index() as ViewResult;
+            ViewResult result = controller.Index(null) as ViewResult;
 
             // Assert
             Assert.IsNotNull(result);

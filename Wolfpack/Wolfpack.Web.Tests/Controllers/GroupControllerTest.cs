@@ -987,7 +987,7 @@ namespace Wolfpack.Web.Tests.Controllers
 
             var secondGroup = new Group
             {
-                Id = 1,
+                Id = 2,
                 Archived = false
             };
 
