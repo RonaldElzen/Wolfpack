@@ -1,0 +1,29 @@
+﻿@model Wolfpack.Web.Models.Event.RatingVM
+<div id="rating" data-userId="@Model.UserId" data-eventId="@Model.EventId">
+    <h4>Time to rate @Model.UserName</h4>
+
+    @foreach (var skill in Model.Skills)
+    {
+
+        <div class="rate-item">
+            <h4>@skill.Name</h4>
+
+            <div class="rating" data-ratingId="@skill.Id">
+                <div class="star" data-value="1"><i class="fas fa-star fa-lg"></i></div>
+                <div class="star" data-value="2"><i class="fas fa-star fa-lg"></i></div>
+                <div class="star" data-value="3"><i class="fas fa-star fa-lg"></i></div>
+                <div class="star" data-value="4"><i class="fas fa-star fa-lg"></i></div>
+                <div class="star" data-value="5"><i class="fas fa-star fa-lg"></i></div>
+                <div class="star" data-value="6"><i class="fas fa-star fa-lg"></i></div>
+                <div class="star" data-value="7"><i class="fas fa-star fa-lg"></i></div>
+                <div class="star" data-value="8"><i class="fas fa-star fa-lg"></i></div>
+                <div class="star" data-value="9"><i class="fas fa-star fa-lg"></i></div>
+                <div class="star" data-value="10"><i class="fas fa-star fa-lg"></i></div>
+            </div>
+            @Html.LabelFor(m => m.RateComment)
+            @Html.EditorFor(m => m.RateComment)
+        </div>
+    }
+    <button class="submit-button">Submit</button>
+</div>
+

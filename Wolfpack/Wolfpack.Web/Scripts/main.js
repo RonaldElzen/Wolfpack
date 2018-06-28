@@ -1,6 +1,22 @@
 ﻿let isCollapsed = false;
 let modalOpen = false;
 
+function showLoading() {
+    let loading = document.createElement("div");
+    loading.setAttribute("class", "loading");
+    let image = document.createElement("img");
+    image.setAttribute("src", "/Content/images/logo_animated.svg")
+    let text = document.createElement("h2");
+    text.appendChild(document.createTextNode("Please Wait"));
+    loading.append(image);
+    loading.append(text);
+    document.body.append(loading);
+}
+
+function hideLoading() {
+    document.querySelector(".loading").remove();
+}
+
 /**
  * Function to toggle the menu 
  **/
@@ -38,53 +54,137 @@ document.querySelector("#toggle-collapse").addEventListener('click', function ()
     }
 });
 
-function getPartial(url,data) {
+function getPartial(url, data) {
+    showLoading();
     //Ajax request
     let httpRequest = new XMLHttpRequest();
     httpRequest.open('POST', url);
     httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     httpRequest.send(data);
-
     //Handle result
     httpRequest.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
             document.body.innerHTML += httpRequest.response;
-                //Key up function to check if changes are made in input
-                let input = document.querySelector("#NewSkillName")
+            //Key up function to check if changes are made in input
+            let input = document.querySelector("#NewSkillName")
+            if (input !== null) {
                 input.onkeyup = function (e) {
-                    getSkillSuggestions("/Skill/GetSkills", e.target.value);       
+                    getSkillSuggestions("/Skill/GetSkills", e.target.value);
+                }
+            }
+            hideLoading();
         }
     }
 }
 
-function getNotificationCount(url) {
+function createRatings() {
+    //Handle ratings 
+    let ratings = document.querySelectorAll(".rating");
+
+    for (let i = 0; i < ratings.length; i++) {
+        stars = ratings[i].getElementsByClassName("star");
+        for (let j = 0; j < stars.length; j++)
+        stars[j].addEventListener('click', function () {
+            let starsInParent = this.parentElement.children;
+            for (let i = 0; i < starsInParent.length; i++) {
+                starsInParent[i].children[0].style.color = "#d3d3d3";
+            }
+            for (let i = 0; i < this.dataset.value; i++) {
+                this.parentElement.children[i].children[0].style.color = "#455B65";
+            }
+            this.parentElement.dataset.rate = this.dataset.value;
+        });
+    }
+}
+
+function getTeamRating(url, data) {
+    showLoading();
     //Ajax request
     let httpRequest = new XMLHttpRequest();
     httpRequest.open('POST', url);
     httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    httpRequest.send();
-    if (document.querySelector(".notification-count") != null) {
-        document.query(".notification-count").remove();
-    }
+    httpRequest.send(data);
     //Handle result
     httpRequest.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
+            document.querySelector(".main").innerHTML += httpRequest.response;
 
-            if (httpRequest.response > 0) {
-                let notificationcount = document.createElement("p");
-                notificationcount.setAttribute("class", "notification-count");
-                notificationcount.appendChild(document.createTextNode(httpRequest.response));
-                document.querySelector("#notification-box").append(notificationcount);
-            }
-            document.querySelector
+            createRatings();
+            document.querySelector(".submit-button").addEventListener("click", function () {
+
+                let ratingsToSend = []
+                let ratings = document.querySelectorAll(".rating");
+                for (let i = 0; i < ratings.length; i++) {
+                    ratingsToSend.push({
+                        "Id": ratings[i].dataset.ratingid,
+                        "Rating": ratings[i].dataset.rate,
+                        "Comment": ratings[i].parentElement.querySelector(".text-box").value
+                    })
+                }
+                sendRatings("/Event/HandleRating", ratingsToSend);
+
+            })
+            hideLoading();
+
         }
     }
 }
 
+function sendRatings(url, data) {
+    showLoading();
+    //Ajax request
+    let httpRequest = new XMLHttpRequest();
+    httpRequest.open('POST', url);
+    httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    httpRequest.send(JSON.stringify({
+        eventId: 1,
+        userId: document.querySelector("#rating").dataset.userid,
+        skillId: document.querySelector(".rating").dataset.ratingid,
+        ratings: data
+    }));
+    
+    httpRequest.onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+
+            document.querySelector("#rating").remove();
+            users.shift();
+            getTeamRating('/Event/RatePartial', JSON.stringify({
+                userId: users[0].id,
+                eventId: 1
+                    }));
+                }
+            hideLoading();
+        }
+    }
+  
+
+    function getNotificationCount(url) {
+        //Ajax request
+        let httpRequest = new XMLHttpRequest();
+        httpRequest.open('POST', url);
+        httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        httpRequest.send();
+        if (document.querySelector(".notification-count") != null) {
+            document.query(".notification-count").remove();
+        }
+        //Handle result
+        httpRequest.onreadystatechange = function () {
+            if (this.readyState === 4 && this.status === 200) {
+
+                if (httpRequest.response > 0) {
+                    let notificationcount = document.createElement("p");
+                    notificationcount.setAttribute("class", "notification-count");
+                    notificationcount.appendChild(document.createTextNode(httpRequest.response));
+                    document.querySelector("#notification-box").append(notificationcount);
+                }
+            }
+        }
+    }
+
 /**
  * Function to open/close a info modal
  */
-function showModal(heading, text,addCloseButton) {
+function showModal(heading, text, addCloseButton) {
     //Create modal background
     let modalBackground = document.createElement("div");
     modalBackground.setAttribute("class", 'modal-background');
@@ -112,7 +212,7 @@ function showModal(heading, text,addCloseButton) {
         modalTextDiv.append(modalText);
         modalBody.append(modalTextDiv);
     }
- 
+
     if (addCloseButton) {
         //Create Close button
         let closeButton = document.createElement("button");
@@ -128,6 +228,7 @@ function showModal(heading, text,addCloseButton) {
         });
     }
 }
+
 
 function createConfirmModal(actionLink) {
 
@@ -152,21 +253,6 @@ function createConfirmModal(actionLink) {
     document.querySelector("#confirm").addEventListener('click', function () {
         document.querySelector(".modal-background").remove();
         window.location = actionLink;
-    });
-}
-
-//Handle ratings 
-let stars = document.querySelectorAll(".star");
-for (let i = 0; i < stars.length; i++) {
-    stars[i].addEventListener('click', function () {
-        let starsInParent = this.parentElement.children;
-        for (let i = 0; i < starsInParent.length; i++) {
-            starsInParent[i].children[0].style.color = "#d3d3d3";
-        }
-        for (let i = 0; i < this.dataset.value; i++) {
-            this.parentElement.children[i].children[0].style.color = "#455B65";
-        }
-        document.querySelector("#Rating").value = this.dataset.value;
     });
 }
 

@@ -5,8 +5,6 @@
 }
 
 <h2>Index</h2>
-
-@Html.ActionLink("Create new event", "Create", null, new { @class = "action-button" })
 <h3>Events created by you</h3>
 <div class="overview">
 
@@ -22,10 +20,9 @@
                 <h4>Date created</h4>
                 <p>@Html.DisplayFor(modelItem => item.CreatedOn)</p>
                 <h4>Actions</h4>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "action-button" })
                 @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "action-button" })
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "action-button" })
-                @Html.ActionLink("RateUser", "RateUser", new { groupId = item.Id }, new { @class = "action-button" })
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "action-button delete" })
+                @Html.ActionLink("RateUser", "RateUser", new { id = item.Id }, new { @class = "action-button" })
             </div>
         </div>
     }
@@ -46,13 +43,16 @@
                 <h4>Date created</h4>
                 <p>@Html.DisplayFor(modelItem => item.CreatedOn)</p>
                 <h4>Actions</h4>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "action-button" })
                 @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "action-button" })
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "action-button" })
-                @Html.ActionLink("RateUser", "RateUser", new { groupId = item.Id }, new { @class = "action-button" })
+                @Html.ActionLink("RateUser", "RateUser", new { id = item.Id }, new { @class = "action-button" })
             </div>
         </div>
     }
 </div>
-
-
+<script>
+        document.querySelector(".delete").addEventListener('click', function (e) {
+         e.preventDefault();
+        actionLink = this.href;
+    createConfirmModal(actionLink);
+});
+</script>

@@ -46,7 +46,12 @@ namespace Wolfpack.Web.Controllers
                 Archived = g.Archived
             });
 
-            return View(new UserGroupsVM{CreatedGroups = groups, ParticipatingGroups = participatingGroups });
+            return View(new UserGroupsVM { CreatedGroups = groups, ParticipatingGroups = participatingGroups });
+        }
+
+        public ActionResult RateTeamMembers()
+        {
+            return View();
         }
 
         /// <summary>
@@ -127,9 +132,9 @@ namespace Wolfpack.Web.Controllers
             var userToRate = Context.Users.FirstOrDefault(x => x.Id == vm.UserToRateId);
             var skillToRate = Context.Skills.FirstOrDefault(x => x.Id == vm.SkillToRateId);
             var userSkill = userToRate.UserSkills.Where(s => s.Skill.Id == skillToRate.Id).FirstOrDefault();
-            
+
             //Adding the rating to the database.
-            if(userSkill == null)
+            if (userSkill == null)
             {
                 userSkill = new UserSkill
                 {
@@ -169,7 +174,7 @@ namespace Wolfpack.Web.Controllers
 
                 //TODO Send notification to removed user (waiting for notification system)
             }
-            return RedirectToAction("Details", new { Id = groupId,state = "success" });
+            return RedirectToAction("Details", new { Id = groupId, state = "success" });
         }
 
         /// <summary>
@@ -268,7 +273,7 @@ namespace Wolfpack.Web.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         public ActionResult Archive(int id)
-        {            
+        {
             int loggedInUserId = UserHelper.GetCurrentUser().Id;
             var singleGroup = Context.Groups.FirstOrDefault(x => x.Id == id && x.GroupCreator == loggedInUserId);
             if (singleGroup != null)
@@ -307,7 +312,7 @@ namespace Wolfpack.Web.Controllers
         {
             var group = Context.Groups.SingleOrDefault(g => g.Id == vm.Id);
 
-            foreach(var user in group.Users)
+            foreach (var user in group.Users)
             {
                 user.Notifications.Add(new Notification
                 {
@@ -372,7 +377,7 @@ namespace Wolfpack.Web.Controllers
         public ActionResult AddUser(AddUserVM vm)
         {
             string input = vm.UserName;
-            
+
             var user = Context.Users.FirstOrDefault(g => g.UserName == vm.UserName || g.Mail == vm.UserName);
             //Return a list with possible users if the username is not found.
             if (user == null)
@@ -403,7 +408,7 @@ namespace Wolfpack.Web.Controllers
                     LastName = g.LastName
                 }).Where(g => g.UserName.Contains(vm.UserName)).ToList();
 
-                if(possibleUsers != null && possibleUsers.Count > 0)
+                if (possibleUsers != null && possibleUsers.Count > 0)
                     return View(new AddUserVM { GroupId = vm.GroupId, PossibleUsers = possibleUsers });
                 else
                     return RedirectToAction("Details", new { id = vm.Id, state = "No user" });
@@ -430,14 +435,14 @@ namespace Wolfpack.Web.Controllers
                     });
 
                     Context.SaveChanges();
-                
+
                     return View(new AddUserVM { });
                 }
                 else
                 {
                     var message = "Target group is archived";
                     return RedirectToAction("Index", message);
-                }            
+                }
             }
         }
 
@@ -474,7 +479,7 @@ namespace Wolfpack.Web.Controllers
 
         public ActionResult GetNewEventModal(int id)
         {
-            return PartialView("_createEventPartial", new GroupVM {Id = id});
+            return PartialView("_createEventPartial", new GroupVM { Id = id });
         }
 
         public ActionResult RatingProgressModal(int id)
@@ -500,26 +505,9 @@ namespace Wolfpack.Web.Controllers
 
         public ActionResult AddSkillModal(int id)
         {
-            return PartialView("_addSkillPartial", new Models.Group.EditVM {Id = id });
+            return PartialView("_addSkillPartial", new Models.Group.EditVM { Id = id });
         }
 
-        /// <summary>
-        /// Standard view for creating a new event
-        /// </summary>
-        /// <param name="message"></param>
-        /// <returns></returns>
-        public ActionResult NewEvent(int Id, string message = "")
-        {
-            var singleGroup = Context.Groups.FirstOrDefault(x => x.Id == Id);
-
-            if (!singleGroup.Archived)
-            {
-                Session["selectedGroupId"] = Id;
-                return View(new EventVM() { GroupId = Id, Message = message });
-            }
-            message = "Group has been archived and cannot be used";
-            return RedirectToAction("Index", message);
-        }
         /// <summary>
         /// Submit action for creating a new event, takes an eventname from inputfield
         /// </summary>
@@ -528,13 +516,11 @@ namespace Wolfpack.Web.Controllers
         [HttpPost]
         public ActionResult NewEvent(GroupVM vm)
         {
-            var message = "";
             var state = "";
             if (!string.IsNullOrWhiteSpace(vm.NewEventName))
             {
                 var group = Context.Groups.SingleOrDefault(e => e.Id == vm.Id);
-
-                if (group != null && group.Archived)
+                if (group != null)
                 {
                     Context.Events.Add(new Event
                     {
@@ -545,20 +531,17 @@ namespace Wolfpack.Web.Controllers
                     });
 
                     Context.SaveChanges();
-                    message = "Event created!";
                     state = "success";
                 }
                 else
                 {
-                    message = "No group users found!";
                     state = "error";
                 }
             }
             else
             {
-                message = "Something went wrong, please fill in all the fields";
             }
-            return RedirectToAction("Details", new { id = vm.Id,state});
+            return RedirectToAction("Details", new { id = vm.Id, state });
         }
     }
 }
