@@ -1,0 +1,67 @@
+﻿<script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+
+@model Wolfpack.Web.Models.Profile.SingleSkillVM
+
+<h2>@Model.Name</h2>
+<div>
+    <div id="chartDiv" style="max-width=80%;"></div>
+    <div>
+        <h4>Recieved ratings</h4>
+        <table>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Mark</th>
+            <th>New Average</th>
+            @foreach (var rating in Model.Ratings)
+            {
+                <tr>
+                    <td>@rating.RatedAt.ToLongDateString()</td>
+                    <td>@rating.RatedAt.ToLongTimeString()</td>
+                    <td>@rating.Mark</td>
+                    <td>@rating.AverageMark</td>
+                </tr>
+            }
+        </table>
+        
+    </div>
+    
+</div>
+
+<script type="text/javascript">
+var chartConfig = {
+    "type": 'area',
+    "title": {
+        "text": 'Progress over time'
+    },
+    "subtitle": {
+        "text": '@Model.Name'
+    },
+    "plot": {
+        "aspect": "spline",
+        "alphaArea": 0.2
+    },
+    "series": [
+        {
+        "values": @Html.Raw(Json.Encode(Model.Ratings.Select(s => s.AverageMark).ToList().ToArray())),
+        "text": "@Model.Name",
+        }
+    ],
+    "scale-x": {
+        "values": @Html.Raw(Json.Encode(Model.Ratings.Select(s => s.RatedAt.ToLongDateString()).ToList().ToArray())),
+        "label": {
+            "text": "Date"
+        }
+    },
+    "scale-y": {
+        "min-value": 0,
+        "max-value": 10
+    }
+};
+
+zingchart.render({
+    id: 'chartDiv',
+    data: chartConfig,
+    height: 200,
+    width: '100%'
+});
+</script>

@@ -533,7 +533,7 @@ namespace Wolfpack.Web.Controllers
             {
                 var group = Context.Groups.SingleOrDefault(e => e.Id == vm.Id);
 
-                if (group != null && group.Archived)
+                if (group != null && !group.Archived)
                 {
                     Context.Events.Add(new Event
                     {

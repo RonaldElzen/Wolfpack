@@ -38,7 +38,7 @@ document.querySelector("#toggle-collapse").addEventListener('click', function ()
     }
 });
 
-function getPartial(url,data) {
+function getPartial(url, data) {
     //Ajax request
     let httpRequest = new XMLHttpRequest();
     httpRequest.open('POST', url);
@@ -49,10 +49,11 @@ function getPartial(url,data) {
     httpRequest.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
             document.body.innerHTML += httpRequest.response;
-                //Key up function to check if changes are made in input
-                let input = document.querySelector("#NewSkillName")
-                input.onkeyup = function (e) {
-                    getSkillSuggestions("/Skill/GetSkills", e.target.value);       
+            //Key up function to check if changes are made in input
+            let input = document.querySelector("#NewSkillName")
+            input.onkeyup = function (e) {
+                getSkillSuggestions("/Skill/GetSkills", e.target.value);
+            }
         }
     }
 }

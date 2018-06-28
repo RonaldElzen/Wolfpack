@@ -193,7 +193,9 @@
     <Compile Include="Models\Notification\NotificationsVM.cs" />
     <Compile Include="Models\Notification\NotificationVM.cs" />
     <Compile Include="Models\Profile\ProfileVM.cs" />
+    <Compile Include="Models\Profile\SkillRatingVM.cs" />
     <Compile Include="Models\Profile\SearchVM.cs" />
+    <Compile Include="Models\Profile\SingleSkillVM.cs" />
     <Compile Include="Models\Profile\SkillVM.cs" />
     <Compile Include="Models\Profile\UserVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -274,6 +276,7 @@
     <Content Include="Views\Group\_addSkillPartial.cshtml" />
     <Content Include="Views\Group\Details.cshtml" />
     <Content Include="Views\Group\_ratingProgressPartial.cshtml" />
+    <Content Include="Views\Profile\ViewSkill.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
