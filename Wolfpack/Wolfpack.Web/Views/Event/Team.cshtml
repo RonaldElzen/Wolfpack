@@ -5,23 +5,9 @@
     ViewBag.Title = "Team";
 }
 
-<h2>Team</h2>
-<p>
-    @Model.Name
-</p>
+<h2>@Model.Name</h2>
 <div id="chartDiv"></div>
-<ul>
-    @foreach (var User in Model.Users)
-    {
-        <li>@User.FirstName @User.LastName</li>
-        foreach (var Skill in User.SkillRatings)
-        {
-            <p>
-                @Skill.Name: @Skill.Mark
-            </p>
-        }
-    }
-</ul>
+
 
 @section scripts {
     <script type="text/javascript">
@@ -36,7 +22,7 @@
             {
                 <text>
                 {
-                "values": @Html.Raw(Json.Encode(User.SkillRatings.Select(s => s.Mark).ToList().ToArray())),
+                "values": @Html.Raw(Json.Encode(User.SkillRatings.Select(s => s.Rating).ToList().ToArray())),
                 "text": "@User.FirstName @User.LastName",
                 },
                 </text>

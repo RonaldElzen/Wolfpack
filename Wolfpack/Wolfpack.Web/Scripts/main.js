@@ -83,6 +83,20 @@ function getPartial(url, data) {
                     getSkillSuggestions("/Skill/GetSkills", e.target.value);
                 };
             }
+            if (document.querySelector(".submit-button") != null) {
+                document.querySelector(".submit-button").addEventListener("click", function () {
+                    showLoading();
+                })
+              
+            }
+
+            if (document.querySelector(".modal-close") != null) {
+                document.querySelector(".modal-close").addEventListener("click", function () {
+                    let throwAway = document.querySelector(".modal-background");
+                    document.querySelector("#" + throwAway.id).remove();
+                })
+                addListeners();
+            };
             hideLoading();
         }
     };
@@ -254,8 +268,9 @@ function showModal(heading, text, addCloseButton) {
         closeButton.append(icon);
         modalHeading.append(closeButton);
         //Click listener for close button
-        closeButton.addEventListener("click", function () {
-            modalBackground.remove();
+        document.querySelector(".modal-close").addEventListener("click", function () {
+            alert()
+            document.querySelector(".modal-background").remove();
         });
     }
 }
@@ -348,8 +363,3 @@ for (let i = 0; i < suggestions.length; i++) {
         document.querySelector("#SearchProfile").submit();
     });
 }
-
-document.querySelector(".modal-close").addEventListener("click", function () {
-    document.querySelector(".modal-background").remove();
-});
-

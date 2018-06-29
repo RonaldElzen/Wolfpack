@@ -370,9 +370,11 @@ th {
   margin: 10px;
   width: 200px;
   background: #fff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24); }
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  position: relative; }
   .overview-item .overview-text {
-    padding: 10px; }
+    padding: 10px;
+    margin-bottom: 20px; }
     .overview-item .overview-text h4 {
       padding: 0;
       margin: 0;
@@ -388,6 +390,18 @@ th {
     .overview-item .overview-header h3 {
       color: #fff;
       margin: 5px; }
+    .overview-item .overview-header h4 {
+      color: #fff;
+      margin: 5px;
+      font-size: 1.2rem;
+      letter-spacing: 0rem; }
+  .overview-item .button-bottom {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    border-radius: 0;
+    margin: 0;
+    padding: 10px; }
 
 .item-large {
   width: 300px; }
@@ -423,7 +437,7 @@ th {
     justify-content: center;
     cursor: pointer;
     border: 0;
-    background: #455B65;
+    background: #81939D;
     color: #fff;
     padding: 5px;
     transition: all .2s ease;
@@ -631,23 +645,26 @@ h2 {
   margin-top: 0;
   font-size: 20pt;
   color: #fff;
-  padding: 10px; }
+  padding: 10px;
+  position: relative; }
   .modal-heading h2 {
     padding: 0;
     margin: 0;
+    font-size: 1.5rem;
+    letter-spacing: 0rem;
     color: #fff; }
 
 .modal-close {
   position: absolute;
-  right: 12px;
-  top: 12px;
+  right: 0;
+  top: 0;
+  height: 100%;
   vertical-align: middle;
   background: #455B65;
   transition: all .2s ease;
   cursor: pointer;
   color: #FFF;
-  border: 0;
-  border-radius: 4px; }
+  border: 0; }
   .modal-close:hover {
     transform: scale(1.1);
     -webkit-transform: scale(1.1); }

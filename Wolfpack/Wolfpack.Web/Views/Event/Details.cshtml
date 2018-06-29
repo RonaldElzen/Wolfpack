@@ -13,7 +13,12 @@
 {
     <div class="alert error">No user found!</div>
 }
-    <a class="action-button" href="@Url.Action("RateTeamMembers", new { id =  Model.Id })"><i class="fas fa-arrow-circle-left fa-lg icon-left"></i><span>Rate your team</span></a>
+
+@if (Request.Params["state"] == "error")
+{
+    <div class="alert error">Something went wrong, please try again.</div>
+}
+
 <a class="action-button" href="@Url.Action("Index")"><i class="fas fa-arrow-circle-left fa-lg icon-left"></i><span>Back</span></a>
 @if (Model.IsEventCreator)
 {
@@ -21,7 +26,6 @@
 }
 <div class="info-box" id="info-box">
     <h2>@Html.DisplayFor(model => model.EventName)</h2>
-
     @if (Model.IsEventCreator)
     {
         <h3>Skills in this event</h3><button class="action-button" id="addSkill"><span>Add new</span><i class="fas fa-plus fa-lg"></i> </button>
@@ -32,12 +36,11 @@
             <li>@Skill.Name</li>
         }
     </ul>
-
     <h3>Teams in event</h3>
     <div class="overview">
         @foreach (var Team in Model.Teams)
         {
-                <div class="overview-item item-large">
+            <div class="overview-item item-large">
                 <div class="overview-header">
                     <h3>@Team.Name</h3>
                 </div>
@@ -49,7 +52,7 @@
                         <ul>
                             <li class="team-members">@User.UserName</li>
                         </ul>
-                    }            
+                    }
                     @Html.ActionLink("View team", "Team", new { id = Team.Id }, new { @class = "action-button" })
                 </div>
                 @if (Model.IsEventCreator)
@@ -67,8 +70,17 @@
     function removeAlert() {
         document.querySelector(".alert").remove();
     }
+
+    function addListeners() {
+
     window.setTimeout(removeAlert, 8000);
-    document.querySelector("#generateTeams").addEventListener("click", function () {
-        getPartial('@Url.Action("GenerateTeamsModal")', JSON.stringify({ id: @Model.Id}));
-    });
+        document.querySelector("#generateTeams").addEventListener("click", function () {
+            getPartial('@Url.Action("GenerateTeamsModal")', JSON.stringify({ id: @Model.Id}))
+        });
+
+            document.querySelector("#addSkill").addEventListener("click", function () {
+                getPartial('@Url.Action("AddSkillModal")', JSON.stringify({ id: @Model.Id}));
+            });
+    }
+    addListeners();
 </script>

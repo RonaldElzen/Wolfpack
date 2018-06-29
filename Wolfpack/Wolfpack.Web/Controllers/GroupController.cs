@@ -331,16 +331,6 @@ namespace Wolfpack.Web.Controllers
         }
 
         /// <summary>
-        /// Create a new group
-        /// </summary>
-        /// <param name="message"></param>
-        /// <returns></returns>
-        public ActionResult NewGroup(string message = "")
-        {
-            return View(new GroupVM() { Message = message });
-        }
-
-        /// <summary>
         /// Form handling for adding skill to Group
         /// </summary>
         /// <param name="vm"></param>
@@ -361,11 +351,11 @@ namespace Wolfpack.Web.Controllers
                 };
                 group.Skills.Add(NewSkill);
                 Context.SaveChanges();
-                return View("Edit", new Models.Group.EditVM { Message = "Skill added" });
+                return View("details", new { state = "success" });
             }
             else
             {
-                return View("Edit", new Models.Group.EditVM { Message = "Group has been archived and cannot be edited" });
+                return RedirectToAction("details", new {id = group.Id, state = "archived" });
 
             }
         }
@@ -456,7 +446,6 @@ namespace Wolfpack.Web.Controllers
         [HttpPost]
         public ActionResult NewGroup(GroupVM vm)
         {
-            var message = "";
             if ((!string.IsNullOrWhiteSpace(vm.GroupName) && (!string.IsNullOrWhiteSpace(vm.GroupName))))
             {
                 var userId = UserHelper.GetCurrentUser().Id;
@@ -469,13 +458,12 @@ namespace Wolfpack.Web.Controllers
                 });
 
                 Context.SaveChanges();
-                message = "Group created!";
+                return RedirectToAction("index", new {state = "success" });
             }
             else
             {
-                message = "Something went wrong, please fill in all the fields";
+                return RedirectToAction("index", new { state = "error" });
             }
-            return View(new GroupVM() { Message = message });
         }
         
         public ActionResult GetNewEventModal(int id)
@@ -486,6 +474,11 @@ namespace Wolfpack.Web.Controllers
                 return PartialView("_createEventPartial", new GroupVM { Id = id });
 
             return RedirectToAction("Details", new { id = group.Id, state = "archived" });
+        }
+
+        public ActionResult GetNewGroupModal()
+        {
+            return PartialView("_addGroupPartial");
         }
 
         public ActionResult RatingProgressModal(int id)
@@ -549,7 +542,9 @@ namespace Wolfpack.Web.Controllers
                 state = "error";
             }
 
-            return RedirectToAction("Details", new { id = vm.Id, state });
+                return RedirectToAction("Details", new { id = vm.Id, state });
+            }
+            return RedirectToAction("Index", new { message = "error" });
         }
     }
 }
