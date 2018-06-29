@@ -26,17 +26,22 @@ function hideLoading() {
 /**
  * Function to toggle the menu 
  **/
-document.querySelector(".toggle-menu").addEventListener('click', function () {
-    document.querySelector(".sidebar").style.marginLeft = "0";
-    let overlay = document.createElement('div');
-    overlay.classList.add("sidebar-overlay");
-    overlay.addEventListener('click', function () {
+function setMenuListener() {
+    document.querySelector(".toggle-menu").addEventListener('click', function () {
+        document.querySelector(".sidebar").style.marginLeft = "0";
+        let overlay = document.createElement('div');
+        overlay.classList.add("sidebar-overlay");
+        overlay.addEventListener('click', function () {
 
-        document.querySelector(".sidebar").style.marginLeft = "-200px";
-        overlay.remove();
+            document.querySelector(".sidebar").style.marginLeft = "-200px";
+            overlay.remove();
+        });
+        document.querySelector(".wrapper").appendChild(overlay);
     });
-    document.querySelector(".wrapper").appendChild(overlay);
-});
+}
+
+setMenuListener();
+
 
 //Make sidebar collapse on tablet
 if (window.innerWidth <= 1024 && window.innerWidth >= 600) {
@@ -96,6 +101,7 @@ function getPartial(url, data) {
                     document.querySelector("#" + throwAway.id).remove();
                 })
                 addListeners();
+                setMenuListener();
             };
             hideLoading();
         }
@@ -360,6 +366,12 @@ let suggestions = document.querySelectorAll(".userNameSuggestion");
 for (let i = 0; i < suggestions.length; i++) {
     suggestions[i].addEventListener('click', function () {
         UserName.value = this.innerText;
-        document.querySelector("#SearchProfile").submit();
+        if (document.querySelector("#SearchProfile") !== null){
+            document.querySelector("#SearchProfile").submit();
+        }
+        if (document.querySelector("#AddUserForm") !== null) {
+            document.querySelector("#AddUserForm").submit();
+        }
+
     });
 }

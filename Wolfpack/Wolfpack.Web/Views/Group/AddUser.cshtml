@@ -9,7 +9,7 @@
 <h2>User Not found?</h2>
 
 <div class="form-box">
-    @using (Html.BeginForm("AddUser"))
+    @using (Html.BeginForm("AddUser",null, FormMethod.Post, new { id = "AddUserForm" }))
     {
         <div class="form-item">
             @Html.EditorFor(m => m.UserName)
@@ -29,6 +29,4 @@
         @Html.HiddenFor(m => m.GroupId)
     }
 </div>
-<p>
-    @Html.ActionLink("Back", "Edit", new { id = Model.GroupId })
-</p>
+x

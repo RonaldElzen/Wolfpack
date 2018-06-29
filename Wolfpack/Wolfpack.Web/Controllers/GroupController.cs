@@ -428,7 +428,7 @@ namespace Wolfpack.Web.Controllers
 
                     Context.SaveChanges();
 
-                    return View(new AddUserVM { });
+                    return RedirectToAction("Details", new { id = vm.Id, state = "success" });
                 }
                 else
                 {
