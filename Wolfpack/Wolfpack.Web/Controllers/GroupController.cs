@@ -351,7 +351,7 @@ namespace Wolfpack.Web.Controllers
                 };
                 group.Skills.Add(NewSkill);
                 Context.SaveChanges();
-                return View("details", new { state = "success" });
+                return RedirectToAction("details", new { state = "success" });
             }
             else
             {

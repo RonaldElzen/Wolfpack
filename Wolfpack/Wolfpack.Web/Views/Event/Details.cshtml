@@ -46,6 +46,7 @@
                 </div>
 
                 <div class="overview-text">
+
                     <h4>Team members:</h4>
                     @foreach (var User in Team.Users)
                     {
@@ -54,13 +55,11 @@
                         </ul>
                     }
                     @Html.ActionLink("View team", "Team", new { id = Team.Id }, new { @class = "action-button" })
+                    @if (Model.IsEventCreator)
+                    {
+                        <button class="action-button" id="renameTeam" data-url="@Url.Action("RenameTeamModal",  new { id = Team.Id })"><span>Rename</span><i class="fas fa-edit fa-lg"></i></button>
+                    }
                 </div>
-                @if (Model.IsEventCreator)
-                {
-                    <div>
-                        @Html.ActionLink("Rename", "RenameTeamModal", new { id = Team.Id }, new { @class = "action-button" })
-                    </div>
-                }
             </div>
 
         }
@@ -80,6 +79,10 @@
 
             document.querySelector("#addSkill").addEventListener("click", function () {
                 getPartial('@Url.Action("AddSkillModal")', JSON.stringify({ id: @Model.Id}));
+        });
+
+        document.querySelector("#renameTeam").addEventListener("click", function () {
+                getPartial('@Url.Action("RenameTeamModal")', JSON.stringify({ id: @Model.Id}));
             });
     }
     addListeners();

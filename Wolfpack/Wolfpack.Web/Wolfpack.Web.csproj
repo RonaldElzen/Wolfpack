@@ -216,6 +216,19 @@
     <Content Include="Content\css\Main.min.css">
       <DependentUpon>Main.css</DependentUpon>
     </Content>
+    <Content Include="Content\favicon\android-chrome-192x192.png" />
+    <Content Include="Content\favicon\android-chrome-512x512.png" />
+    <Content Include="Content\favicon\apple-touch-icon.png" />
+    <Content Include="Content\favicon\browserconfig.xml" />
+    <Content Include="Content\favicon\favicon-16x16.png" />
+    <Content Include="Content\favicon\favicon-32x32.png" />
+    <Content Include="Content\favicon\favicon.ico" />
+    <Content Include="Content\favicon\mstile-144x144.png" />
+    <Content Include="Content\favicon\mstile-150x150.png" />
+    <Content Include="Content\favicon\mstile-310x150.png" />
+    <Content Include="Content\favicon\mstile-310x310.png" />
+    <Content Include="Content\favicon\mstile-70x70.png" />
+    <Content Include="Content\favicon\safari-pinned-tab.svg" />
     <Content Include="Content\images\logo.png" />
     <Content Include="Content\images\logo.svg" />
     <Content Include="Content\images\logo_animated.svg" />
@@ -229,6 +242,7 @@
     <Content Include="Content\css\Main.scss" />
     <None Include="Properties\PublishProfiles\Wolfpack-final - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\Wolfpack-final - Web Deploy.pubxml" />
+    <Content Include="Content\favicon\site.webmanifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -271,7 +285,6 @@
     <Content Include="Views\Event\Details.cshtml" />
     <Content Include="Views\Event\GenerateTeamsForm.cshtml" />
     <Content Include="Views\Group\Delete.cshtml" />
-    <Content Include="Views\Event\Delete.cshtml" />
     <Content Include="Views\Group\RateUser.cshtml" />
     <Content Include="Views\Profile\SearchProfile.cshtml" />
     <Content Include="Views\Event\Team.cshtml" />
