@@ -44,7 +44,7 @@ namespace Wolfpack.BusinessLayer
             var base64Hash = Convert.ToBase64String(hashBytes);
 
             //format hash with extra information
-            return string.Format("$MYHASH$V1${0}${1}", iterations, base64Hash);
+            return string.Format("$Wolfpack$V1${0}${1}", iterations, base64Hash);
         }
         /// <summary>
         /// Creates a hash from a password with 10000 iterations
@@ -63,7 +63,7 @@ namespace Wolfpack.BusinessLayer
         /// <returns>is supported?</returns>
         public static bool IsHashSupported(string hashString)
         {
-            return hashString.Contains("$MYHASH$V1$");
+            return hashString.Contains("$MYHASH$V1$") || hashString.Contains("$Wolfpack$V1$");
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace Wolfpack.BusinessLayer
             }
 
             //extract iteration and Base64 string
-            var splittedHashString = hashedPassword.Replace("$MYHASH$V1$", "").Split('$');
+            var splittedHashString = hashedPassword.Replace("$MYHASH$V1$", "").Replace("$Wolfpack$V1$", "").Split('$');
             var iterations = int.Parse(splittedHashString[0]);
             var base64Hash = splittedHashString[1];
 

@@ -4,43 +4,86 @@
     ViewBag.Title = "Details";
 }
 
-<div class="info-box">
-    <h2>Details for @Html.DisplayFor(model => model.EventName)</h2>
-    <p>
-        @Html.ActionLink("Generate Teams", "GenerateTeams", new { Id = Model.Id })
-    </p>
+@if (Request.Params["state"] == "success")
+{
+    <div class="alert">Succes!</div>
+}
 
-    <h3>Basic info</h3>
-    <h4>@Html.DisplayNameFor(model => model.CreatedOn)</h4>
-    <p>@Html.DisplayFor(model => model.CreatedOn)</p>
+@if (Request.Params["state"] == "No user")
+{
+    <div class="alert error">No user found!</div>
+}
 
-    <h3>Skills in this Event</h3>
+@if (Request.Params["state"] == "error")
+{
+    <div class="alert error">Something went wrong, please try again.</div>
+}
+
+<a class="action-button" href="@Url.Action("Index")"><i class="fas fa-arrow-circle-left fa-lg icon-left"></i><span>Back</span></a>
+@if (Model.IsEventCreator)
+{
+    <button id="generateTeams" class="action-button"><span>Generate teams</span><i class="fas fa-plus fa-lg"></i></button>
+}
+<div class="info-box" id="info-box">
+    <h2>@Html.DisplayFor(model => model.EventName)</h2>
+    @if (Model.IsEventCreator)
+    {
+        <h3>Skills in this event</h3><button class="action-button" id="addSkill"><span>Add new</span><i class="fas fa-plus fa-lg"></i> </button>
+    }
     <ul>
         @foreach (var Skill in Model.Skills)
         {
             <li>@Skill.Name</li>
         }
     </ul>
-
     <h3>Teams in event</h3>
-    <ul>
+    <div class="overview">
         @foreach (var Team in Model.Teams)
         {
-            <h4>
-                @Team.Name
-            </h4>
+            <div class="overview-item item-large">
+                <div class="overview-header">
+                    <h3>@Team.Name</h3>
+                </div>
 
-            foreach (var User in Team.Users)
-            {
-                <li>@User.FirstName @User.LastName</li>
-            }
-            <p>
-                @Html.ActionLink("View team", "Team", new { id = Team.Id })
-            </p>
+                <div class="overview-text">
+
+                    <h4>Team members:</h4>
+                    @foreach (var User in Team.Users)
+                    {
+                        <ul>
+                            <li class="team-members">@User.UserName</li>
+                        </ul>
+                    }
+                    @Html.ActionLink("View team", "Team", new { id = Team.Id }, new { @class = "action-button" })
+                    @if (Model.IsEventCreator)
+                    {
+                        <button class="action-button" id="renameTeam" data-url="@Url.Action("RenameTeamModal",  new { id = Team.Id })"><span>Rename</span><i class="fas fa-edit fa-lg"></i></button>
+                    }
+                </div>
+            </div>
+
         }
-    </ul>
-    <p>
-        @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-        @Html.ActionLink("Back to List", "Index")
-    </p>
+    </div>
 </div>
+<script>
+    function removeAlert() {
+        document.querySelector(".alert").remove();
+    }
+
+    function addListeners() {
+
+    window.setTimeout(removeAlert, 8000);
+        document.querySelector("#generateTeams").addEventListener("click", function () {
+            getPartial('@Url.Action("GenerateTeamsModal")', JSON.stringify({ id: @Model.Id}))
+        });
+
+            document.querySelector("#addSkill").addEventListener("click", function () {
+                getPartial('@Url.Action("AddSkillModal")', JSON.stringify({ id: @Model.Id}));
+        });
+
+        document.querySelector("#renameTeam").addEventListener("click", function () {
+                getPartial('@Url.Action("RenameTeamModal")', JSON.stringify({ id: @Model.Id}));
+            });
+    }
+    addListeners();
+</script>

@@ -7,13 +7,13 @@ namespace Wolfpack.Data.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class RegisterInvite : IMigrationMetadata
+    public sealed partial class MergeChange : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(RegisterInvite));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(MergeChange));
         
         string IMigrationMetadata.Id
         {
-            get { return "201806171006510_RegisterInvite"; }
+            get { return "201806251226100_MergeChange"; }
         }
         
         string IMigrationMetadata.Source

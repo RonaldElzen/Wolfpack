@@ -1,0 +1,23 @@
+﻿@model Wolfpack.Web.Models.Event.RenameTeamVM
+
+
+<div id="renameTeamPartial" class="modal-background">
+    <div class="modal">
+        <div class="modal-heading">
+            <h2>Rename team</h2>
+            <button class="modal-close"><i class="fas fa-times fa-3x icon-only"></i> </button>
+        </div>
+        <div class="form-box modal-form">
+            @using (Html.BeginForm("RenameTeam", "Event"))
+        {
+            <div>
+                @Html.EditorFor(m => m.Name)
+                @Html.HiddenFor(m => m.Id)
+            </div>
+            <div>
+                <input type="submit" class="submit-button" />
+            </div>
+    }
+        </div>
+    </div>
+    </div>

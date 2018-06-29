@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net.Mail;
 using System.Web.Mvc;
 using Wolfpack.BusinessLayer;
+using Wolfpack.BusinessLayer.Extensions;
 using Wolfpack.Data;
 using Wolfpack.Data.Models;
 using Wolfpack.Web.Helpers;
@@ -28,7 +29,7 @@ namespace Wolfpack.Web.Controllers
         {
             if(vm.Key != null)
             {
-                var newRegister = Context.NewRegisters.SingleOrDefault(x => x.Key == vm.Key);
+                var newRegister = Context.NewRegisters.GetByKey(vm.Key);
                 if(newRegister != null)
                     vm.MailAdress = newRegister.Email;
             }
@@ -160,7 +161,7 @@ namespace Wolfpack.Web.Controllers
             {
                 var userExists = Context.Users.Any(x => x.UserName == vm.UserName);
                 var mailExists = Context.Users.Any(x => x.Mail == vm.MailAdress);
-                if (!userExists && !mailExists)
+                if (!mailExists && !userExists)
                 {
                     Context.Users.Add(new User
                     {
@@ -175,10 +176,10 @@ namespace Wolfpack.Web.Controllers
                 }
                 else
                 {
-                    if (userExists)
+                    if (mailExists)
                         ModelState.AddModelError("MailAdress", "Email already in use.");
 
-                    if (mailExists)
+                    if (userExists)
                         ModelState.AddModelError("UserName", "Username already in use.");
                 }
 
@@ -187,13 +188,13 @@ namespace Wolfpack.Web.Controllers
                     Context.SaveChanges();
 
                     //Add the user to the specified group if the person was invited while a groupadmin was inviting people
-                    var newRegister = Context.NewRegisters.SingleOrDefault(x => x.Key == vm.Key);
+                    var newRegister = Context.NewRegisters.GetByKey(vm.Key);
                     if (newRegister != null)
                     {
-                        var user = Context.Users.FirstOrDefault(u => u.Mail == vm.MailAdress);
+                        var user = Context.Users.GetByMail(vm.MailAdress);
                         if (user != null)
                         {
-                            Context.Groups.FirstOrDefault(g => g.Id == newRegister.GroupId).Users.Add(user);
+                            Context.Groups.GetById(newRegister.GroupId).Users.Add(user);
                             Context.SaveChanges();
                         }
                     }
@@ -236,7 +237,7 @@ namespace Wolfpack.Web.Controllers
         {
             if(vm.Key != null)
             {
-                Recovery recovery = Context.Recoveries.FirstOrDefault(r => r.Key == vm.Key);
+                Recovery recovery = Context.Recoveries.GetByKey(vm.Key);
                 if (recovery != null)
                 {
                     User user = recovery.User;
@@ -266,7 +267,7 @@ namespace Wolfpack.Web.Controllers
         {
             if (vm.Password == vm.PasswordCheck && vm.Key != null)
             {
-                Recovery recovery = Context.Recoveries.FirstOrDefault(r => r.Key == vm.Key);
+                Recovery recovery = Context.Recoveries.GetByKey(vm.Key);
                 if (recovery != null)
                 {
                     User user = recovery.User;
@@ -292,7 +293,7 @@ namespace Wolfpack.Web.Controllers
         {
             if (!string.IsNullOrWhiteSpace(vm.Email))
             {
-                User user = Context.Users.FirstOrDefault(u => u.Mail == vm.Email);
+                User user = Context.Users.GetByMail(vm.Email);
                 if (user != null) _resetPassword(vm.Email);
             }
             return View("Recovery", new RecoveryVM { Status = RecoveryStatus.Sent });
@@ -325,7 +326,7 @@ namespace Wolfpack.Web.Controllers
         /// <param name="email"></param>
         private void _resetPassword(string email)
         {
-            User user = Context.Users.SingleOrDefault(u => u.Mail == email);
+            User user = Context.Users.GetByMail(email);
             if (user != null)
             {
                 string key = Guid.NewGuid().ToString();

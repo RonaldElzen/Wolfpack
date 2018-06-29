@@ -6,44 +6,16 @@
 
 <h2>Notifications</h2>
 
-<table>
-    <thead>
-        <tr>
-            <th>Title</th>
-            <th>Date</th>
-            <th>IsRead</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var notification in Model.Notifications)
-        {
-            <tr>
-                <td>@Html.ActionLink(notification.Title, "GetNotification", new { id = notification.Id })</td>
-                <td>@notification.Date</td>
-                <td>@notification.IsRead</td>
-            </tr>
-        }
-    </tbody>
-</table>
 
-<h2>History</h2>
+@foreach (var notification in Model.Notifications)
+{
 
-<table>
-    <thead>
-        <tr>
-            <th>Title</th>
-            <th>Date</th>
-            <th>IsRead</th>
-        </tr>
-    </thead>
-    <tbody>
+    @Html.ActionLink(@notification.Title, "GetNotification", new { id = notification.Id }, new { @class = "notification-item"})
+}
+
+<h3>History</h3>
+
         @foreach (var notification in Model.NotificationHistory)
-        {
-            <tr>
-                <td>@Html.ActionLink(notification.Title, "GetNotification", new { id = notification.Id })</td>
-                <td>@notification.Date</td>
-                <td>@notification.IsRead</td>
-            </tr>
-        }
-    </tbody>
-</table>
+    {
+        @Html.ActionLink(@notification.Title, "GetNotification", new { id = notification.Id }, new { @class = "notification-item" })
+}

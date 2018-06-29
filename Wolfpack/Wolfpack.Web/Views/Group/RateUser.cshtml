@@ -9,11 +9,19 @@
     {
         @Html.ValidationSummary()
         <div class="form-item form-normal">
-            @Html.LabelFor(m => m.UserToRateId)
-            @Html.DropDownListFor(m => Model.UserToRateId,
-                                             Model.UsersList,
-                                             "Select user to rate",
-                                             new { @class = "form-control" })
+            @if (Model.UsersList.Count() > 1)
+            {
+                @Html.LabelFor(m => m.UserToRateId)
+                @Html.DropDownListFor(m => Model.UserToRateId,
+                    Model.UsersList,
+                    "Select user to rate",
+                    new { @class = "form-control" })
+            }
+            else
+            {
+                @Model.UsersList.FirstOrDefault().Text
+                @Html.HiddenFor(m => m.UserToRateId)
+            }
         </div>
         <div class="form-item form-normal">
             @Html.LabelFor(m => m.SkillToRateId)

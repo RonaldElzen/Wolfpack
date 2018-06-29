@@ -7,7 +7,8 @@ namespace Wolfpack.Web.Models.Event
 {
     public class SkillRatingVM
     {
-        public double Mark { get; set; }
+        public double Rating { get; set; }
         public string Name { get; set; }
-    }
+
+        }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Wolfpack.BusinessLayer.Extensions;
 using Wolfpack.Data;
 using Wolfpack.Data.Models;
 using Wolfpack.Web.Helpers.Interfaces;
@@ -22,26 +23,6 @@ namespace Wolfpack.Web.Controllers
         }
 
         /// <summary>
-        /// Adds a test notification
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult AddTestNotification()
-        {
-            var guid = Guid.NewGuid().ToString();
-            UserHelper.GetCurrentDbUser(Context).Notifications.Add(new Notification
-            {
-                Title = $"Test notification ({guid})",
-                Content = $"This notification is a test. Just to see whether the system works. {guid}",
-                IsRead = false,
-                Date = DateTime.Now
-            });
-
-            Context.SaveChanges();
-
-            return RedirectToAction("Index", "Home");
-        }
-
-        /// <summary>
         /// Gets the view for a single notification
         /// </summary>
         /// <param name="id">Id of the notification</param>
@@ -49,7 +30,7 @@ namespace Wolfpack.Web.Controllers
         /// <returns>View for the notification</returns>
         public ActionResult GetNotification(int id)
         {
-            var notification = Context.Notifications.SingleOrDefault(n => n.Id == id);
+            var notification = Context.Notifications.GetById(id);
 
             if (notification == null)
                 return HttpNotFound();
@@ -75,7 +56,7 @@ namespace Wolfpack.Web.Controllers
         {
             var minDate = DateTime.Now.AddDays(-2);
             var notifications = UserHelper.GetCurrentDbUser(Context).Notifications
-                .Where(n => !n.IsRead || n.Date > minDate)
+                .Where(n => !n.IsRead)
                 .Select(n => new NotificationVM
                 {
                     Id = n.Id,
@@ -86,7 +67,7 @@ namespace Wolfpack.Web.Controllers
                 }).ToList();
 
             var notificationHistory = UserHelper.GetCurrentDbUser(Context).Notifications
-                .Where(n => n.IsRead && n.Date <= minDate)
+                .Where(n => n.IsRead)
                 .Select(n => new NotificationVM
                 {
                     Id = n.Id,
@@ -109,7 +90,7 @@ namespace Wolfpack.Web.Controllers
         {
             var minDate = DateTime.Now.AddDays(-2);
             var notifications = UserHelper.GetCurrentDbUser(Context).Notifications
-                .Where(n => !n.IsRead || n.Date > minDate)
+                .Where(n => n.IsRead == false)
                 .ToList();
 
             return Json(notifications.Count(), JsonRequestBehavior.AllowGet);

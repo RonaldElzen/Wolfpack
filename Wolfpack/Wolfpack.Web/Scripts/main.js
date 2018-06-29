@@ -2,10 +2,32 @@
 let modalOpen = false;
 
 /**
+ * Function to show loading
+ */
+function showLoading() {
+    let loading = document.createElement("div");
+    loading.setAttribute("class", "loading");
+    let image = document.createElement("img");
+    image.setAttribute("src", "/Content/images/logo_animated.svg");
+    let text = document.createElement("h2");
+    text.appendChild(document.createTextNode("Please Wait"));
+    loading.append(image);
+    loading.append(text);
+    document.body.append(loading);
+}
+
+/**
+ * Function to hide loading
+ */
+function hideLoading() {
+    document.querySelector(".loading").remove();
+}
+
+/**
  * Function to toggle the menu 
  **/
 document.querySelector(".toggle-menu").addEventListener('click', function () {
-    document.querySelector(".sidebar").style.marginLeft = "0"
+    document.querySelector(".sidebar").style.marginLeft = "0";
     let overlay = document.createElement('div');
     overlay.classList.add("sidebar-overlay");
     overlay.addEventListener('click', function () {
@@ -38,38 +60,176 @@ document.querySelector("#toggle-collapse").addEventListener('click', function ()
     }
 });
 
-function getPartial(url,data) {
+/**
+ * Function to get partial
+ * @param {String} url 
+ * @param {JSON} data
+ */
+function getPartial(url, data) {
+    showLoading();
     //Ajax request
     let httpRequest = new XMLHttpRequest();
     httpRequest.open('POST', url);
     httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     httpRequest.send(data);
-
     //Handle result
     httpRequest.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
             document.body.innerHTML += httpRequest.response;
-
-            try {
-                //Key up function to check if changes are made in input
-                let input = document.querySelector("#NewSkillName")
+            //Key up function to check if changes are made in input
+            let input = document.querySelector("#NewSkillName");
+            if (input !== null) {
                 input.onkeyup = function (e) {
-                    getSkillSuggestions("/Skill/GetSkills", e.target.value)
-                }
+                    getSkillSuggestions("/Skill/GetSkills", e.target.value);
+                };
             }
-            catch (err) {
+            if (document.querySelector(".submit-button") !== null) {
+                document.querySelector(".submit-button").addEventListener("click", function () {
+                    showLoading();
+                })
+              
+            }
 
-                }
-           
+            if (document.querySelector(".modal-close") !== null) {
+                document.querySelector(".modal-close").addEventListener("click", function () {
+                    let throwAway = document.querySelector(".modal-background");
+                    document.querySelector("#" + throwAway.id).remove();
+                })
+                addListeners();
+            };
+            hideLoading();
         }
+    };
+}
+
+/**
+ * Function to create ratings
+ */
+function createRatings() {
+    //Handle ratings 
+    let ratings = document.querySelectorAll(".rating");
+
+    for (let i = 0; i < ratings.length; i++) {
+        stars = ratings[i].getElementsByClassName("star");
+        for (let j = 0; j < stars.length; j++)
+            stars[j].addEventListener('click', function () {
+                let starsInParent = this.parentElement.children;
+                for (let i = 0; i < starsInParent.length; i++) {
+                    starsInParent[i].children[0].style.color = "#d3d3d3";
+                }
+                for (let i = 0; i < this.dataset.value; i++) {
+                    this.parentElement.children[i].children[0].style.color = "#455B65";
+                }
+                this.parentElement.dataset.rate = this.dataset.value;
+            });
     }
 }
 
 
 /**
- * Function to open/close a info modal
+ * Function to start the team rating
+ * @param {String} url
+ * @param {JSON} data
  */
-function showModal(heading, text,addCloseButton) {
+function getTeamRating(url, data) {
+    showLoading();
+    //Ajax request
+    let httpRequest = new XMLHttpRequest();
+    httpRequest.open('POST', url);
+    httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    httpRequest.send(data);
+    //Handle result
+    httpRequest.onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+            document.querySelector(".main").innerHTML += httpRequest.response;
+
+            createRatings();
+            document.querySelector(".submit-button").addEventListener("click", function () {
+
+                let ratingsToSend = []
+                let ratings = document.querySelectorAll(".rating");
+                for (let i = 0; i < ratings.length; i++) {
+                    ratingsToSend.push({
+                        "Id": ratings[i].dataset.ratingid,
+                        "Rating": ratings[i].dataset.rate,
+                        "Comment": ratings[i].parentElement.querySelector(".text-box").value
+                    });
+                }
+                sendRatings("/Event/HandleRating", ratingsToSend);
+
+            });
+            hideLoading();
+
+        }
+    };
+}
+
+/**
+ * Function to send the rating
+ * @param {String} url
+ * @param {JSON} data
+ */
+function sendRatings(url, data) {
+    showLoading();
+    //Ajax request
+    let httpRequest = new XMLHttpRequest();
+    httpRequest.open('POST', url);
+    httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    httpRequest.send(JSON.stringify({
+        eventId: document.querySelector("#rating").dataset.eventid,
+        userId: document.querySelector("#rating").dataset.userid,
+        skillId: document.querySelector(".rating").dataset.ratingid,
+        ratings: data
+    }));
+
+    httpRequest.onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+            let eventId = document.querySelector("#rating").dataset.eventid
+                document.querySelector("#rating").remove();
+            users.shift();
+            getTeamRating('/Event/RatePartial', JSON.stringify({
+                userId: users[0].id,
+                eventId: eventId
+            }));
+        }
+        hideLoading();
+    };
+}
+
+/**
+ * Function to count the notifications and display in sidebar
+ * @param {any} url
+ */
+function getNotificationCount(url) {
+    //Ajax request
+    let httpRequest = new XMLHttpRequest();
+    httpRequest.open('POST', url);
+    httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    httpRequest.send();
+    if (document.querySelector(".notification-count") !== null) {
+        document.query(".notification-count").remove();
+    }
+    //Handle result
+    httpRequest.onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+
+            if (httpRequest.response > 0) {
+                let notificationcount = document.createElement("p");
+                notificationcount.setAttribute("class", "notification-count");
+                notificationcount.appendChild(document.createTextNode(httpRequest.response));
+                document.querySelector("#notification-box").append(notificationcount);
+            }
+        }
+    };
+}
+
+/**
+ * Function to show modal
+ * @param {String} heading
+ * @param {String} text
+ * @param {Boolean} addCloseButton
+ */
+function showModal(heading, text, addCloseButton) {
     //Create modal background
     let modalBackground = document.createElement("div");
     modalBackground.setAttribute("class", 'modal-background');
@@ -79,7 +239,7 @@ function showModal(heading, text,addCloseButton) {
     //Create Heading
     let modalHeading = document.createElement("div");
     modalHeading.setAttribute("class", 'modal-heading');
-    let headingText = document.createElement("h2")
+    let headingText = document.createElement("h2");
     headingText.appendChild(document.createTextNode(heading));
     modalHeading.append(headingText);
 
@@ -89,7 +249,7 @@ function showModal(heading, text,addCloseButton) {
     modalBackground.append(modalBody);
 
     //Create modal text element
-    if (text != null) {
+    if (text !== null) {
         let modalTextDiv = document.createElement("div");
         modalTextDiv.setAttribute("class", 'modal-text');
         let modalText = document.createElement("p");
@@ -97,7 +257,7 @@ function showModal(heading, text,addCloseButton) {
         modalTextDiv.append(modalText);
         modalBody.append(modalTextDiv);
     }
- 
+
     if (addCloseButton) {
         //Create Close button
         let closeButton = document.createElement("button");
@@ -108,12 +268,17 @@ function showModal(heading, text,addCloseButton) {
         closeButton.append(icon);
         modalHeading.append(closeButton);
         //Click listener for close button
-        closeButton.addEventListener("click", function () {
-            modalBackground.remove();
+        document.querySelector(".modal-close").addEventListener("click", function () {
+            alert()
+            document.querySelector(".modal-background").remove();
         });
     }
 }
 
+/**
+ * Function to create confirm modal
+ * @param {String} actionLink
+ */
 function createConfirmModal(actionLink) {
 
     showModal("Are you sure?", "You are about to delete a group, are you sure?", false);
@@ -128,38 +293,15 @@ function createConfirmModal(actionLink) {
     confirmButton.innerText = "yes";
 
     document.querySelector(".modal-text").append(confirmButton);
-    document.querySelector(".modal-text").append(cancelButton)
+    document.querySelector(".modal-text").append(cancelButton);
 
     document.querySelector("#cancel").addEventListener('click', function () {
         document.querySelector(".modal-background").remove();
 
-    })
+    });
     document.querySelector("#confirm").addEventListener('click', function () {
         document.querySelector(".modal-background").remove();
         window.location = actionLink;
-    });
-}
-
-//Handle ratings 
-let stars = document.querySelectorAll(".star");
-for (let i = 0; i < stars.length; i++) {
-    stars[i].addEventListener('click', function () {
-        let starsInParent = this.parentElement.children;
-        for (let i = 0; i < starsInParent.length; i++) {
-            starsInParent[i].children[0].style.color = "#d3d3d3";
-        }
-        for (let i = 0; i < this.dataset.value; i++) {
-            this.parentElement.children[i].children[0].style.color = "#455B65";
-        }
-        document.querySelector("#Rating").value = this.dataset.value;
-    });
-}
-
-//Display user suggestions in UI
-let suggestions = document.querySelectorAll(".userNameSuggestion");
-for (let i = 0; i < suggestions.length; i++) {
-    suggestions[i].addEventListener('click', function () {
-        UserName.value = this.innerText;
     });
 }
 
@@ -184,13 +326,13 @@ function getSkillSuggestions(url, prefix) {
             //Get autocomplete element
             let autocomplete = document.querySelector("#autocomplete");
             //Reset changed form
-            document.querySelector("#skillDescriptionItem").style.display = "block"
+            document.querySelector("#skillDescriptionItem").style.display = "block";
             document.querySelector("#NewSkillDescription").required = true;
             //Make sure it's empty
             while (autocomplete.firstChild) {
                 autocomplete.removeChild(autocomplete.firstChild);
             }
-            let skills = JSON.parse(httpRequest.response)
+            let skills = JSON.parse(httpRequest.response);
             //Loop through suggestions and display
             for (let i = 0; i < skills.length; i++) {
                 let li = document.createElement('li');
@@ -201,7 +343,7 @@ function getSkillSuggestions(url, prefix) {
                     document.querySelector("#NewSkillName").value = this.innerText;
                     //Hide description field
                     document.querySelector("#NewSkillDescription").required = false;
-                    document.querySelector("#skillDescriptionItem").style.display = "none"
+                    document.querySelector("#skillDescriptionItem").style.display = "none";
                     let autocomplete = document.querySelector("#autocomplete");
                     while (autocomplete.firstChild) {
                         autocomplete.removeChild(autocomplete.firstChild);
@@ -213,6 +355,11 @@ function getSkillSuggestions(url, prefix) {
     };
 }
 
-document.querySelector(".modal-close").addEventListener("click", function () {
-    document.querySelector(".modal-background").remove();
-})
+//Display user suggestions in UI
+let suggestions = document.querySelectorAll(".userNameSuggestion");
+for (let i = 0; i < suggestions.length; i++) {
+    suggestions[i].addEventListener('click', function () {
+        UserName.value = this.innerText;
+        document.querySelector("#SearchProfile").submit();
+    });
+}

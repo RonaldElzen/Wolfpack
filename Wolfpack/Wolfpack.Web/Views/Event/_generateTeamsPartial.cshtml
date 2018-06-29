@@ -1,0 +1,25 @@
+﻿@model Wolfpack.Web.Models.Event.GenerateTeamsVM
+@{
+    ViewBag.Title = "GenerateTeamsForm";
+}
+
+<div id="generateTeamsModal" class="modal-background">
+    <div class="modal">
+        <h2 class="modal-heading">Generate teams</h2>
+        <div class="form-box modal-form">
+            @using (Html.BeginForm("GenerateTeams", "Event", FormMethod.Post, new { id = "generateForm" }))
+            {
+                <div class="form-normal">
+                    @Html.Label("Maximum persons per team", new { htmlAttributes = new { required = "required" } })
+                    @Html.EditorFor(m => m.TeamSize, new { htmlAttributes = new { required = "required" } })
+                </div>
+                <div class="form-normal">
+                    @Html.Label("Algorithm type")
+                    @Html.DropDownListFor(m => m.AlgorithmType, Model.AlgorithmTypes)
+                </div>
+                @Html.HiddenFor(m => m.EventId)
+                <input type="submit" class="submit-button" id="submit-generate" value="Submit" />
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,26 @@
+﻿@model Wolfpack.Web.Models.Group.GroupVM
+
+<div id="newEventModal" class="modal-background">
+    <div class="modal">
+        <div class="modal-heading">
+            <h2>Create new group</h2>
+            <button class="modal-close"><i class="fas fa-times fa-3x icon-only"></i> </button>
+        </div>
+        <div class="form-box modal-form">
+            @using (Html.BeginForm("NewGroup","Group"))
+            {
+                @Html.ValidationSummary()
+                <div class="form-item">
+                    @Html.EditorFor(m => m.GroupName, new { htmlAttributes = new { required = "required" } })
+                    @Html.LabelFor(m => m.GroupName, new { htmlAttributes = new { required = "required" } })
+                </div>
+                <div class="form-item">
+                    @Html.EditorFor(m => m.Category, new { htmlAttributes = new { required = "required" } })
+                    @Html.LabelFor(m => m.Category, new { htmlAttributes = new { required = "required" } })
+                </div>
+                <input type="submit" class="submit-button" value="Submit" />
+            }
+        </div>
+        </div>
+    </div>
+

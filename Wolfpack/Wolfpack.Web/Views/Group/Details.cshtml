@@ -14,46 +14,81 @@
     <div class="alert error">No user found!</div>
 }
 
-    <div class="info-box" id="info-box">
-        <h2>@Html.DisplayFor(model => model.GroupName)</h2>
-        <p>@Html.DisplayFor(model => model.Category)</p>
-        <a class="action-button" href="@Url.Action("Index")"><i class="fas fa-arrow-circle-left fa-lg icon-left"></i><span>Back</span></a>
-        <button id="createEvent" class="action-button" )"><span>Create event</span><i class="fas fa-plus fa-lg"></i></button>
+@if (Request.Params["state"] == "archived")
+{
+    <div class="alert error">New events can't be created for archived groups.</div>
+}
 
-
-        <h3>Skills in this group <button class="action-button" id="addSkill"><span>Add new</span><i class="fas fa-plus fa-lg"></i> </button></h3>
-        <ul>
-            @foreach (var Skill in Model.Skills)
+<div class="info-box" id="info-box">
+    <h2>@Html.DisplayFor(model => model.GroupName)</h2>
+    <p>@Html.DisplayFor(model => model.Category)</p>
+    <a class="action-button" href="@Url.Action("Index")"><i class="fas fa-arrow-circle-left fa-lg icon-left"></i><span>Back</span></a>
+    @if (Model.IsGroupCreator)
+    {
+        <button id="createEvent" class="action-button"><span>Create event</span><i class="fas fa-plus fa-lg"></i></button>
+    }
+    <h3>
+        Skills in this group
+        @if (Model.IsGroupCreator)
+        {
+            <button class="action-button" id="addSkill">
+                <span>Add new</span>
+                <i class="fas fa-plus fa-lg"></i>
+            </button>
+        }
+    </h3>
+    <ul>
+        @foreach (var Skill in Model.Skills)
         {
             <li>@Skill.Name</li>
-    }
-        </ul>
-        @if (Model.GroupUsers != null && Model.GroupUsers.Count() > 0)
+        }
+    </ul>
+    <h3>
+        Group users
+        @if (Model.IsGroupCreator)
+        {
+            <button class="action-button" id="addUser">
+                <span>Add new</span>
+                <i class="fas fa-plus fa-lg"></i>
+            </button>
+            <button class="action-button" id="ratingProgress">
+                <span>Rating progress</span>
+                <i class="fas fa-tasks fa-lg"></i>
+            </button>
+        }
+    </h3>
+    @if (Model.GroupUsers != null && Model.GroupUsers.Count() > 0)
     {
-        <h3>
-            Group users <button class="action-button" id="addUser"><span>Add new</span><i class="fas fa-plus fa-lg"></i> </button>
-        </h3>
         <div class="user-row">
             @foreach (var item in Model.GroupUsers)
-        {
-            <div class="user-box">
-                @Html.DisplayFor(modelItem => item.FirstName)
-                @Html.DisplayFor(modelItem => item.LastName)
-                <button class="delete-button" data-url="@Url.Action("RemoveUserFromGroup", new { userId = item.Id, groupId = Model.Id })"><i class="fas fa-trash-alt fa-lg icon-only"></i></button>
-            </div>
-    }
+            {
+                <div class="user-box">
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                    @Html.DisplayFor(modelItem => item.LastName)
+                    @if (Model.IsGroupCreator)
+                    {
+                        <button class="delete-button" data-url="@Url.Action("RemoveUserFromGroup", new { userId = item.Id, groupId = Model.Id })"><i class="fas fa-trash-alt fa-lg icon-only"></i></button>
+                    }
+                </div>
+            }
         </div>
-}
-    </div>
+    }
+</div>
 
 <script>
 
     function removeAlert() {
-        document.querySelector(".alert").remove();
+        if (document.querySelector(".alert") == null) {
+            document.querySelector(".alert").remove();
+        }
     }
+    if (document.querySelector(".alert") == null) {
+        window.setTimeout(removeAlert, 8000);
+    };
 
-    window.setTimeout(removeAlert, 8000);
-    document.querySelector("#createEvent").addEventListener("click", function () {
+
+    function addListeners() {
+        document.querySelector("#createEvent").addEventListener("click", function () {
         getPartial('@Url.Action("GetNewEventModal")', JSON.stringify({ id: @Model.Id}));
     });
 
@@ -61,13 +96,25 @@
         getPartial('@Url.Action("AddUserModal")', JSON.stringify({ id: @Model.Id}));
     });
 
-        document.querySelector("#addSkill").addEventListener("click", function () {
-        getPartial('@Url.Action("AddSkillModal")', JSON.stringify({ id: @Model.Id}));
+    document.querySelector("#ratingProgress").addEventListener("click", function () {
+
+        getPartial('@Url.Action("ratingProgressModal")', JSON.stringify({ id: @Model.Id}));
+
     });
 
-    document.querySelector(".delete-button").addEventListener("click", function () {
-        let actionLink = this.dataset.url;
-        createConfirmModal(actionLink);
-    });
+    document.querySelector("#addSkill").addEventListener("click", function () {
+        getPartial('@Url.Action("AddSkillModal")', JSON.stringify({ id: @Model.Id}));
+        });
+        let deleteButtons = document.querySelectorAll(".delete-button");
+        for (let i = 0; i < deleteButtons.length; i++) {
+            deleteButtons[i].addEventListener('click', function () {
+                let actionLink = this.dataset.url;
+                createConfirmModal(actionLink);
+            });
+        };
+    }
+    addListeners();
+
+
 
 </script>

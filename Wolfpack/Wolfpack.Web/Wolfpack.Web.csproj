@@ -178,6 +178,9 @@
     <Compile Include="Models\Event\EditVM.cs" />
     <Compile Include="Models\Event\EventVM.cs" />
     <Compile Include="Models\Event\GenerateTeamsVM.cs" />
+    <Compile Include="Models\Event\RatingToSendVM.cs" />
+    <Compile Include="Models\Event\RatingVM.cs" />
+    <Compile Include="Models\Event\RenameTeamVM.cs" />
     <Compile Include="Models\Event\SkillRatingVM.cs" />
     <Compile Include="Models\Event\SkillVM.cs" />
     <Compile Include="Models\Event\TeamVM.cs" />
@@ -185,6 +188,7 @@
     <Compile Include="Models\Group\AddUserVM.cs" />
     <Compile Include="Models\Group\EditVM.cs" />
     <Compile Include="Models\Group\RateVM.cs" />
+    <Compile Include="Models\Group\RatingProgressVM.cs" />
     <Compile Include="Models\Group\UserGroupsVM.cs" />
     <Compile Include="Models\Group\UserVM.cs" />
     <Compile Include="Models\Group\GroupVM.cs" />
@@ -192,7 +196,9 @@
     <Compile Include="Models\Notification\NotificationsVM.cs" />
     <Compile Include="Models\Notification\NotificationVM.cs" />
     <Compile Include="Models\Profile\ProfileVM.cs" />
+    <Compile Include="Models\Profile\SkillRatingVM.cs" />
     <Compile Include="Models\Profile\SearchVM.cs" />
+    <Compile Include="Models\Profile\SingleSkillVM.cs" />
     <Compile Include="Models\Profile\SkillVM.cs" />
     <Compile Include="Models\Profile\UserVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -210,7 +216,22 @@
     <Content Include="Content\css\Main.min.css">
       <DependentUpon>Main.css</DependentUpon>
     </Content>
+    <Content Include="Content\favicon\android-chrome-192x192.png" />
+    <Content Include="Content\favicon\android-chrome-512x512.png" />
+    <Content Include="Content\favicon\apple-touch-icon.png" />
+    <Content Include="Content\favicon\browserconfig.xml" />
+    <Content Include="Content\favicon\favicon-16x16.png" />
+    <Content Include="Content\favicon\favicon-32x32.png" />
+    <Content Include="Content\favicon\favicon.ico" />
+    <Content Include="Content\favicon\mstile-144x144.png" />
+    <Content Include="Content\favicon\mstile-150x150.png" />
+    <Content Include="Content\favicon\mstile-310x150.png" />
+    <Content Include="Content\favicon\mstile-310x310.png" />
+    <Content Include="Content\favicon\mstile-70x70.png" />
+    <Content Include="Content\favicon\safari-pinned-tab.svg" />
     <Content Include="Content\images\logo.png" />
+    <Content Include="Content\images\logo.svg" />
+    <Content Include="Content\images\logo_animated.svg" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -219,6 +240,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\css\Main.scss" />
+    <None Include="Properties\PublishProfiles\Wolfpack-final - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\Wolfpack-final - Web Deploy.pubxml" />
+    <Content Include="Content\favicon\site.webmanifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -260,9 +284,7 @@
     <Content Include="Views\Event\Index.cshtml" />
     <Content Include="Views\Event\Details.cshtml" />
     <Content Include="Views\Event\GenerateTeamsForm.cshtml" />
-    <Content Include="Views\Event\Edit.cshtml" />
     <Content Include="Views\Group\Delete.cshtml" />
-    <Content Include="Views\Event\Delete.cshtml" />
     <Content Include="Views\Group\RateUser.cshtml" />
     <Content Include="Views\Profile\SearchProfile.cshtml" />
     <Content Include="Views\Event\Team.cshtml" />
@@ -272,6 +294,15 @@
     <Content Include="Views\Group\_addUserPartial.cshtml" />
     <Content Include="Views\Group\_addSkillPartial.cshtml" />
     <Content Include="Views\Group\Details.cshtml" />
+    <Content Include="Views\Group\_ratingProgressPartial.cshtml" />
+    <Content Include="Views\Profile\ViewSkill.cshtml" />
+    <Content Include="Views\Event\_generateTeamsPartial.cshtml" />
+    <Content Include="Views\Group\RateTeamMembers.cshtml" />
+    <Content Include="Views\Event\_rateUserPartial.cshtml" />
+    <Content Include="Views\Event\RateTeamMembers.cshtml" />
+    <Content Include="Views\Event\_renameTeamPartial.cshtml" />
+    <Content Include="Views\Group\_addGroupPartial.cshtml" />
+    <Content Include="Views\Event\_addSkillPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

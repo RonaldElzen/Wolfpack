@@ -7,6 +7,12 @@
 
 <h2>Welcome back to WolfPack!</h2>
 <div class="form-box pre-form">
+    @if (!string.IsNullOrWhiteSpace(Model.Message))
+    {
+    <div class="form-success">
+        @Model.Message
+    </div>
+    }
     @using (Html.BeginForm("Login"))
     {
         @Html.ValidationSummary()
@@ -19,17 +25,12 @@
             <div class="form-item">
                 @Html.PasswordFor(m => m.Password, new { required = "required" })
                 @Html.LabelFor(m => m.Password)
-            </div>          
+            </div>
 
         </div>
-        if (!string.IsNullOrWhiteSpace(Model.Message))
-        {
-            <div class="form-item">
-                @Model.Message
-            </div>
-        }
+
         <input type="submit" class="submit-button" value="Submit" />
     }
-    @Html.ActionLink("Not a member? Click here to register.","Register")
+    @Html.ActionLink("Not a member? Click here to register.", "Register")
 </div>
 
