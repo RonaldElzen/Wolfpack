@@ -1167,63 +1167,6 @@ namespace Wolfpack.Web.Tests.Controllers
 
         #endregion
 
-        #region NewEvent
-
-        [TestMethod]
-        public void NewEvent_IsArchived_ActionResult()
-        {
-            // Arrange
-            var mainUser = new User
-            {
-                Id = 1,
-                FirstName = "Unit",
-                LastName = "Test",
-                UserName = "UnitTest",
-                Mail = "unittest@wolfpack.com"
-            };
-
-            var users = new List<User>()
-            {
-                mainUser
-            }.AsQueryable();
-
-            var mainGroup = new Group
-            {
-                Id = 1,
-                Archived = false,
-            };
-
-            var secondGroup = new Group
-            {
-                Id = 2,
-                Archived = true,
-            };
-
-            var groups = new List<Group>()
-            {
-                mainGroup,
-                secondGroup
-            }.AsQueryable();
-
-            var mockContext = new Mock<Context>();
-
-            var mockGroups = MockHelper.MockDbSet(groups);
-            mockContext.SetupGet(c => c.Groups).Returns(mockGroups.Object);
-
-            var mockSession = new Mock<ISessionHelper>();
-
-            var controller = new GroupController(mockContext.Object, null, mockSession.Object);
-            // Act
-            ViewResult resultGroupNotArchived = controller.NewEvent(mainGroup.Id) as ViewResult;
-            RedirectToRouteResult resultGroupArchived = controller.NewEvent(secondGroup.Id) as RedirectToRouteResult;
-
-            // Assert
-            Assert.IsNotNull(resultGroupArchived);
-            Assert.IsNotNull(resultGroupNotArchived);
-        }
-
-        #endregion
-
         #region NewEventPost
 
         [TestMethod]

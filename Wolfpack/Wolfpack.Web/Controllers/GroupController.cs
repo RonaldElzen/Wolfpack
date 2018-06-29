@@ -542,9 +542,7 @@ namespace Wolfpack.Web.Controllers
                 state = "error";
             }
 
-                return RedirectToAction("Details", new { id = vm.Id, state });
-            }
-            return RedirectToAction("Index", new { message = "error" });
+            return RedirectToAction("Details", new { id = vm.Id, state });
         }
     }
 }
