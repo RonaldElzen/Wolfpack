@@ -34,7 +34,7 @@ namespace Wolfpack.Web.Controllers
                     Id = s.Skill.Id,
                     Name = s.Skill.Name,
                     NumberOfRatings = s.Ratings.Count,
-                    AverageRating = s.Ratings.Average(r => r.Mark),
+                    AverageRating = s.Ratings.Count > 0 ? s.Ratings.Average(r => r.Mark) : 0,
                     Description = s.Skill.Description
                 });
             return View(profileVM);
@@ -72,7 +72,7 @@ namespace Wolfpack.Web.Controllers
             var skill = Context.Skills.SingleOrDefault(x => x.Id == id);
             var ratings = Context.Ratings.Where(u => u.UserSkill.User.Id == userId && u.UserSkill.Skill.Id == id).Select(u => new SkillRatingVM
             {
-                Mark = u.Mark,
+                Rating = u.Mark,
                 RatedAt = u.RatedAt,
                 Comment = u.Comment
             });
@@ -83,12 +83,12 @@ namespace Wolfpack.Web.Controllers
             foreach(var rating in ratings)
             {
                 count++;
-                totalMark += rating.Mark;
+                totalMark += rating.Rating;
                 finalRatings.Add(new SkillRatingVM
                 {
                     AverageMark = Math.Round((totalMark / count), 2),
                     Comment = rating.Comment,
-                    Mark = rating.Mark,
+                    Rating = rating.Rating,
                     RatedAt = rating.RatedAt
                 });
             }

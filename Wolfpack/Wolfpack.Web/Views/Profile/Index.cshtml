@@ -18,20 +18,19 @@
 <div class="overview">
     @foreach (var skill in Model.Skills)
     {
-        <a href="@Url.Action("ViewSkill", new { id = skill.Id, userId = Model.Id })" style="text-decoration: none; color: black">
-            <div class="overview-item" id="skill_@skill.Id">
-                <div class="overview-header">
-                <h4>@skill.Name</h4>
-                </div>
-                <div class="overview-text">
-                    <h4>Description</h4>
-                    <p>@skill.Description</p>
-                    <h4>Times rated</h4>
-                    <p>@skill.NumberOfRatings</p>
-                    <h4>Average</h4>
-                    <p>@skill.AverageRating</p>
-                </div>
-            </div>
-        </a>
+    <div class="overview-item" id="skill_@skill.Id">
+        <div class="overview-header">
+            <h4>@skill.Name</h4>
+        </div>
+        <div class="overview-text">
+            <h4>Description</h4>
+            <p>@skill.Description</p>
+            <h4>Times rated</h4>
+            <p>@skill.NumberOfRatings</p>
+            <h4>Average</h4>
+            <p>@skill.AverageRating</p>
+        </div>
+        <a class="action-button button-bottom" href="@Url.Action("ViewSkill", new { id = skill.Id, userId = Model.Id })"><i class="fas fa-chart-line fa-lg icon-left"></i><span>Show graph</span></a>
+    </div>
     }
 </div>

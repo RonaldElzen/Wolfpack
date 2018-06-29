@@ -498,9 +498,11 @@ th {
     width: 200px;
     background: #fff;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    position: relative;
 
     .overview-text {
         padding: 10px;
+        margin-bottom: 20px;
 
         h4 {
             padding: 0;
@@ -524,8 +526,25 @@ th {
             color: #fff;
             margin: 5px;
         }
+
+        h4 {
+            color: #fff;
+            margin: 5px;
+            font-size: 1.2rem;
+            letter-spacing: 0rem;
+        }
+    }
+
+    .button-bottom {
+        position: absolute;
+        width: 100%;
+        bottom: 0;
+        border-radius: 0;
+        margin: 0;
+        padding: 10px;
     }
 }
+
 
 .item-large {
     width: 300px;
@@ -571,7 +590,7 @@ th {
         justify-content: center;
         cursor: pointer;
         border: 0;
-        background: $darkBlue;
+        background: $lightBlue;
         color: #fff;
         padding: 5px;
         transition: all .2s ease;
@@ -851,25 +870,28 @@ h2 {
     font-size: 20pt;
     color: #fff;
     padding: 10px;
+    position: relative;
 
     h2 {
         padding: 0;
         margin: 0;
+        @include font-size(24);
+        @include letter-spacing(0);
         color: #fff;
     }
 }
 
 .modal-close {
     position: absolute;
-    right: 12px;
-    top: 12px;
+    right: 0;
+    top: 0;
+    height:100%;
     vertical-align: middle;
     background: $darkBlue;
     transition: all .2s ease;
     cursor: pointer;
     color: #FFF;
     border: 0;
-    border-radius: 4px;
 
     &:hover {
         transform: scale(1.10);

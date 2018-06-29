@@ -384,6 +384,12 @@ namespace Wolfpack.Web.Controllers
             });
         }
 
+
+        public ActionResult AddSkillModal(int id)
+        {
+            return PartialView("_addSkillPartial", new Models.Event.EditVM { Id = id });
+        }
+
         /// <summary>
         /// Form handling for adding skill to Event
         /// </summary>

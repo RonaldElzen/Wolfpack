@@ -1,0 +1,28 @@
+﻿@model Wolfpack.Web.Models.Event.EditVM
+
+<div id="newEventModal" class="modal-background">
+    <div class="modal">
+        <div class="modal-heading">
+            <h2>Add skill</h2>
+            <button class="modal-close"><i class="fas fa-times fa-3x icon-only"></i> </button>
+        </div>
+        <div class="form-box modal-form">
+            @using (Html.BeginForm("AddSkill", "Event"))
+            {
+                @Model.Message
+                @Html.ValidationSummary()
+                <div class="form-item">
+                    @Html.EditorFor(m => m.NewSkillName, new { required = "required" })
+                    @Html.LabelFor(m => m.NewSkillName, new { htmlAttributes = new { required = "required" } })
+                    <ul id="autocomplete"></ul>
+                </div>
+                <div class="form-item" id="skillDescriptionItem">
+                    @Html.EditorFor(m => m.NewSkillDescription, new { htmlAttributes = new { required = "required" } })
+                    @Html.LabelFor(m => m.NewSkillDescription, new { htmlAttributes = new { required = "required" } })
+                </div>
+                @Html.HiddenFor(m => m.Id)
+                <input type="submit" class="submit-button" value="Submit" />
+            }
+        </div>
+    </div>
+</div>

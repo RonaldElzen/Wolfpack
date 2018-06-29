@@ -7,7 +7,7 @@ namespace Wolfpack.Web.Models.Profile
 {
     public class SkillRatingVM
     {
-        public double Mark { get; set; }
+        public double Rating { get; set; }
         public DateTime RatedAt { get; set; }
         public string Comment { get; set; }
         public double AverageMark { get; set; }
