@@ -18,6 +18,8 @@ namespace Wolfpack.Web.Models.Event
 
         public DateTime CreatedOn { get; set; }
 
+        public bool IsEventCreator { get; set; }
+
         public int GroupId { get; set; }
         public IEnumerable<SkillVM> Skills { get; set; }
         public IEnumerable<TeamVM> Teams { get; set; }

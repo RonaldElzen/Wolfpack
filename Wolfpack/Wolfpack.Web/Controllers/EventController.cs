@@ -86,7 +86,8 @@ namespace Wolfpack.Web.Controllers
                     GroupId = singleEvent.Group.Id,
                     Id = singleEvent.Id,
                     Skills = skills,
-                    Teams = teams
+                    Teams = teams,
+                    IsEventCreator = singleEvent.EventCreator.Id == userId
                 });
             }
             else
@@ -536,6 +537,28 @@ namespace Wolfpack.Web.Controllers
             }
 
             return HttpNotFound();
+        }
+
+        public ActionResult RenameTeamModal(int id)
+        {
+            var team = Context.EventTeams.GetById(id);
+
+            return PartialView("_renameTeamPartial", new RenameTeamVM
+            {
+                Id = team.Id,
+                Name = team.Name
+            });
+        }
+
+        [HttpPost]
+        public ActionResult RenameTeam(RenameTeamVM vm)
+        {
+            var team = Context.EventTeams.GetById(vm.Id);
+            team.Name = vm.Name;
+
+            Context.SaveChanges();
+
+            return RedirectToAction("Details", new { id = team.Event.Id, state = "success" });
         }
     }
 }

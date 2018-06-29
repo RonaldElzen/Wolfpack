@@ -34,7 +34,8 @@ namespace Wolfpack.Web.Controllers
                 Id = g.Id,
                 Category = g.Category,
                 CreatedOn = g.CreatedOn,
-                GroupName = g.GroupName
+                GroupName = g.GroupName,
+                GroupCreator = g.Id,
             });
 
             //Get the groups in which user participates
@@ -479,7 +480,12 @@ namespace Wolfpack.Web.Controllers
         
         public ActionResult GetNewEventModal(int id)
         {
-            return PartialView("_createEventPartial", new GroupVM { Id = id });
+            var group = Context.Groups.GetById(id);
+
+            if (!group.Archived)
+                return PartialView("_createEventPartial", new GroupVM { Id = id });
+
+            return RedirectToAction("Details", new { id = group.Id, state = "archived" });
         }
 
         public ActionResult RatingProgressModal(int id)
@@ -506,21 +512,6 @@ namespace Wolfpack.Web.Controllers
         public ActionResult AddSkillModal(int id)
         {
             return PartialView("_addSkillPartial", new Models.Group.EditVM { Id = id });
-        }
-
-        /// <summary>
-        /// Standard view for creating a new event
-        /// </summary>
-        /// <param name="message"></param>
-        /// <returns></returns>
-        public ActionResult NewEvent(int id, string message = "")
-        {
-            var singleGroup = Context.Groups.GetById(id);
-
-            if (!singleGroup.Archived)
-            {
-                return View(new EventVM() { GroupId = id, Message = message });
-            }
         }
 
         /// <summary>
@@ -552,6 +543,11 @@ namespace Wolfpack.Web.Controllers
                 {
                     state = "error";
                 }
+            }
+            else
+            {
+                state = "error";
+            }
 
             return RedirectToAction("Details", new { id = vm.Id, state });
         }

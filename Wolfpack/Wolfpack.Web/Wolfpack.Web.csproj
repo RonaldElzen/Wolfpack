@@ -180,6 +180,7 @@
     <Compile Include="Models\Event\GenerateTeamsVM.cs" />
     <Compile Include="Models\Event\RatingToSendVM.cs" />
     <Compile Include="Models\Event\RatingVM.cs" />
+    <Compile Include="Models\Event\RenameTeamVM.cs" />
     <Compile Include="Models\Event\SkillRatingVM.cs" />
     <Compile Include="Models\Event\SkillVM.cs" />
     <Compile Include="Models\Event\TeamVM.cs" />
@@ -285,6 +286,7 @@
     <Content Include="Views\Group\RateTeamMembers.cshtml" />
     <Content Include="Views\Event\_rateUserPartial.cshtml" />
     <Content Include="Views\Event\RateTeamMembers.cshtml" />
+    <Content Include="Views\Event\_renameTeamPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
