@@ -68,16 +68,9 @@
 
 <script>
     function addListeners() {
-    document.querySelector(".delete").addEventListener('click', function (e) {
-        e.preventDefault();
-        actionLink = this.href;
-        createConfirmModal(actionLink);
-        });
-
         document.querySelector("#createGroup").addEventListener('click', function () {
             getPartial('@Url.Action("GetNewGroupModal")')
         });
     };
-
     addListeners();
 </script>

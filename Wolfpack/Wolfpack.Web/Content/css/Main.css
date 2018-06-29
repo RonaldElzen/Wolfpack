@@ -103,8 +103,7 @@ div, ul, li, a {
     margin: 0 0 0; }
     .sidebar .nav li {
       display: block;
-      transition: all .5s ease;
-      background: #5a7683; }
+      transition: all .5s ease; }
       .sidebar .nav li i, .sidebar .nav li #toggle-collapse > i {
         line-height: initial;
         float: right;
@@ -138,7 +137,7 @@ div, ul, li, a {
           top: -9px;
           right: -16px; }
       .sidebar .nav li:hover {
-        background: #5a7683; }
+        background: #648492; }
       .sidebar .nav li a, .sidebar .nav li #toggle-collapse {
         display: block;
         text-decoration: none;
@@ -402,6 +401,12 @@ th {
     border-radius: 0;
     margin: 0;
     padding: 10px; }
+
+#confirm {
+  margin-right: 10px; }
+
+#cancel {
+  margin-left: 10px; }
 
 .item-large {
   width: 300px; }

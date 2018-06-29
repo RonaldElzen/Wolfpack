@@ -61,9 +61,9 @@ document.querySelector("#toggle-collapse").addEventListener('click', function ()
 });
 
 /**
- * 
- * @param {any} url
- * @param {any} data
+ * Function to get partial
+ * @param {String} url 
+ * @param {JSON} data
  */
 function getPartial(url, data) {
     showLoading();
@@ -83,14 +83,14 @@ function getPartial(url, data) {
                     getSkillSuggestions("/Skill/GetSkills", e.target.value);
                 };
             }
-            if (document.querySelector(".submit-button") != null) {
+            if (document.querySelector(".submit-button") !== null) {
                 document.querySelector(".submit-button").addEventListener("click", function () {
                     showLoading();
                 })
               
             }
 
-            if (document.querySelector(".modal-close") != null) {
+            if (document.querySelector(".modal-close") !== null) {
                 document.querySelector(".modal-close").addEventListener("click", function () {
                     let throwAway = document.querySelector(".modal-background");
                     document.querySelector("#" + throwAway.id).remove();
@@ -128,8 +128,8 @@ function createRatings() {
 
 /**
  * Function to start the team rating
- * @param {any} url
- * @param {any} data
+ * @param {String} url
+ * @param {JSON} data
  */
 function getTeamRating(url, data) {
     showLoading();
@@ -166,8 +166,8 @@ function getTeamRating(url, data) {
 
 /**
  * Function to send the rating
- * @param {any} url
- * @param {any} data
+ * @param {String} url
+ * @param {JSON} data
  */
 function sendRatings(url, data) {
     showLoading();
@@ -224,10 +224,10 @@ function getNotificationCount(url) {
 }
 
 /**
- * 
- * @param {any} heading
- * @param {any} text
- * @param {any} addCloseButton
+ * Function to show modal
+ * @param {String} heading
+ * @param {String} text
+ * @param {Boolean} addCloseButton
  */
 function showModal(heading, text, addCloseButton) {
     //Create modal background
@@ -276,8 +276,8 @@ function showModal(heading, text, addCloseButton) {
 }
 
 /**
- * Function to create a confirm modal
- * @param {any} actionLink
+ * Function to create confirm modal
+ * @param {String} actionLink
  */
 function createConfirmModal(actionLink) {
 

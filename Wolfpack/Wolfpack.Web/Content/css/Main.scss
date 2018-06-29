@@ -148,7 +148,7 @@ div, ul, li, a {
         li {
             display: block;
             transition: all .5s ease;
-            background:lighten($darkBlue,10%);
+
             i, #toggle-collapse > i {
                 line-height: initial;
                 float: right;
@@ -190,7 +190,7 @@ div, ul, li, a {
             }
 
             &:hover {
-                background: lighten($darkBlue,10%);
+                background: lighten($darkBlue,15%);
             }
 
             a, #toggle-collapse {
@@ -545,6 +545,13 @@ th {
     }
 }
 
+
+#confirm{
+    margin-right:10px;
+}
+#cancel{
+    margin-left:10px;
+}
 
 .item-large {
     width: 300px;
