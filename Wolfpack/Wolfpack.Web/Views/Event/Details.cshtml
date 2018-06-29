@@ -15,11 +15,17 @@
 }
     <a class="action-button" href="@Url.Action("RateTeamMembers", new { id =  Model.Id })"><i class="fas fa-arrow-circle-left fa-lg icon-left"></i><span>Rate your team</span></a>
 <a class="action-button" href="@Url.Action("Index")"><i class="fas fa-arrow-circle-left fa-lg icon-left"></i><span>Back</span></a>
-<button id="generateTeams" class="action-button"><span>Generate teams</span><i class="fas fa-plus fa-lg"></i></button>
+@if (Model.IsEventCreator)
+{
+    <button id="generateTeams" class="action-button"><span>Generate teams</span><i class="fas fa-plus fa-lg"></i></button>
+}
 <div class="info-box" id="info-box">
     <h2>@Html.DisplayFor(model => model.EventName)</h2>
 
-    <h3>Skills in this event</h3><button class="action-button" id="addSkill"><span>Add new</span><i class="fas fa-plus fa-lg"></i> </button>
+    @if (Model.IsEventCreator)
+    {
+        <h3>Skills in this event</h3><button class="action-button" id="addSkill"><span>Add new</span><i class="fas fa-plus fa-lg"></i> </button>
+    }
     <ul>
         @foreach (var Skill in Model.Skills)
         {
@@ -46,7 +52,12 @@
                     }            
                     @Html.ActionLink("View team", "Team", new { id = Team.Id }, new { @class = "action-button" })
                 </div>
-
+                @if (Model.IsEventCreator)
+                {
+                    <div>
+                        @Html.ActionLink("Rename", "RenameTeamModal", new { id = Team.Id }, new { @class = "action-button" })
+                    </div>
+                }
             </div>
 
         }
