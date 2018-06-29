@@ -10,7 +10,11 @@
 }
 <h2>Index</h2>
 <a class="action-button" href="@Url.Action("NewGroup")"><span>Create new group</span><i class="fas fa-plus fa-lg"></i></a>
-<h3>Groups created by you</h3>
+@if (Model.CreatedGroups.Count() > 0)
+{
+    <h3>Groups created by you</h3>
+}
+
 <div class="overview">
     @foreach (var item in Model.CreatedGroups)
     {
@@ -27,13 +31,17 @@
                 <p>@Html.DisplayFor(modelItem => item.CreatedOn)</p>
                 <h4>Actions</h4>
                 @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "action-button" })
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "action-button", id = "delete" })
-                @Html.ActionLink("RateUser", "RateUser", new { groupId = item.Id }, new { @class = "action-button" })
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "action-button delete" })
+                @Html.ActionLink("RateUser", "RateUser", new { id = item.Id }, new { @class = "action-button" })
             </div>
         </div>
     }
 </div>
-<h3>Groups you participate in</h3>
+@if (Model.ParticipatingGroups.Count() > 0)
+{
+    <h3>Groups you participate in</h3>
+}
+
 <div class="overview">
     @foreach (var item in Model.ParticipatingGroups)
     {
@@ -50,16 +58,16 @@
                 <p>@Html.DisplayFor(modelItem => item.CreatedOn)</p>
                 <h4>Actions</h4>
                 @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "action-button" })
-                @Html.ActionLink("RateUser", "RateUser", new { groupId = item.Id }, new { @class = "action-button" })
+                @Html.ActionLink("RateUser", "RateUser", new { id = item.Id }, new { @class = "action-button" })
             </div>
         </div>
     }
 </div>
 
 <script>
-document.querySelector("#delete").addEventListener('click', function (e) {
-    e.preventDefault();
-    actionLink = this.href;
-    createConfirmModal(actionLink);
-});
+    document.querySelector(".delete").addEventListener('click', function (e) {
+        e.preventDefault();
+        actionLink = this.href;
+        createConfirmModal(actionLink);
+    });
 </script>

@@ -20,7 +20,7 @@
         <a class="action-button" href="@Url.Action("Index")"><i class="fas fa-arrow-circle-left fa-lg icon-left"></i><span>Back</span></a>
         @if (Model.IsGroupCreator)
         {
-            <button id="createEvent" class="action-button" )"><span>Create event</span><i class="fas fa-plus fa-lg"></i></button>
+            <button id="createEvent" class="action-button"><span>Create event</span><i class="fas fa-plus fa-lg"></i></button>
         }
 
         <h3>
@@ -87,7 +87,9 @@
     });
 
     document.querySelector("#ratingProgress").addEventListener("click", function () {
+
         getPartial('@Url.Action("ratingProgressModal")', JSON.stringify({ id: @Model.Id}));
+
     });
 
     document.querySelector("#addSkill").addEventListener("click", function () {

@@ -1,21 +1,29 @@
 //Main Stylesheet﻿
+
+$darkBlue: #455B65;
+$logoBackground: #81939D;
+$lightBlue: #81939D;
+$successColor: #00C851;
+
+$errorColor: #ff4444;
+
+//Mixins to transform sp to rem
 @mixin font-size($size) {
     font-size: $size * 0.0625 + rem;
 }
 
 @mixin letter-spacing($size) {
-   letter-spacing: $size * 0.0625 + rem;
+    letter-spacing: $size * 0.0625 + rem;
 }
 
 body {
     margin: 0;
     padding: 0;
-    font-family: 'Open Sans', sans-serif;
     font-family: 'Roboto', sans-serif;
 }
 
 .body-form {
-    background: #455B65;
+    background: $darkBlue;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -25,22 +33,24 @@ body {
     overflow-x: hidden;
 }
 
-p{
-    font-size:1rem;
-    letter-spacing:0.03125rem;
-    margin:0;
-    padding:0;
+p {
+    font-size: 1rem;
+    letter-spacing: 0.03125rem;
+    margin-top: 10px;
+    padding: 0;
 }
 
-h4 {
-    @include font-size(34);
-    @include letter-spacing(0.25);
+h3 {
+    margin-bottom: 10px;
 }
 
 h4 {
     @include font-size(24);
     @include letter-spacing(0);
+    padding: 0;
+    margin: 0;
 }
+
 .star {
     margin-left: 5px;
     display: inline-block;
@@ -107,16 +117,16 @@ div, ul, li, a {
 }
 
 .sidebar {
-    box-shadow: 0 1px 1px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
     width: 200px;
     height: 100%;
-    background: #455B65;
+    background: $darkBlue;
     position: fixed;
     transition: all 1s ease;
 
     .logo {
         padding: 10px;
-        background: #81939D;
+        background: $logoBackground;
         position: relative;
         transition: all 1s ease;
         text-align: center;
@@ -132,14 +142,13 @@ div, ul, li, a {
         transition: all 1s ease-in;
         list-style-type: none;
         width: 100%;
-        margin: 0;
         padding: 0;
-        margin-top: 20px;
+        margin: 0 0 0;
 
         li {
             display: block;
             transition: all .5s ease;
-
+            background:lighten($darkBlue,10%);
             i, #toggle-collapse > i {
                 line-height: initial;
                 float: right;
@@ -168,7 +177,7 @@ div, ul, li, a {
                     font-weight: 900;
                     font-size: 10pt;
                     margin: 0;
-                    background: #81939d;
+                    background: $lightBlue;
                     color: #ffffff;
                     position: absolute;
                     border-radius: 999px;
@@ -177,12 +186,11 @@ div, ul, li, a {
                     height: 20px;
                     top: -9px;
                     right: -16px;
-                    ;
                 }
             }
 
             &:hover {
-                background: #81939D;
+                background: lighten($darkBlue,10%);
             }
 
             a, #toggle-collapse {
@@ -212,7 +220,7 @@ div, ul, li, a {
             li {
                 display: block;
                 margin: 5px;
-                background: #81939D;
+                background: $lightBlue;
                 flex: 1;
                 color: #fff;
                 font-size: 12pt;
@@ -249,8 +257,6 @@ div, ul, li, a {
 .collapsed {
     margin-left: -125px;
 
-
-
     .sidebar-bottom {
         display: none;
     }
@@ -272,7 +278,7 @@ div, ul, li, a {
     position: fixed;
     height: 70px;
     top: 0;
-    background: #455A64;
+    background: $darkBlue;
     display: none;
     align-items: center;
     z-index: 2;
@@ -291,15 +297,10 @@ div, ul, li, a {
     }
 }
 
-.input-box {
-    padding: 20px;
-    background: #ff6600;
-}
-
 #autocomplete {
     list-style-type: none;
     margin: 0;
-    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
     max-height: 150px;
     overflow-y: scroll;
 
@@ -309,13 +310,11 @@ div, ul, li, a {
         transition: all .1s ease;
 
         &:hover {
-            background: #81939D;
+            background: $lightBlue;
             color: #fff;
         }
     }
 }
-
-
 
 input[type="text"],
 input[type="password"],
@@ -331,20 +330,19 @@ input:focus ~ label, input:valid ~ label, textarea:focus ~ label, textarea:valid
     top: 0;
 }
 
-
 input:focus,
 textarea:focus {
-    border-bottom: 2px solid #455B65;
+    border-bottom: 2px solid $darkBlue;
     outline: none;
 }
 
-/* Change Autocomplete styles in Chrome*/
+/* Change Auto complete styles in Chrome*/
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
-input:-webkit-autofill:focus
+input:-webkit-autofill:focus,
 input:-webkit-autofill,
 textarea:-webkit-autofill,
-textarea:-webkit-autofill:hover
+textarea:-webkit-autofill:hover,
 textarea:-webkit-autofill:focus,
 select:-webkit-autofill,
 select:-webkit-autofill:hover,
@@ -352,11 +350,9 @@ select:-webkit-autofill:focus {
     border: 0;
     border-bottom: 1px solid #666666;
     -webkit-text-fill-color: #fff;
-    transition: background-color #fff;
-    -webkit-box-shadow: 0 0 0px 1000px #49606b inset;
+    -webkit-box-shadow: 0 0 0 1000px $darkBlue inset;
     transition: background-color 5000s ease-in-out 0s;
 }
-
 
 label {
     position: absolute;
@@ -367,34 +363,30 @@ label {
 }
 
 .pre-form {
-    min-width: 300px;
+    min-width: 250px;
     padding: 20px;
     text-align: left;
     margin: auto;
-
-
+    max-width: 400px;
     a {
         text-align: center;
-        margin: auto;
         display: block;
-        margin-top: 10px;
+        margin: 10px auto auto;
         color: #fff;
     }
 
     input[type="text"],
     input[type="password"] {
-        border-color: #fff;
         transition: all .2s ease;
-        border-width: 2px;
+        border-bottom: 2px solid #fff;
         color: #fff;
         width: 100%;
     }
 
     input[type="submit"] {
-        margin: auto;
-        background: #81939d;
+        background: $lightBlue;
         display: block;
-        margin-top: 20px;
+        margin: 20px auto auto;
     }
 
     label {
@@ -403,8 +395,9 @@ label {
 }
 
 .input-box {
-    background: lighten(#455b65,2%);
+    background: lighten($darkBlue, 5%);
     padding: 20px;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.28);
 }
 
 .info-box {
@@ -420,8 +413,7 @@ label {
     }
 
     p {
-        margin: 0;
-        margin-bottom: 10px;
+        margin: 0 0 10px;
         color: #444a53;
     }
 
@@ -436,15 +428,23 @@ label {
             list-style-type: none;
             color: #fff;
             box-shadow: 0 2px 2px rgba(0, 0, 0, 0.28);
-            background: #455B65;
+            background: $darkBlue;
             max-width: 350px;
+        }
+
+        .team-members {
+            background: #fff;
+            color: #455b65;
+            box-shadow: initial;
+            margin: 0;
+            padding: 5px;
         }
     }
 }
 
 h3 {
-    font-size: 3rem;
-    letter-spacing:0;
+    @include font-size(34);
+    @include letter-spacing(0.25);
     color: #455b65;
 }
 
@@ -455,17 +455,18 @@ th {
 .userNameSuggestion {
     list-style-type: none;
     padding: 10px;
-    margin: 0;
-    margin-bottom: 10px;
+    margin: 0 0 10px;
     max-width: 200px;
     cursor: pointer;
     color: #fff;
-    background: #81939D;
+    background: $darkBlue;
 }
+
+
 
 .notification-item {
     max-width: 350px;
-    background: #455b65;
+    background: $darkBlue;
     padding: 10px;
     margin-top: 10px;
     margin-bottom: 10px;
@@ -493,35 +494,31 @@ th {
 }
 
 .overview-item {
-    width: 250px;
     margin: 10px;
     width: 200px;
     background: #fff;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 
     .overview-text {
         padding: 10px;
 
         h4 {
-            padding:0;
+            padding: 0;
             margin: 0;
-            color: #455b65;
+            color: $darkBlue;
         }
 
         p {
-            margin: 0;
-            margin-bottom: 10px;
+            margin: 0 0 10px;
         }
     }
 
     .overview-header {
-        background: #455B65;
+        background: $darkBlue;
         color: #fff;
         padding: 10px;
         margin: 0;
         width: 100%;
-
 
         h3 {
             color: #fff;
@@ -544,20 +541,19 @@ th {
     }
 }
 
+
 .user-row {
     display: flex;
     flex-wrap: wrap;
 }
 
 .user-box {
-    margin-top: 5px;
-    margin-bottom: 5px;
     margin: 5px;
     padding: 10px;
     list-style-type: none;
     color: #fff;
     display: inline;
-    background: #455B65;
+    background: $darkBlue;
     box-shadow: 0 2px 2px rgba(0, 0, 0, 0.28);
     position: relative;
     flex-basis: 220px;
@@ -575,7 +571,7 @@ th {
         justify-content: center;
         cursor: pointer;
         border: 0;
-        background: #81939d;
+        background: $darkBlue;
         color: #fff;
         padding: 5px;
         transition: all .2s ease;
@@ -601,26 +597,28 @@ th {
 
 h2 {
     color: #455b65;
-    font-size: 3.75rem;
-    letter-spacing: 0.03125rem;
+    @include font-size(48);
+    @include letter-spacing(0);
 }
 
 .registration-box {
     margin: auto;
 }
 
-
 .submit-button {
     cursor: pointer;
     min-width: 100px;
-    border: 0px;
-    background: #455b65;
+    border: 0;
+    background: $darkBlue;
     color: #fff;
     padding: 10px;
-    margin: auto;
-    margin-top: 20px;
-    box-shadow: 0 7px 12px rgba(0,0,0,0.28);
+    margin: 20px auto auto;
+    box-shadow: 0 7px 12px rgba(0, 0, 0, 0.28);
     transition: all .2s ease;
+    @include font-size(14);
+    @include letter-spacing(0.75);
+    text-transform: uppercase;
+    font-weight: 400;
 
     &:hover {
         transform: scale(1.1);
@@ -629,20 +627,27 @@ h2 {
 
 .action-button {
     cursor: pointer;
-    border: 0px;
-    background: #81939d;
+    border: 0;
+    background: $darkBlue;
     border-radius: 4px;
     color: #fff;
-    padding: 5px;
     display: inline-block;
-    margin: auto;
-    margin-top: 5px;
-    box-shadow: 0 2px 2px rgba(0,0,0,0.28);
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.28);
     transition: all .2s ease;
     text-decoration: none;
+    margin: 5px auto 10px;
+    @include font-size(14);
+    @include letter-spacing(0.75);
+    text-transform: uppercase;
+    font-weight: 400;
+    padding: 5px;
 
     &:hover {
         transform: scale(1.1);
+    }
+
+    centered {
+        margin: auto;
     }
 
     i {
@@ -678,24 +683,43 @@ h2 {
 .form-normal {
     label {
         position: initial;
+        margin: 10px;
         display: block;
     }
 }
 
 .validation-summary-errors {
     ul {
+        padding: 0;
+
         li {
             list-style-type: none;
             margin-bottom: 10px;
+            background: $errorColor;
+            text-align: center;
+            padding: 10px;
             color: #fff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+            border-radius: 4px;
         }
     }
+}
+
+.form-success {
+    list-style-type: none;
+    margin-bottom: 10px;
+    background: $successColor;
+    text-align: center;
+    padding: 10px;
+    color: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    border-radius: 4px;
 }
 
 .field-validation-error {
     margin-top: 10px;
     margin-bottom: 10px;
-    color: #ef5350;
+    color: $errorColor;
 }
 
 .g-recaptcha {
@@ -703,7 +727,6 @@ h2 {
         margin: auto;
     }
 }
-
 
 .info-item {
     flex: 1;
@@ -739,8 +762,7 @@ h2 {
     }
 
     .form-box {
-        margin: 0;
-        margin-top: 20px;
+        margin: 20px 0 0;
     }
 
     .hidden {
@@ -793,7 +815,7 @@ h2 {
     left: 0;
     bottom: 0;
     right: 0;
-    display:flex;
+    display: flex;
     z-index: 3;
 }
 
@@ -810,17 +832,18 @@ h2 {
     position: relative
 }
 
-.hidden{
-    display:none;
+.hidden {
+    display: none;
 }
 
 .modal-text {
     padding: 20px
 }
 
-.modal-form{
-    padding:20px;
+.modal-form {
+    padding: 20px;
 }
+
 .modal-heading {
     width: 350px;
     background: #263238;
@@ -841,7 +864,7 @@ h2 {
     right: 12px;
     top: 12px;
     vertical-align: middle;
-    background: #455b65;
+    background: $darkBlue;
     transition: all .2s ease;
     cursor: pointer;
     color: #FFF;
@@ -860,7 +883,7 @@ h2 {
 
 @keyframes hideAlert {
     0% {
-        margin-top:0;
+        margin-top: 0;
     }
 
     25% {
@@ -872,25 +895,90 @@ h2 {
     }
 
     100% {
-       margin-top:-250px;
+        margin-top: -250px;
     }
 }
 
 .alert {
     width: 100%;
     top: 0;
-    position:fixed;
-    background: #00C851;
+    position: fixed;
+    background: $successColor;
     padding: 20px;
-    margin-left:-20px;
+    margin-left: -20px;
     color: #fff;
     transition: all .2s ease;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
     animation: hideAlert 8s linear;
 }
 
 .error {
-    background: #ff4444;
+    background: $errorColor;
 }
 
+.rating-progress {
+    padding: 5px;
+    margin: 5px;
+    background: $errorColor;
+    color: #fff;
+    max-width: 100px;
+    display: inline-block;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
 
+#rating {
+    max-width: 500px;
+
+}
+
+.rate-item {
+    padding: 20px;
+    margin: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    background: #fff;
+
+    h4 {
+        margin-bottom: 10px;
+    }
+
+    input {
+        position: relative;
+    }
+
+    label {
+        position: relative;
+        margin-bottom:10px;
+    }
+
+    .rating {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        margin-left: 0;
+    }
+}
+.success{
+    background:$successColor;
+}
+
+.loading {
+    position: fixed;
+    align-items: center;
+    justify-content: center;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    z-index: 3;
+    background: rgba(47, 61, 68, 0.81);
+    flex-direction: column;
+
+    h2 {
+        color: #fff;
+    }
+
+    img {
+        border-radius: 999px;
+        width: 250px;
+    }
+}

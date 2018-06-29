@@ -178,6 +178,8 @@
     <Compile Include="Models\Event\EditVM.cs" />
     <Compile Include="Models\Event\EventVM.cs" />
     <Compile Include="Models\Event\GenerateTeamsVM.cs" />
+    <Compile Include="Models\Event\RatingToSendVM.cs" />
+    <Compile Include="Models\Event\RatingVM.cs" />
     <Compile Include="Models\Event\SkillRatingVM.cs" />
     <Compile Include="Models\Event\SkillVM.cs" />
     <Compile Include="Models\Event\TeamVM.cs" />
@@ -214,6 +216,8 @@
       <DependentUpon>Main.css</DependentUpon>
     </Content>
     <Content Include="Content\images\logo.png" />
+    <Content Include="Content\images\logo.svg" />
+    <Content Include="Content\images\logo_animated.svg" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -277,6 +281,10 @@
     <Content Include="Views\Group\Details.cshtml" />
     <Content Include="Views\Group\_ratingProgressPartial.cshtml" />
     <Content Include="Views\Profile\ViewSkill.cshtml" />
+    <Content Include="Views\Event\_generateTeamsPartial.cshtml" />
+    <Content Include="Views\Group\RateTeamMembers.cshtml" />
+    <Content Include="Views\Event\_rateUserPartial.cshtml" />
+    <Content Include="Views\Event\RateTeamMembers.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

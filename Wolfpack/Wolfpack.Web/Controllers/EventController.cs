@@ -55,7 +55,7 @@ namespace Wolfpack.Web.Controllers
         public ActionResult Details(int id)
         {
             var userId = UserHelper.GetCurrentUser().Id;
-            var singleEvent = Context.Events.SingleOrDefault(x => x.Id == id && x.EventCreator.Id == userId);
+            var singleEvent = Context.Events.SingleOrDefault(x => x.Id == id);
             if (singleEvent != null)
             {
                 var skills = singleEvent.Skills.Select(s => new SkillVM
@@ -91,7 +91,7 @@ namespace Wolfpack.Web.Controllers
             }
             else
             {
-                return RedirectToAction("Index", "EventController");
+                return RedirectToAction("Index");
             }
         }
 
@@ -140,7 +140,7 @@ namespace Wolfpack.Web.Controllers
                     UserName = u.UserName,
                     SkillRatings = u.UserSkills.Select(us => new SkillRatingVM
                     {
-                        Mark = us.Ratings.Average(r => r.Mark),
+                        Rating = us.Ratings.Average(r => r.Mark),
                         Name = us.Skill.Name
                     })
                 }),
@@ -161,7 +161,7 @@ namespace Wolfpack.Web.Controllers
         {
             var selectListItems = new List<SelectListItem>();
 
-            foreach(var item in Enum.GetValues(typeof(AlgorithmType)))
+            foreach (var item in Enum.GetValues(typeof(AlgorithmType)))
             {
                 selectListItems.Add(new SelectListItem { Value = item.ToString(), Text = item.ToString() });
             }
@@ -172,6 +172,11 @@ namespace Wolfpack.Web.Controllers
                 AlgorithmTypes = selectListItems,
                 AlgorithmType = AlgorithmType.AverageTeams
             });
+        }
+
+        public ActionResult RateTeamMembers(int id )
+        {
+            return View( new { Id = id });
         }
 
         [HttpPost]
@@ -197,14 +202,14 @@ namespace Wolfpack.Web.Controllers
                     return HttpNotFound();
             }
 
-            foreach(var user in currentEvent.Group.Users)
+            foreach (var user in currentEvent.Group.Users)
             {
                 user.Notifications.Add(new Notification
                 {
                     Title = "Added to eventTeam for event: " + currentEvent.EventName,
                     Content = $"An event has started and you've been added to a team. " +
                             $"You can now rate your team members through the following link: " +
-                            Url.Action("RateUser", "Group", new { groupId = currentEvent.Group.Id }, this.Request.Url.Scheme),
+                            Url.Action("RateUser", "Group", new { id = currentEvent.Group.Id }, this.Request.Url.Scheme),
                     Date = DateTime.Now,
                     IsRead = false
                 });
@@ -217,7 +222,7 @@ namespace Wolfpack.Web.Controllers
         {
             currentEvent.Teams.Clear();
 
-            if(currentEvent != null && !currentEvent.Group.Archived)
+            if (currentEvent != null && !currentEvent.Group.Archived)
             {
                 var groupUsers = currentEvent.Group.Users;
 
@@ -350,11 +355,33 @@ namespace Wolfpack.Web.Controllers
                         UserName = u != null ? u.FirstName : "null",
                         SkillRatings = u.GetSkillRatings().Select(x => new SkillRatingVM
                         {
-                            Mark = x
+                            Rating = x
                         })
                     })
                 });
-            }   
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult GenerateTeamsModal(int Id)
+        {
+            var selectListItems = new List<SelectListItem>();
+
+            foreach (var item in Enum.GetValues(typeof(AlgorithmType)))
+            {
+                selectListItems.Add(new SelectListItem { Value = item.ToString(), Text = item.ToString() });
+            }
+
+            return PartialView("_generateTeamsPartial", new GenerateTeamsVM
+            {
+                EventId = Id,
+                AlgorithmTypes = selectListItems,
+                AlgorithmType = AlgorithmType.AverageTeams
+            });
         }
 
         /// <summary>
@@ -381,6 +408,134 @@ namespace Wolfpack.Web.Controllers
             currentEvent.Skills.Add(skill);
             Context.SaveChanges();
             return View("Edit", new EditVM { Message = "Skill added" });
+        }
+
+        [HttpPost]
+        public ActionResult HandleRating(int eventId, int userId, int skillId,IEnumerable<RatingToSendVM> ratings)
+        {
+            var userToRate = Context.Users.FirstOrDefault(x => x.Id == userId);
+            var user = UserHelper.GetCurrentDbUser(Context);
+            var userSkill = userToRate.UserSkills.Where(s => s.Skill.Id == skillId).FirstOrDefault();
+
+            //Adding the rating to the database.
+            if (userSkill == null)
+            {
+                userSkill = new UserSkill
+                {
+                    Skill = Context.Skills.FirstOrDefault(x => x.Id == skillId)
+                };
+                userToRate.UserSkills.Add(userSkill);
+            }
+
+            foreach (var rating in ratings)
+            {
+                userSkill.Ratings.Add(new Rating
+                {
+                    Mark = rating.Rating,
+                    RatedAt = DateTime.Now,
+                    RatedBy = user,
+                    Comment = rating.Comment,
+                });
+            }
+            Context.SaveChanges();
+            return View("RateTeamMembers",new { state = "success"});
+        }
+
+        public ActionResult RatePartial(int userId,int eventId)
+        {
+            var user = UserHelper.GetCurrentDbUser(Context);
+            var currentEventTeam = user.EventTeams.FirstOrDefault(t => t.Event.Id == eventId);
+            var userToBeRated = Context.Users.SingleOrDefault(u => u.Id == userId);
+
+            if (currentEventTeam != null && userToBeRated != null)
+            {
+
+                var ratedSkills = userToBeRated.UserSkills
+                    .Where(s => s.Ratings.Any(r => r.RatedBy.Id == user.Id))
+                    .Select(s => new SkillVM
+                    {
+                        Id = s.Id,
+                        Name = s.Skill.Name
+                    });
+
+                var allSkills = currentEventTeam.Event.Skills
+                    .Select(s => new SkillVM
+                    {
+                        Id = s.Id,
+                        Name = s.Name
+                    })
+                    .Concat(currentEventTeam.Event.Group.Skills
+                     .Select(s => new SkillVM
+                     {
+                         Id = s.Id,
+                         Name = s.Name
+                     })).Distinct();
+
+                var skillsToBeRated = allSkills.Where(s => !ratedSkills.Contains(s));
+
+                return PartialView("_rateUserPartial", new RatingVM
+                {
+                    UserName = userToBeRated.UserName,
+                    UserId = userToBeRated.Id,
+                    EventId = eventId,
+                    Skills = skillsToBeRated
+                });
+            }
+
+            return HttpNotFound();
+
+        }
+
+        public ActionResult UsersToBeRated(int eventId)
+        {
+            var user = UserHelper.GetCurrentDbUser(Context);
+            var currentEventTeam = user.EventTeams.FirstOrDefault(t => t.Event.Id == eventId);
+
+            if (currentEventTeam != null)
+            {
+                var skillsToRate = currentEventTeam.Event.Skills
+                    .Select(s => s.Id)
+                    .Concat(currentEventTeam.Event.Group.Skills
+                        .Select(s => s.Id))
+                    .Distinct();
+
+                var usersToBeRated = currentEventTeam.Users
+                    .Where(u => !u.UserSkills.Where(s => skillsToRate.Contains(s.Skill.Id)).All(s => s.Ratings.Any(r => r.RatedBy.Id == user.Id)))
+                    .Select(u => new {
+                        id = u.Id,
+                        userName = u.UserName
+                    });
+
+                return Json(usersToBeRated, JsonRequestBehavior.AllowGet);
+            }
+
+            return HttpNotFound();
+        }
+
+        public ActionResult SkillsToBeRated(int userId, int eventId)
+        {
+            var user = UserHelper.GetCurrentDbUser(Context);
+            var currentEventTeam = user.EventTeams.FirstOrDefault(t => t.Event.Id == eventId);
+            var userToBeRated = Context.Users.SingleOrDefault(u => u.Id == userId);
+
+            if (currentEventTeam != null && userToBeRated != null)
+            {
+                var ratedSkills = userToBeRated.UserSkills
+                    .Where(s => s.Ratings.Any(r => r.RatedBy.Id == user.Id))
+                    .Select(s => s.Id);
+
+                var allSkills = currentEventTeam.Event.Skills
+                    .Select(s => s.Id)
+                    .Concat(currentEventTeam.Event.Group.Skills
+                        .Select(s => s.Id))
+                    .Distinct();
+
+                var skillsToBeRated = allSkills.Where(s => !ratedSkills.Contains(s));
+
+                return Json(skillsToBeRated, JsonRequestBehavior.AllowGet);
+            }
+
+            return HttpNotFound();
         }
     }
 }

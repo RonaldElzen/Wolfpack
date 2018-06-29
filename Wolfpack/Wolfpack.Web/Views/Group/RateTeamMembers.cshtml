@@ -1,0 +1,40 @@
+﻿
+@{
+    ViewBag.Title = "RateTeamMembers";
+}
+
+<h2>Time to rate your teammembers</h2>
+<p>Please rate your teammembers skills</p>
+<div class="rating-box">
+
+</div>
+
+<script>
+    let ratingElements = [];
+    function  getDing(){
+
+    //Ajax request
+    let httpRequest = new XMLHttpRequest();
+    httpRequest.open('POST','@Url.Action("UsersToBeRated")');
+    httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    httpRequest.send(JSON.stringify({
+        eventId: 1
+    }));
+
+    //Handle result
+
+        httpRequest.onreadystatechange = function () {
+            let result = JSON.parse(httpRequest.response)
+            result.forEach(function (element) {
+                let rateElement = document.createElement("div");
+                rateElement.setAttribute("class", "rating-box");
+                let title = document.createElement("h3");
+                title.appendChild(document.createTextNode("Time to rate " + element.userName))
+                rateElement.append(title);
+                ratingElements.push(rateElement);
+            });
+
+            document.querySelector(".main").append(ratingElements[0])
+    };
+    }
+</script>

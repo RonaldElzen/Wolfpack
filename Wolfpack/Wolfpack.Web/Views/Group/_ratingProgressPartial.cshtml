@@ -1,8 +1,26 @@
 ﻿@model Wolfpack.Web.Models.Group.RatingProgressVM
 
-@foreach(var data in Model.Progress)
-{
-    <div>
-        <span>@data.Key @data.Value.Key/@data.Value.Value</span>
+<div id="ratingProgressMOdal" class="modal-background">
+    <div class="modal">
+        <div class="modal-heading">
+            <h2>Add user</h2>
+            <button class="modal-close"><i class="fas fa-times fa-3x icon-only"></i> </button> 
+        </div>
+        @foreach (var data in Model.Progress)
+        {
+            if (data.Value.Key == data.Value.Value)
+            {
+                <div class="rating-progress success">
+                    <span>@data.Key @data.Value.Key/@data.Value.Value</span>
+                </div>
+            }
+            else
+            {
+                <div class="rating-progress">
+                    <span>@data.Key @data.Value.Key/@data.Value.Value</span>
+                </div>
+            }
+
+        }
     </div>
-}
+</div>

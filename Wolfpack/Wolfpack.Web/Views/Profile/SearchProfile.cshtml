@@ -3,14 +3,14 @@
         ViewBag.Title = "SearchProfile";
     }
         
-    <h2>SearchProfile</h2>
+    <h2>Search a user</h2>
     <div class="form-box">
-        @using (Html.BeginForm("SearchProfile"))
+        @using (Html.BeginForm("SearchProfile", null, FormMethod.Post, new { id = "SearchProfile" }))
         {
             <div class="form-item">
                 @Html.EditorFor(m => m.UserName)
             </div>
-            <input type="submit" class="submit-button" value="Submit" />
+            <input type="submit" class="submit-button" value="Search" />
             if (Model.PossibleUsers != null && Model.PossibleUsers.Count() > 0)
             {
                 <h3>User not found, did you mean:</h3>

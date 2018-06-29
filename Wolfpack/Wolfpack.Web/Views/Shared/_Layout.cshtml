@@ -6,9 +6,7 @@
     <title>@ViewBag.Title - My ASP.NET Application</title>
     <meta name="theme-color" content="#455B65" />
     @Styles.Render("~/Content/css")
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
+
 </head>
 <body>
     <div class="wrapper">
@@ -18,7 +16,7 @@
         <div class="sidebar-wrapper">
             <div class="sidebar" id="sidebar">
                 <div class="logo">
-                    <img src="~/Content/images/logo.png" />
+                    <img src="~/Content/images/logo.svg" />
                     @*@Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })*@
                 </div>
                 <ul class="nav">
@@ -37,14 +35,17 @@
                     <ul class="nav-bottom">
                         @*<li><a href="@Url.Action("Index","Home")"><span>Settings</span><i class="fas fa-cog fa-lg"></i></a></li>*@
                         <li><a href="@Url.Action("Logout","Account")"><span>Log out</span><i class="fas fa-sign-out-alt fa-lg"></i></a></li>
-                        </ul>
+                    </ul>
                 </div>
             </div>
-            </div>
-            <div class="main">
-                @RenderBody()
-            </div>
         </div>
+        <div class="main">
+            @RenderBody()
+        </div>
+    </div>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
+    <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
     @RenderSection("scripts", required: false)
     <script src="@Url.Content("~/Scripts/main.js")"></script>
     <script>getNotificationCount('@Url.Action("GetNotificationCount", "Notification")')</script>
