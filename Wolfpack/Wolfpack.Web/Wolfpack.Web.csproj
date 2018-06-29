@@ -227,6 +227,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\css\Main.scss" />
+    <None Include="Properties\PublishProfiles\Wolfpack-final - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\Wolfpack-final - Web Deploy.pubxml" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
